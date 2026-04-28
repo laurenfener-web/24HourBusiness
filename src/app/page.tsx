@@ -1,92 +1,141 @@
 import Link from "next/link";
+import { ArrowRight, CheckCircle2, Clock, Shield, Zap } from "lucide-react";
 
-const steps = [
-  "Choose your business name",
-  "Pick a business structure (LLC)",
-  "File your LLC",
-  "Get your EIN from the IRS",
-  "Open a business bank account",
-  "Get a business credit card",
-  "Set up basic accounting",
-  "Launch",
+const STEPS = [
+  { num: "01", title: "Name your business", desc: "AI-powered name generator helps you find the perfect name in minutes." },
+  { num: "02", title: "Choose your structure", desc: "LLC, S-Corp, or sole proprietor — we explain each so you can decide with confidence." },
+  { num: "03", title: "File your LLC", desc: "State-by-state filing guide with exact links, fees, and processing times." },
+  { num: "04", title: "Get your EIN", desc: "Free from the IRS, takes 10 minutes. We walk you through every field." },
+  { num: "05", title: "Open a bank account", desc: "Keep business and personal money separate from day one." },
+  { num: "06", title: "Get a business credit card", desc: "Build business credit and earn rewards on every dollar you spend." },
+  { num: "07", title: "Set up accounting", desc: "The right tool from the start saves you thousands at tax time." },
+  { num: "08", title: "Launch", desc: "Get your first customer. The paperwork is done — now the real work begins." },
+];
+
+const PILLARS = [
+  { icon: Zap, label: "Completely free", desc: "No account, no credit card, no upsells." },
+  { icon: Clock, label: "One weekend", desc: "Most people finish in under 48 hours." },
+  { icon: Shield, label: "Expert guidance", desc: "Every step explained in plain English." },
 ];
 
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <span className="font-semibold text-lg tracking-tight">24HourBusiness</span>
-        <Link
-          href="/guide"
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
-        >
-          Start the guide →
-        </Link>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xs">24</span>
+            </div>
+            <span className="font-bold text-gray-900 tracking-tight">HourBusiness</span>
+          </div>
+          <Link
+            href="/guide"
+            className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+          >
+            Start the guide <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center text-center px-6 py-24 flex-1">
-        <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 text-sm font-medium px-3 py-1 rounded-full mb-6">
-          <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" />
-          Free. No account required.
-        </div>
-
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-gray-900 max-w-2xl leading-tight">
-          Start your business{" "}
-          <span className="text-indigo-600">this weekend.</span>
-        </h1>
-
-        <p className="mt-6 text-xl text-gray-500 max-w-xl">
-          We cut through the noise. 8 simple steps from idea to official
-          business — LLC, EIN, bank account, and everything in between.
-        </p>
-
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center">
+      <section className="bg-slate-950 text-white pt-32 pb-24 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
+            <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse" />
+            Free · No account required · Takes one weekend
+          </div>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.08] mb-6">
+            Stop thinking about it.{" "}
+            <span className="text-indigo-400">Start your business.</span>
+          </h1>
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            8 guided steps from idea to official business. Name, LLC, EIN, bank account — we walk you through every single one, in plain English.
+          </p>
           <Link
             href="/guide"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-indigo-500/25"
           >
-            Start for free →
+            Start for free <ArrowRight className="w-5 h-5" />
           </Link>
-          <span className="text-sm text-gray-400">Takes about a weekend</span>
+          <p className="mt-4 text-sm text-slate-500">No signup. No payment. Just start.</p>
         </div>
       </section>
 
-      {/* Steps preview */}
-      <section className="bg-gray-50 border-t border-gray-100 px-6 py-16">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8 text-center">
-            What you&apos;ll do
-          </h2>
-          <ol className="space-y-3">
-            {steps.map((step, i) => (
-              <li
-                key={i}
-                className="flex items-center gap-4 bg-white border border-gray-100 rounded-xl px-5 py-4 shadow-sm"
+      {/* Trust pillars */}
+      <section className="border-b border-gray-100 bg-white">
+        <div className="max-w-4xl mx-auto px-6 py-12 grid sm:grid-cols-3 gap-8">
+          {PILLARS.map(({ icon: Icon, label, desc }) => (
+            <div key={label} className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">{label}</p>
+                <p className="text-sm text-gray-500 mt-0.5">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Steps */}
+      <section className="bg-slate-50 px-6 py-20">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-3">The 8-step process</p>
+            <h2 className="text-3xl font-bold text-gray-900">Everything you need, in order.</h2>
+            <p className="text-gray-500 mt-3 text-lg">No guesswork. No rabbit holes. Just the next step.</p>
+          </div>
+          <div className="space-y-3">
+            {STEPS.map((step, i) => (
+              <div
+                key={step.num}
+                className="bg-white border border-gray-100 rounded-2xl px-6 py-5 flex items-start gap-5 shadow-sm hover:shadow-md transition-shadow"
               >
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 font-bold text-sm shrink-0">
-                  {i + 1}
+                <span className="text-2xl font-black text-indigo-100 tabular-nums leading-none mt-0.5 select-none">
+                  {step.num}
                 </span>
-                <span className="text-gray-700 font-medium">{step}</span>
-              </li>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900">{step.title}</p>
+                  <p className="text-sm text-gray-500 mt-1">{step.desc}</p>
+                </div>
+                {i === 0 && (
+                  <span className="shrink-0 text-xs font-semibold bg-indigo-600 text-white px-2.5 py-1 rounded-full">
+                    AI-powered
+                  </span>
+                )}
+              </div>
             ))}
-          </ol>
+          </div>
 
           <div className="mt-10 text-center">
             <Link
               href="/guide"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors inline-block"
+              className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
             >
-              Let&apos;s go →
+              Let&apos;s get started <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      <footer className="text-center py-6 text-sm text-gray-400 border-t border-gray-100">
-        Built to help you stop waiting and start building.
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-100 px-6 py-10">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-indigo-600 rounded-md flex items-center justify-center">
+              <span className="text-white font-bold text-xs">24</span>
+            </div>
+            <span className="font-bold text-gray-900 text-sm">HourBusiness</span>
+          </div>
+          <p className="text-sm text-gray-400 flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            Built to help you stop waiting and start building.
+          </p>
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }
