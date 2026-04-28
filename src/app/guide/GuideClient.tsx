@@ -138,14 +138,14 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
           <span className="text-sm text-gray-500 font-medium">
             {step + 1} <span className="text-gray-300">/</span> {STEPS.length}
           </span>
-          <ProfileDropdown
-            userEmail={userEmail}
-            companies={companies}
-            activeCompanyId={activeCompany?.id ?? ""}
-            onSelectCompany={handleSelectCompany}
-            onNewCompany={handleNewCompany}
-          />
         </div>
+        <ProfileDropdown
+          userEmail={userEmail}
+          companies={companies}
+          activeCompanyId={activeCompany?.id ?? ""}
+          onSelectCompany={handleSelectCompany}
+          onNewCompany={handleNewCompany}
+        />
       </nav>
 
       <div className="flex flex-1">
