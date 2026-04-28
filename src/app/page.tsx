@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, Shield, Zap } from "lucide-react";
+import { getSession } from "@/lib/session";
 
 const STEPS = [
   { num: "01", title: "Name your business", desc: "AI-powered name generator helps you find the perfect name in minutes." },
@@ -18,7 +19,8 @@ const PILLARS = [
   { icon: Shield, label: "Expert guidance", desc: "Every step explained in plain English." },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Nav */}
@@ -30,12 +32,20 @@ export default function Home() {
             </div>
             <span className="font-bold text-gray-900 tracking-tight">HourBusiness</span>
           </div>
-          <Link
-            href="/guide"
-            className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-          >
-            Start the guide <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          {session ? (
+            <Link href="/guide" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+              Continue guide <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 px-3 py-2 transition-colors">
+                Log in
+              </Link>
+              <Link href="/signup" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+                Sign up free <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -54,12 +64,12 @@ export default function Home() {
             8 guided steps from idea to official business. Name, LLC, EIN, bank account — we walk you through every single one, in plain English.
           </p>
           <Link
-            href="/guide"
+            href={session ? "/guide" : "/signup"}
             className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-indigo-500/25"
           >
-            Start for free <ArrowRight className="w-5 h-5" />
+            {session ? "Continue your guide" : "Start for free"} <ArrowRight className="w-5 h-5" />
           </Link>
-          <p className="mt-4 text-sm text-slate-500">No signup. No payment. Just start.</p>
+          <p className="mt-4 text-sm text-slate-500">{session ? `Logged in as ${session.email}` : "Free account. No credit card."}</p>
         </div>
       </section>
 

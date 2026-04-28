@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Check, ChevronLeft } from "lucide-react";
+import { Check, ChevronLeft, LogOut } from "lucide-react";
+import { logout } from "@/actions/auth";
 import Step1Name from "./steps/Step1Name";
 import Step2Structure from "./steps/Step2Structure";
 import Step3LLC from "./steps/Step3LLC";
@@ -30,7 +31,7 @@ const STEPS = [
   { title: "Launch", sub: "Go get that first customer" },
 ];
 
-export default function GuideClient() {
+export default function GuideClient({ userEmail }: { userEmail: string }) {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<State>({ businessName: "", structure: "llc", state: "", done: false });
 
@@ -97,9 +98,21 @@ export default function GuideClient() {
               style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
             />
           </div>
-          <span className="text-sm text-gray-500 font-medium">
-            {step + 1} <span className="text-gray-300">/</span> {STEPS.length}
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-500 font-medium">
+              {step + 1} <span className="text-gray-300">/</span> {STEPS.length}
+            </span>
+            {userEmail && (
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:block text-xs text-gray-400 truncate max-w-[160px]">{userEmail}</span>
+                <form action={logout}>
+                  <button type="submit" className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors font-medium">
+                    <LogOut className="w-3.5 h-3.5" /> Log out
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
