@@ -43,7 +43,7 @@ const STATES: Record<string, { fee: string; time: string; url: string }> = {
   "New York": { fee: "$200", time: "2–3 weeks", url: "https://www.dos.ny.gov/corps" },
   "North Carolina": { fee: "$125", time: "Same day", url: "https://www.sosnc.gov/divisions/business_registration" },
   "North Dakota": { fee: "$135", time: "2–5 days", url: "https://sos.nd.gov/business/business-services.html" },
-  "Ohio": { fee: "$99", time: "Same day", url: "https://www.sos.state.oh.us/businesses" },
+  "Ohio": { fee: "$99", time: "Same day", url: "https://bsportal.ohiosos.gov/" },
   "Oklahoma": { fee: "$100", time: "3–5 days", url: "https://www.sos.ok.gov/business" },
   "Oregon": { fee: "$100", time: "Same day", url: "https://sos.oregon.gov/business" },
   "Pennsylvania": { fee: "$125", time: "1–2 weeks", url: "https://www.corporations.pa.gov" },
