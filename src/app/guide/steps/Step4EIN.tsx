@@ -59,7 +59,7 @@ export default function Step4EIN({ businessName, onComplete }: Props) {
       </div>
 
       <button
-        onClick={() => { window.open("https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online", "_blank", "noopener,noreferrer"); onComplete(); }}
+        onClick={() => { window.open("https://sa.www4.irs.gov/applyein/", "_blank", "noopener,noreferrer"); onComplete(); }}
         className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-sm text-sm"
       >
         Apply for your EIN on IRS.gov
