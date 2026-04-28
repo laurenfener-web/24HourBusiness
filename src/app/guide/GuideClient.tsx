@@ -10,6 +10,8 @@ import Step4EIN from "./steps/Step4EIN";
 import Step5Bank from "./steps/Step5Bank";
 import Step6CreditCard from "./steps/Step6CreditCard";
 import Step7Accounting from "./steps/Step7Accounting";
+import StepDomain from "./steps/StepDomain";
+import StepWebsite from "./steps/StepWebsite";
 import Step8Launch from "./steps/Step8Launch";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { Company } from "@/lib/db";
@@ -29,6 +31,8 @@ const STEPS = [
   { title: "Open a bank account", sub: "Keep money separate" },
   { title: "Business credit card", sub: "Build credit & earn rewards" },
   { title: "Set up accounting", sub: "Track from day one" },
+  { title: "Buy a domain", sub: "Own your web address", skippable: true },
+  { title: "Build a website", sub: "Get online fast", skippable: true },
   { title: "Launch", sub: "Go get that first customer" },
 ];
 
@@ -168,9 +172,16 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                     {done ? <Check className="w-3 h-3" /> : <span>{i + 1}</span>}
                   </div>
                   <div className="min-w-0">
-                    <p className={`text-sm font-semibold truncate ${active ? "text-indigo-700" : "text-gray-700"}`}>
-                      {s.title}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className={`text-sm font-semibold truncate ${active ? "text-indigo-700" : "text-gray-700"}`}>
+                        {s.title}
+                      </p>
+                      {s.skippable && (
+                        <span className="shrink-0 text-xs text-gray-400 border border-gray-200 rounded-full px-1.5 py-0.5 leading-none">
+                          optional
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-gray-400 truncate">{s.sub}</p>
                   </div>
                 </div>
@@ -182,9 +193,16 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
         <main className="flex-1 min-w-0 py-10 px-6">
           <div className="max-w-xl mx-auto">
             <div className="mb-8">
-              <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 mb-2">
-                Step {step + 1} of {STEPS.length}
-              </p>
+              <div className="flex items-center gap-3 mb-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-indigo-500">
+                  Step {step + 1} of {STEPS.length}
+                </p>
+                {STEPS[step].skippable && (
+                  <span className="text-xs text-gray-400 border border-gray-200 rounded-full px-2 py-0.5">
+                    optional
+                  </span>
+                )}
+              </div>
               <h1 className="text-3xl font-bold text-gray-900 leading-tight">{STEPS[step].title}</h1>
               <p className="text-gray-400 mt-1">{STEPS[step].sub}</p>
             </div>
@@ -197,7 +215,9 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
               {step === 4 && <Step5Bank onComplete={() => next()} />}
               {step === 5 && <Step6CreditCard onComplete={() => next()} />}
               {step === 6 && <Step7Accounting onComplete={() => next()} />}
-              {step === 7 && (
+              {step === 7 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
+              {step === 8 && <StepWebsite onComplete={() => next()} />}
+              {step === 9 && (
                 <Step8Launch
                   businessName={data.businessName}
                   userEmail={userEmail}

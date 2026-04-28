@@ -85,7 +85,6 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
     { emoji: "💼", title: "Post on LinkedIn", desc: "Your professional network is your first warm audience. Be specific about what you do." },
     { emoji: "📧", title: "Reach out to 3 potential customers", desc: "Don't broadcast — go direct. A personal message beats a post every time." },
     { emoji: "💳", title: "Set up payment processing", desc: "Stripe, Square, or Venmo Business — make it easy to pay you before you need it." },
-    { emoji: "🌐", title: "Build a simple website", desc: "Carrd.co lets you launch a clean, professional page in under an hour." },
     { emoji: "🎯", title: "Set a 30-day revenue goal", desc: "What does success look like this month? Write it down. Make it specific." },
   ];
 
