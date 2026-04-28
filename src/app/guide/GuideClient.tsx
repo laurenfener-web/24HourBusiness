@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Check, ChevronLeft, LogOut } from "lucide-react";
-import { logout } from "@/actions/auth";
+import { Check, ChevronLeft } from "lucide-react";
 import Step1Name from "./steps/Step1Name";
 import Step2Structure from "./steps/Step2Structure";
 import Step3LLC from "./steps/Step3LLC";
@@ -12,8 +11,10 @@ import Step5Bank from "./steps/Step5Bank";
 import Step6CreditCard from "./steps/Step6CreditCard";
 import Step7Accounting from "./steps/Step7Accounting";
 import Step8Launch from "./steps/Step8Launch";
+import ProfileDropdown from "@/components/ProfileDropdown";
+import { Company } from "@/lib/db";
 
-interface State {
+interface WizardData {
   businessName: string;
   structure: string;
   state: string;
@@ -31,36 +32,73 @@ const STEPS = [
   { title: "Launch", sub: "Go get that first customer" },
 ];
 
-export default function GuideClient({ userEmail }: { userEmail: string }) {
-  const [step, setStep] = useState(0);
-  const [data, setData] = useState<State>({ businessName: "", structure: "llc", state: "", done: false });
+function companyToData(company: Company): WizardData {
+  return {
+    businessName: company.name === "New Business" ? "" : company.name,
+    structure: company.structure,
+    state: company.state,
+    done: company.done,
+  };
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem("24hb-progress");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.step !== undefined) setStep(parsed.step);
-      if (parsed.data) setData(parsed.data);
-    }
-  }, []);
+async function saveCompany(id: string, updates: Record<string, unknown>) {
+  await fetch("/api/companies", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...updates }),
+  });
+}
 
-  function save(newStep: number, newData: State) {
-    localStorage.setItem("24hb-progress", JSON.stringify({ step: newStep, data: newData }));
-  }
+interface Props {
+  userEmail: string;
+  initialCompanies: Company[];
+  initialCompany: Company | null;
+}
 
-  function next(updatedData?: State) {
+export default function GuideClient({ userEmail, initialCompanies, initialCompany }: Props) {
+  const [companies, setCompanies] = useState<Company[]>(initialCompanies);
+  const [activeCompany, setActiveCompany] = useState<Company | null>(initialCompany);
+  const [step, setStep] = useState(initialCompany?.current_step ?? 0);
+  const [data, setData] = useState<WizardData>(
+    initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "", done: false }
+  );
+
+  async function next(updatedData?: WizardData) {
     const nextStep = Math.min(step + 1, STEPS.length - 1);
     const nextData = updatedData ?? data;
     setStep(nextStep);
     setData(nextData);
-    save(nextStep, nextData);
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (activeCompany) {
+      const updates: Record<string, unknown> = { current_step: nextStep };
+      if (nextData.businessName) updates.name = nextData.businessName;
+      if (nextData.structure) updates.structure = nextData.structure;
+      if (nextData.state) updates.state = nextData.state;
+      saveCompany(activeCompany.id, updates);
+      const updated = { ...activeCompany, current_step: nextStep, ...updates } as Company;
+      setActiveCompany(updated);
+      setCompanies(prev => prev.map(c => c.id === updated.id ? updated : c));
+    }
   }
 
   function back() {
-    const prevStep = Math.max(step - 1, 0);
-    setStep(prevStep);
-    save(prevStep, data);
+    setStep(s => Math.max(s - 1, 0));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleSelectCompany(company: Company) {
+    setActiveCompany(company);
+    setStep(company.current_step);
+    setData(companyToData(company));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleNewCompany(company: Company) {
+    setCompanies(prev => [company, ...prev]);
+    setActiveCompany(company);
+    setStep(0);
+    setData({ businessName: "", structure: "llc", state: "", done: false });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -83,7 +121,6 @@ export default function GuideClient({ userEmail }: { userEmail: string }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      {/* Top nav */}
       <nav className="bg-white border-b border-gray-100 px-6 h-14 flex items-center justify-between shrink-0 sticky top-0 z-10">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-6 h-6 bg-indigo-600 rounded-md flex items-center justify-center">
@@ -98,26 +135,20 @@ export default function GuideClient({ userEmail }: { userEmail: string }) {
               style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
             />
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500 font-medium">
-              {step + 1} <span className="text-gray-300">/</span> {STEPS.length}
-            </span>
-            {userEmail && (
-              <div className="flex items-center gap-2">
-                <span className="hidden sm:block text-xs text-gray-400 truncate max-w-[160px]">{userEmail}</span>
-                <form action={logout}>
-                  <button type="submit" className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors font-medium">
-                    <LogOut className="w-3.5 h-3.5" /> Log out
-                  </button>
-                </form>
-              </div>
-            )}
-          </div>
+          <span className="text-sm text-gray-500 font-medium">
+            {step + 1} <span className="text-gray-300">/</span> {STEPS.length}
+          </span>
+          <ProfileDropdown
+            userEmail={userEmail}
+            companies={companies}
+            activeCompanyId={activeCompany?.id ?? ""}
+            onSelectCompany={handleSelectCompany}
+            onNewCompany={handleNewCompany}
+          />
         </div>
       </nav>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
         <aside className="hidden lg:flex flex-col w-72 shrink-0 bg-white border-r border-gray-100 py-8 px-4 sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400 px-3 mb-4">Your progress</p>
           <nav className="space-y-1">
@@ -132,11 +163,7 @@ export default function GuideClient({ userEmail }: { userEmail: string }) {
                   }`}
                 >
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
-                    done
-                      ? "bg-indigo-600 text-white"
-                      : active
-                      ? "bg-indigo-600 text-white"
-                      : "bg-gray-100 text-gray-400"
+                    done || active ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-400"
                   }`}>
                     {done ? <Check className="w-3 h-3" /> : <span>{i + 1}</span>}
                   </div>
@@ -152,43 +179,33 @@ export default function GuideClient({ userEmail }: { userEmail: string }) {
           </nav>
         </aside>
 
-        {/* Main content */}
         <main className="flex-1 min-w-0 py-10 px-6">
           <div className="max-w-xl mx-auto">
-            {/* Step header */}
             <div className="mb-8">
               <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 mb-2">
                 Step {step + 1} of {STEPS.length}
               </p>
-              <h1 className="text-3xl font-bold text-gray-900 leading-tight">
-                {STEPS[step].title}
-              </h1>
+              <h1 className="text-3xl font-bold text-gray-900 leading-tight">{STEPS[step].title}</h1>
               <p className="text-gray-400 mt-1">{STEPS[step].sub}</p>
             </div>
 
-            {/* Step content */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-              {step === 0 && (
-                <Step1Name onComplete={(d) => { const nd = { ...data, ...d }; next(nd); }} />
-              )}
-              {step === 1 && (
-                <Step2Structure onComplete={(d) => { const nd = { ...data, ...d }; next(nd); }} />
-              )}
-              {step === 2 && (
-                <Step3LLC businessName={data.businessName} onComplete={(d) => { const nd = { ...data, ...d }; next(nd); }} />
-              )}
-              {step === 3 && (
-                <Step4EIN businessName={data.businessName} onComplete={() => next()} />
-              )}
+              {step === 0 && <Step1Name onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 1 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 2 && <Step3LLC businessName={data.businessName} onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 3 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
               {step === 4 && <Step5Bank onComplete={() => next()} />}
               {step === 5 && <Step6CreditCard onComplete={() => next()} />}
               {step === 6 && <Step7Accounting onComplete={() => next()} />}
               {step === 7 && (
-                <Step8Launch businessName={data.businessName} onComplete={() => {
-                  const nd = { ...data, done: true };
-                  setData(nd);
-                  save(step, nd);
-                }} />
+                <Step8Launch
+                  businessName={data.businessName}
+                  onComplete={() => {
+                    const nd = { ...data, done: true };
+                    setData(nd);
+                    if (activeCompany) saveCompany(activeCompany.id, { done: true });
+                  }}
+                />
               )}
             </div>
 

@@ -15,4 +15,29 @@ export async function initDb() {
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS companies (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      name TEXT NOT NULL DEFAULT 'New Business',
+      current_step INT NOT NULL DEFAULT 0,
+      structure TEXT NOT NULL DEFAULT 'llc',
+      state TEXT NOT NULL DEFAULT '',
+      done BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+}
+
+export interface Company {
+  id: string;
+  user_id: string;
+  name: string;
+  current_step: number;
+  structure: string;
+  state: string;
+  done: boolean;
+  created_at: string;
+  updated_at: string;
 }
