@@ -137,7 +137,7 @@ export default function Step1Name({ onComplete }: Props) {
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
             Pick one you love
           </p>
-          {results.map((r) => (
+          {results.filter((r) => r.domainAvailable !== false).map((r) => (
             <button
               key={r.name}
               onClick={() => setSelected(r.name)}

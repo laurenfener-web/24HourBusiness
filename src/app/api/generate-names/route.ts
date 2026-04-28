@@ -31,12 +31,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ANTHROPIC_API_KEY is not set" }, { status: 500 });
   }
 
-  const prompt = `You are a branding expert. Generate 6 creative, memorable business names for the following business idea.
+  const prompt = `You are a branding expert. Generate 8 creative, memorable business names for the following business idea.
 
 Business description: ${description}
 ${vibe ? `Desired vibe/style: ${vibe}` : ""}
 
-Return ONLY a valid JSON array with exactly 6 objects. Each object must have:
+Return ONLY a valid JSON array with exactly 8 objects. Each object must have:
 - "name": the business name (2-4 words max, punchy and memorable)
 - "tagline": a one-line tagline (under 10 words)
 - "why": one sentence explaining why this name works
