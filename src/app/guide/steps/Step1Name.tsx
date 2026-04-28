@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, RefreshCw, ArrowRight, Check } from "lucide-react";
+import { Sparkles, RefreshCw, ArrowRight, Check, Globe, AlertCircle } from "lucide-react";
 
 interface NameResult {
   name: string;
   tagline: string;
   why: string;
+  domain: string;
+  domainAvailable: boolean | null;
 }
 
 interface Props {
@@ -14,6 +16,26 @@ interface Props {
 }
 
 const VIBES = ["Professional", "Fun & Playful", "Bold & Edgy", "Clean & Minimal", "Trustworthy"];
+
+function DomainBadge({ available, domain }: { available: boolean | null; domain: string }) {
+  if (available === null) return null;
+
+  if (available) {
+    return (
+      <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
+        <Globe className="w-3 h-3" />
+        {domain} available
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1.5 text-xs font-semibold text-red-500 bg-red-50 border border-red-100 px-2.5 py-1 rounded-full">
+      <AlertCircle className="w-3 h-3" />
+      {domain} taken
+    </div>
+  );
+}
 
 export default function Step1Name({ onComplete }: Props) {
   const [description, setDescription] = useState("");
@@ -45,11 +67,13 @@ export default function Step1Name({ onComplete }: Props) {
     }
   }
 
+  const selectedResult = results.find((r) => r.name === selected);
+
   return (
     <div className="space-y-7">
       <div>
         <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-          Describe your business idea below and our AI will generate six name options tailored to your vision. Don&apos;t overthink the description — a sentence or two is plenty.
+          Describe your business idea and our AI will generate six name options — each checked for <strong className="text-gray-700">.com domain availability</strong> in real time.
         </p>
         <label className="block text-sm font-semibold text-gray-800 mb-2">
           What does your business do?
@@ -92,7 +116,7 @@ export default function Step1Name({ onComplete }: Props) {
         {loading ? (
           <>
             <RefreshCw className="w-4 h-4 animate-spin" />
-            Generating your names...
+            Generating &amp; checking availability...
           </>
         ) : (
           <>
@@ -110,7 +134,7 @@ export default function Step1Name({ onComplete }: Props) {
 
       {results.length > 0 && (
         <div className="space-y-3 pt-2">
-          <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest text-xs">
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
             Pick one you love
           </p>
           {results.map((r) => (
@@ -124,10 +148,24 @@ export default function Step1Name({ onComplete }: Props) {
               }`}
             >
               <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-bold text-gray-900 text-xl">{r.name}</p>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-3 flex-wrap mb-1">
+                    <p className="font-bold text-gray-900 text-xl">{r.name}</p>
+                    <DomainBadge available={r.domainAvailable} domain={r.domain} />
+                  </div>
                   <p className="text-indigo-600 text-sm font-medium mt-1">&ldquo;{r.tagline}&rdquo;</p>
                   <p className="text-gray-400 text-sm mt-2 leading-relaxed">{r.why}</p>
+
+                  {/* Trademark check link */}
+                  <a
+                    href={`https://www.uspto.gov/trademarks/search?query=${encodeURIComponent(r.name)}&searchType=wordmark`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-indigo-600 mt-2 transition-colors underline underline-offset-2"
+                  >
+                    Check trademark →
+                  </a>
                 </div>
                 <div className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 ${
                   selected === r.name ? "bg-indigo-600 border-indigo-600" : "border-gray-200"
@@ -149,13 +187,23 @@ export default function Step1Name({ onComplete }: Props) {
       )}
 
       {selected && (
-        <button
-          onClick={() => onComplete({ businessName: selected })}
-          className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 text-base shadow-sm"
-        >
-          Use &ldquo;{selected}&rdquo;
-          <ArrowRight className="w-4 h-4" />
-        </button>
+        <div className="space-y-3">
+          {selectedResult?.domainAvailable === false && (
+            <div className="flex items-start gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+              <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-800">
+                <strong>{selectedResult.domain}</strong> is taken, but you can still use this name — many businesses use .co, .io, or a creative variation. Or regenerate for more options.
+              </p>
+            </div>
+          )}
+          <button
+            onClick={() => onComplete({ businessName: selected })}
+            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 text-base shadow-sm"
+          >
+            Use &ldquo;{selected}&rdquo;
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       )}
     </div>
   );
