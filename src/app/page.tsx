@@ -1,65 +1,92 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const steps = [
+  "Choose your business name",
+  "Pick a business structure (LLC)",
+  "File your LLC",
+  "Get your EIN from the IRS",
+  "Open a business bank account",
+  "Get a business credit card",
+  "Set up basic accounting",
+  "Launch",
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex flex-col min-h-screen">
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <span className="font-semibold text-lg tracking-tight">24HourBusiness</span>
+        <Link
+          href="/guide"
+          className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+        >
+          Start the guide →
+        </Link>
+      </nav>
+
+      {/* Hero */}
+      <section className="flex flex-col items-center justify-center text-center px-6 py-24 flex-1">
+        <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 text-sm font-medium px-3 py-1 rounded-full mb-6">
+          <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" />
+          Free. No account required.
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-gray-900 max-w-2xl leading-tight">
+          Start your business{" "}
+          <span className="text-indigo-600">this weekend.</span>
+        </h1>
+
+        <p className="mt-6 text-xl text-gray-500 max-w-xl">
+          We cut through the noise. 8 simple steps from idea to official
+          business — LLC, EIN, bank account, and everything in between.
+        </p>
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center">
+          <Link
+            href="/guide"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Start for free →
+          </Link>
+          <span className="text-sm text-gray-400">Takes about a weekend</span>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Steps preview */}
+      <section className="bg-gray-50 border-t border-gray-100 px-6 py-16">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8 text-center">
+            What you&apos;ll do
+          </h2>
+          <ol className="space-y-3">
+            {steps.map((step, i) => (
+              <li
+                key={i}
+                className="flex items-center gap-4 bg-white border border-gray-100 rounded-xl px-5 py-4 shadow-sm"
+              >
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 font-bold text-sm shrink-0">
+                  {i + 1}
+                </span>
+                <span className="text-gray-700 font-medium">{step}</span>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-10 text-center">
+            <Link
+              href="/guide"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors inline-block"
+            >
+              Let&apos;s go →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="text-center py-6 text-sm text-gray-400 border-t border-gray-100">
+        Built to help you stop waiting and start building.
+      </footer>
+    </main>
   );
 }
