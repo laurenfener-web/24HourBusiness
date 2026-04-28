@@ -74,12 +74,12 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
   }
 
   function openInEmail() {
-    // URLSearchParams encodes spaces as +, which breaks mailto — use encodeURIComponent instead
+    // mailto: "from" is always the user's email client account — we can't set it here
     const parts: string[] = [];
     if (recipients.length > 0) parts.push(`bcc=${recipients.map(encodeURIComponent).join(",")}`);
     if (subject) parts.push(`subject=${encodeURIComponent(subject)}`);
     if (body) parts.push(`body=${encodeURIComponent(body)}`);
-    window.location.href = `mailto:${encodeURIComponent(senderEmail)}?${parts.join("&")}`;
+    window.location.href = `mailto:?${parts.join("&")}`;
   }
 
   const OTHER_ACTIONS = [
@@ -128,7 +128,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                    Your email address <span className="text-gray-400 font-normal">(so recipients know who it&apos;s from)</span>
+                    Your email <span className="text-gray-400 font-normal">(used to personalize the template)</span>
                   </label>
                   <input
                     type="email"
@@ -238,7 +238,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                       Open in email app
                     </button>
                     <p className="text-xs text-gray-400 text-center">
-                      Opens your default email app with recipients in BCC and the template pre-filled.
+                      Opens your email app with recipients in BCC and the template pre-filled. Sends from whichever account your email app is signed into.
                     </p>
                   </div>
                 )}
