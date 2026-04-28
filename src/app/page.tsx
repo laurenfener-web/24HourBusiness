@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Clock, Shield, Zap } from "lucide-react";
 import { getSession } from "@/lib/session";
+import { sql, Company } from "@/lib/db";
+import HomeNav from "@/components/HomeNav";
 
 const STEPS = [
   { num: "01", title: "Name your business", desc: "AI-powered name generator helps you find the perfect name in minutes." },
@@ -21,6 +23,13 @@ const PILLARS = [
 
 export default async function Home() {
   const session = await getSession();
+  let companies: Company[] = [];
+  if (session) {
+    try {
+      const rows = await sql`SELECT * FROM companies WHERE user_id = ${session.userId} ORDER BY updated_at DESC`;
+      companies = rows as Company[];
+    } catch {}
+  }
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Nav */}
@@ -33,9 +42,7 @@ export default async function Home() {
             <span className="font-bold text-gray-900 tracking-tight">HourBusiness</span>
           </div>
           {session ? (
-            <Link href="/guide" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
-              Continue guide <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <HomeNav userEmail={session.email} companies={companies} />
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 px-3 py-2 transition-colors">
