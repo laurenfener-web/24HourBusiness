@@ -200,6 +200,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
               {step === 7 && (
                 <Step8Launch
                   businessName={data.businessName}
+                  userEmail={userEmail}
                   onComplete={() => {
                     const nd = { ...data, done: true };
                     setData(nd);
