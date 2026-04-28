@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, ExternalLink, Mail, RefreshCw, Sparkles, ChevronDown, ChevronUp, Send } from "lucide-react";
+import { useState, useRef, KeyboardEvent } from "react";
+import { ArrowRight, ExternalLink, RefreshCw, Sparkles, ChevronDown, ChevronUp, Send, X, Plus } from "lucide-react";
 
 interface Props {
   businessName: string;
@@ -12,17 +12,46 @@ interface Props {
 export default function Step8Launch({ businessName, userEmail, onComplete }: Props) {
   const [tell10Open, setTell10Open] = useState(false);
   const [senderEmail, setSenderEmail] = useState(userEmail || "");
-  const [recipientsRaw, setRecipientsRaw] = useState("");
+  const [recipients, setRecipients] = useState<string[]>([]);
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputError, setInputError] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [genLoading, setGenLoading] = useState(false);
   const [genError, setGenError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const recipients = recipientsRaw
-    .split(/[\n,;]+/)
-    .map((e) => e.trim())
-    .filter((e) => e.includes("@"))
-    .slice(0, 10);
+  function addRecipient() {
+    const email = inputEmail.trim();
+    if (!email) return;
+    if (!email.includes("@")) {
+      setInputError("Enter a valid email address");
+      return;
+    }
+    if (recipients.includes(email)) {
+      setInputError("Already added");
+      return;
+    }
+    if (recipients.length >= 10) {
+      setInputError("Maximum 10 recipients");
+      return;
+    }
+    setRecipients((prev) => [...prev, email]);
+    setInputEmail("");
+    setInputError("");
+    inputRef.current?.focus();
+  }
+
+  function removeRecipient(email: string) {
+    setRecipients((prev) => prev.filter((e) => e !== email));
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addRecipient();
+    }
+  }
 
   async function generateTemplate() {
     setGenLoading(true);
@@ -45,11 +74,12 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
   }
 
   function openInEmail() {
-    const params = new URLSearchParams();
-    if (recipients.length > 0) params.set("bcc", recipients.join(","));
-    if (subject) params.set("subject", subject);
-    if (body) params.set("body", body);
-    window.location.href = `mailto:${senderEmail}?${params.toString()}`;
+    // URLSearchParams encodes spaces as +, which breaks mailto — use encodeURIComponent instead
+    const parts: string[] = [];
+    if (recipients.length > 0) parts.push(`bcc=${recipients.map(encodeURIComponent).join(",")}`);
+    if (subject) parts.push(`subject=${encodeURIComponent(subject)}`);
+    if (body) parts.push(`body=${encodeURIComponent(body)}`);
+    window.location.href = `mailto:${encodeURIComponent(senderEmail)}?${parts.join("&")}`;
   }
 
   const OTHER_ACTIONS = [
@@ -111,18 +141,53 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                    Recipient emails <span className="text-gray-400 font-normal">(up to 10, comma or line separated)</span>
+                    Recipients <span className="text-gray-400 font-normal">({recipients.length}/10)</span>
                   </label>
-                  <textarea
-                    value={recipientsRaw}
-                    onChange={(e) => setRecipientsRaw(e.target.value)}
-                    placeholder={"friend@gmail.com\ncolleague@work.com, family@example.com"}
-                    rows={4}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-                  />
+
+                  {/* Pill list */}
                   {recipients.length > 0 && (
-                    <p className="text-xs text-indigo-600 mt-1 font-medium">{recipients.length} recipient{recipients.length !== 1 ? "s" : ""} detected</p>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {recipients.map((email) => (
+                        <span
+                          key={email}
+                          className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-100 text-xs font-medium px-2.5 py-1 rounded-full"
+                        >
+                          {email}
+                          <button
+                            onClick={() => removeRecipient(email)}
+                            className="text-indigo-400 hover:text-indigo-700 transition-colors ml-0.5"
+                            aria-label={`Remove ${email}`}
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
                   )}
+
+                  {/* Input + add button */}
+                  {recipients.length < 10 && (
+                    <div className="flex gap-2">
+                      <input
+                        ref={inputRef}
+                        type="email"
+                        value={inputEmail}
+                        onChange={(e) => { setInputEmail(e.target.value); setInputError(""); }}
+                        onKeyDown={handleKeyDown}
+                        placeholder="friend@example.com"
+                        className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                      <button
+                        onClick={addRecipient}
+                        className="shrink-0 w-9 h-9 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+                        aria-label="Add recipient"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                  {inputError && <p className="text-xs text-red-500 mt-1">{inputError}</p>}
+                  <p className="text-xs text-gray-400 mt-1">Press Enter or + to add each address</p>
                 </div>
 
                 <button
@@ -155,7 +220,9 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">Body <span className="text-gray-400 font-normal">(editable)</span></label>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Body <span className="text-gray-400 font-normal">(editable)</span>
+                      </label>
                       <textarea
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
