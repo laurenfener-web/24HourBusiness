@@ -70,14 +70,12 @@ export default function Step7Accounting({ onComplete }: Props) {
                 </span>
               ))}
             </div>
-            <a
-              href={opt.url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => { window.open(opt.url, "_blank", "noopener,noreferrer"); onComplete(); }}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
             >
               Get started with {opt.name} <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            </button>
           </div>
         ))}
       </div>
@@ -100,7 +98,7 @@ export default function Step7Accounting({ onComplete }: Props) {
         onClick={onComplete}
         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
-        I&apos;m set up <ArrowRight className="w-4 h-4" />
+        I&apos;m already set up → Continue <ArrowRight className="w-4 h-4" />
       </button>
     </div>
   );

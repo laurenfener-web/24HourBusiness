@@ -58,21 +58,19 @@ export default function Step4EIN({ businessName, onComplete }: Props) {
         </p>
       </div>
 
-      <a
-        href="https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online"
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        onClick={() => { window.open("https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online", "_blank", "noopener,noreferrer"); onComplete(); }}
         className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-sm text-sm"
       >
         Apply for your EIN on IRS.gov
         <ExternalLink className="w-4 h-4" />
-      </a>
+      </button>
 
       <button
         onClick={onComplete}
         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
-        I got my EIN <ArrowRight className="w-4 h-4" />
+        I already have an EIN → Continue <ArrowRight className="w-4 h-4" />
       </button>
     </div>
   );

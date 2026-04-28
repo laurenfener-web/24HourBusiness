@@ -129,28 +129,26 @@ export default function Step3LLC({ businessName, onComplete }: Props) {
             </ul>
           </div>
 
-          <a
-            href={info.url}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => { window.open(info.url, "_blank", "noopener,noreferrer"); onComplete({ state }); }}
             className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-sm text-sm"
           >
             File your LLC in {state}
             <ExternalLink className="w-4 h-4" />
-          </a>
+          </button>
         </div>
       )}
 
       <div className="pt-2 border-t border-gray-100">
         <p className="text-xs text-gray-400 text-center mb-4">
-          Rather have someone handle it? <a href="https://stripe.com/atlas" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:text-indigo-600">Stripe Atlas</a> does the whole thing for $500 — popular for Delaware C-Corps.
+          Rather have someone handle it? <button onClick={() => { window.open("https://stripe.com/atlas", "_blank", "noopener,noreferrer"); onComplete({ state: state || "Delaware" }); }} className="text-indigo-500 hover:text-indigo-600 underline">Stripe Atlas</button> does the whole thing for $500 — popular for Delaware C-Corps.
         </p>
         <button
           disabled={!state}
           onClick={() => onComplete({ state })}
           className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
         >
-          I filed (or I&apos;m ready to) <ArrowRight className="w-4 h-4" />
+          I already filed → Continue <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     </div>

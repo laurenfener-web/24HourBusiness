@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check, ChevronLeft } from "lucide-react";
 import Step1Name from "./steps/Step1Name";
@@ -34,13 +34,32 @@ export default function GuideClient() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<State>({ businessName: "", structure: "llc", state: "", done: false });
 
-  function next() {
-    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  useEffect(() => {
+    const saved = localStorage.getItem("24hb-progress");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.step !== undefined) setStep(parsed.step);
+      if (parsed.data) setData(parsed.data);
+    }
+  }, []);
+
+  function save(newStep: number, newData: State) {
+    localStorage.setItem("24hb-progress", JSON.stringify({ step: newStep, data: newData }));
+  }
+
+  function next(updatedData?: State) {
+    const nextStep = Math.min(step + 1, STEPS.length - 1);
+    const nextData = updatedData ?? data;
+    setStep(nextStep);
+    setData(nextData);
+    save(nextStep, nextData);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function back() {
-    setStep((s) => Math.max(s - 1, 0));
+    const prevStep = Math.max(step - 1, 0);
+    setStep(prevStep);
+    save(prevStep, data);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -137,22 +156,26 @@ export default function GuideClient() {
             {/* Step content */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
               {step === 0 && (
-                <Step1Name onComplete={(d) => { setData((p) => ({ ...p, ...d })); next(); }} />
+                <Step1Name onComplete={(d) => { const nd = { ...data, ...d }; next(nd); }} />
               )}
               {step === 1 && (
-                <Step2Structure onComplete={(d) => { setData((p) => ({ ...p, ...d })); next(); }} />
+                <Step2Structure onComplete={(d) => { const nd = { ...data, ...d }; next(nd); }} />
               )}
               {step === 2 && (
-                <Step3LLC businessName={data.businessName} onComplete={(d) => { setData((p) => ({ ...p, ...d })); next(); }} />
+                <Step3LLC businessName={data.businessName} onComplete={(d) => { const nd = { ...data, ...d }; next(nd); }} />
               )}
               {step === 3 && (
-                <Step4EIN businessName={data.businessName} onComplete={next} />
+                <Step4EIN businessName={data.businessName} onComplete={() => next()} />
               )}
-              {step === 4 && <Step5Bank onComplete={next} />}
-              {step === 5 && <Step6CreditCard onComplete={next} />}
-              {step === 6 && <Step7Accounting onComplete={next} />}
+              {step === 4 && <Step5Bank onComplete={() => next()} />}
+              {step === 5 && <Step6CreditCard onComplete={() => next()} />}
+              {step === 6 && <Step7Accounting onComplete={() => next()} />}
               {step === 7 && (
-                <Step8Launch businessName={data.businessName} onComplete={() => setData((p) => ({ ...p, done: true }))} />
+                <Step8Launch businessName={data.businessName} onComplete={() => {
+                  const nd = { ...data, done: true };
+                  setData(nd);
+                  save(step, nd);
+                }} />
               )}
             </div>
 

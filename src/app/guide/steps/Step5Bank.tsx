@@ -74,14 +74,12 @@ export default function Step5Bank({ onComplete }: Props) {
                 </span>
               ))}
             </div>
-            <a
-              href={bank.url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => { window.open(bank.url, "_blank", "noopener,noreferrer"); onComplete(); }}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
             >
               Open with {bank.name} <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            </button>
           </div>
         ))}
       </div>
@@ -90,7 +88,7 @@ export default function Step5Bank({ onComplete }: Props) {
         onClick={onComplete}
         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
-        I opened my bank account <ArrowRight className="w-4 h-4" />
+        I already have a business account → Continue <ArrowRight className="w-4 h-4" />
       </button>
     </div>
   );
