@@ -11,7 +11,6 @@ interface Props {
 
 export default function Step8Launch({ businessName, userEmail, onComplete }: Props) {
   const [tell10Open, setTell10Open] = useState(false);
-  const [senderEmail, setSenderEmail] = useState(userEmail || "");
   const [recipients, setRecipients] = useState<string[]>([]);
   const [inputEmail, setInputEmail] = useState("");
   const [inputError, setInputError] = useState("");
@@ -60,7 +59,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
       const res = await fetch("/api/generate-announcement", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessName, senderEmail }),
+        body: JSON.stringify({ businessName, senderEmail: userEmail }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -125,19 +124,6 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
 
             {tell10Open && (
               <div className="px-4 pb-5 pt-3 border-t border-gray-100 space-y-4 bg-white">
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                    Your email <span className="text-gray-400 font-normal">(used to personalize the template)</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={senderEmail}
-                    onChange={(e) => setSenderEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
-                </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
