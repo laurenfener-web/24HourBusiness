@@ -47,7 +47,7 @@ export default function Step1Name({ onComplete }: Props) {
   const [error, setError] = useState("");
 
   async function generate() {
-    if (!description.trim()) return;
+    if (!category.trim() && !description.trim()) return;
     setLoading(true);
     setError("");
     setResults([]);
