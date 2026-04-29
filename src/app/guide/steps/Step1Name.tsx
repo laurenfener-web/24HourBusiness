@@ -38,6 +38,8 @@ function DomainBadge({ available, domain }: { available: boolean | null; domain:
 }
 
 export default function Step1Name({ onComplete }: Props) {
+  const [mode, setMode] = useState<"generate" | "existing">("generate");
+  const [existingName, setExistingName] = useState("");
   const [description, setDescription] = useState("");
   const [vibe, setVibe] = useState("");
   const [results, setResults] = useState<NameResult[]>([]);
@@ -68,6 +70,39 @@ export default function Step1Name({ onComplete }: Props) {
   }
 
   const selectedResult = results.find((r) => r.name === selected);
+
+  if (mode === "existing") {
+    return (
+      <div className="space-y-6">
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-2">
+            Your business name
+          </label>
+          <input
+            type="text"
+            value={existingName}
+            onChange={(e) => setExistingName(e.target.value)}
+            placeholder="e.g. Acme"
+            autoFocus
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg font-semibold"
+          />
+        </div>
+        <button
+          onClick={() => onComplete({ businessName: existingName.trim() })}
+          disabled={!existingName.trim()}
+          className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+        >
+          Use &ldquo;{existingName.trim() || "…"}&rdquo; <ArrowRight className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => setMode("generate")}
+          className="w-full text-gray-400 hover:text-gray-600 text-sm font-medium py-1 transition-colors"
+        >
+          ← Help me come up with a name instead
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-7">
@@ -205,6 +240,15 @@ export default function Step1Name({ onComplete }: Props) {
           </button>
         </div>
       )}
+
+      <div className="pt-2 border-t border-gray-100 text-center">
+        <button
+          onClick={() => setMode("existing")}
+          className="text-sm text-gray-400 hover:text-indigo-600 font-medium transition-colors"
+        >
+          I already have a name →
+        </button>
+      </div>
     </div>
   );
 }
