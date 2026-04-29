@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check, ChevronLeft } from "lucide-react";
 import Step1Name from "./steps/Step1Name";
 import Step2Structure from "./steps/Step2Structure";
+import StepSelectState from "./steps/StepSelectState";
 import Step3LLC from "./steps/Step3LLC";
 import Step4EIN from "./steps/Step4EIN";
 import Step5Bank from "./steps/Step5Bank";
@@ -29,6 +30,7 @@ const STEPS = [
   { title: "Name your business", sub: "Find the perfect name" },
   { title: "Design your logo", sub: "AI-generated icon concepts", skippable: true },
   { title: "Business structure", sub: "LLC, S-Corp, or sole prop" },
+  { title: "Select your state", sub: "Laws vary by state" },
   { title: "File your business", sub: "Official registration" },
   { title: "Get your EIN", sub: "Free from the IRS" },
   { title: "Open a bank account", sub: "Keep money separate" },
@@ -67,7 +69,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
   const [activeCompany, setActiveCompany] = useState<Company | null>(initialCompany);
   const [step, setStep] = useState(initialCompany?.current_step ?? 0);
   const [data, setData] = useState<WizardData>(
-    initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "California", done: false }
+    initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "", done: false }
   );
 
   async function next(updatedData?: WizardData) {
@@ -211,14 +213,15 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
               {step === 0 && <Step1Name onComplete={(d) => next({ ...data, ...d })} />}
               {step === 1 && <StepLogo businessName={data.businessName} onComplete={() => next()} />}
               {step === 2 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 3 && <Step3LLC businessName={data.businessName} structure={data.structure} onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 4 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
-              {step === 5 && <Step5Bank onComplete={() => next()} />}
-              {step === 6 && <Step6CreditCard onComplete={() => next()} />}
-              {step === 7 && <Step7Accounting onComplete={() => next()} />}
-              {step === 8 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
-              {step === 9 && <StepWebsite onComplete={() => next()} />}
-              {step === 10 && (
+              {step === 3 && <StepSelectState onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 4 && <Step3LLC businessName={data.businessName} structure={data.structure} state={data.state} onComplete={() => next()} />}
+              {step === 5 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
+              {step === 6 && <Step5Bank onComplete={() => next()} />}
+              {step === 7 && <Step6CreditCard onComplete={() => next()} />}
+              {step === 8 && <Step7Accounting onComplete={() => next()} />}
+              {step === 9 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
+              {step === 10 && <StepWebsite onComplete={() => next()} />}
+              {step === 11 && (
                 <Step8Launch
                   businessName={data.businessName}
                   userEmail={userEmail}
