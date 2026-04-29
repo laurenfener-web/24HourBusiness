@@ -15,7 +15,6 @@ interface Props {
   onComplete: (data: { businessName: string }) => void;
 }
 
-const VIBES = ["Professional", "Fun & Playful", "Bold & Edgy", "Clean & Minimal", "Trustworthy"];
 
 function DomainBadge({ available, domain }: { available: boolean | null; domain: string }) {
   if (available === null) return null;
@@ -42,7 +41,6 @@ export default function Step1Name({ onComplete }: Props) {
   const [existingName, setExistingName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [vibe, setVibe] = useState("");
   const [results, setResults] = useState<NameResult[]>([]);
   const [selected, setSelected] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,7 +56,7 @@ export default function Step1Name({ onComplete }: Props) {
       const res = await fetch("/api/generate-names", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category, description, vibe }),
+        body: JSON.stringify({ category, description }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -137,28 +135,6 @@ export default function Step1Name({ onComplete }: Props) {
           rows={3}
           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm leading-relaxed"
         />
-      </div>
-
-      {/* Vibe */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-800 mb-3">
-          Brand vibe <span className="text-gray-400 font-normal">(optional)</span>
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {VIBES.map((v) => (
-            <button
-              key={v}
-              onClick={() => setVibe(vibe === v ? "" : v)}
-              className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                vibe === v
-                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                  : "border-gray-200 text-gray-600 hover:border-indigo-300 hover:bg-indigo-50"
-              }`}
-            >
-              {v}
-            </button>
-          ))}
-        </div>
       </div>
 
       <button
