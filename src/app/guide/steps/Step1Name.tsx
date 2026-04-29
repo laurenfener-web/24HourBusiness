@@ -187,10 +187,24 @@ export default function Step1Name({ onComplete }: Props) {
 
       {results.length > 0 && (
         <div className="space-y-3 pt-2">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-            Pick one you love
-          </p>
-          {results.map((r) => (
+          {(() => {
+            const availCount = results.filter((r) => r.domainAvailable === true).length;
+            return availCount > 0 ? (
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                {availCount} available .com {availCount === 1 ? "domain" : "domains"} found — pick one you love
+              </p>
+            ) : (
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                Pick a name — you can use .co or .io if .com is taken
+              </p>
+            );
+          })()}
+          {[...results]
+            .sort((a, b) => {
+              const score = (x: NameResult) => x.domainAvailable === true ? 0 : x.domainAvailable === null ? 1 : 2;
+              return score(a) - score(b);
+            })
+            .map((r) => (
             <button
               key={r.name}
               onClick={() => setSelected(r.name)}

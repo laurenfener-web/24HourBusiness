@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { promises as dns } from "dns";
 import { NextRequest, NextResponse } from "next/server";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -10,12 +11,14 @@ function toDomain(name: string): string {
 async function checkDomain(name: string): Promise<{ domain: string; available: boolean | null }> {
   const domain = toDomain(name);
   try {
-    const res = await fetch(`https://rdap.verisign.com/com/v1/domain/${domain}`, {
-      signal: AbortSignal.timeout(4000),
-    });
-    // 200 = registered (taken), 404 = not found (available)
-    return { domain, available: res.status === 404 };
-  } catch {
+    // SOA record exists for every registered domain
+    await dns.resolveSoa(domain);
+    return { domain, available: false }; // resolved = taken
+  } catch (e: unknown) {
+    const code = (e as NodeJS.ErrnoException).code;
+    if (code === "ENOTFOUND" || code === "ENODATA") {
+      return { domain, available: true };
+    }
     return { domain, available: null };
   }
 }
