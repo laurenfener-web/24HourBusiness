@@ -37,13 +37,22 @@ ${category ? `Industry / type: ${category}` : ""}
 ${description ? `More details: ${description}` : ""}
 ${vibe ? `Desired vibe/style: ${vibe}` : ""}${excludeClause}
 
+CRITICAL: All names must be invented or uncommon words — NOT common English words like Elevate, Catalyst, Pinnacle, Nexus, Forge, Thrive, Apex, Beacon, etc. Those .com domains are all taken.
+
+Instead use:
+- Portmanteaus / blends (e.g. Snapify, Lumiax, Kynect)
+- Invented spellings (e.g. Fiverr, Tumblr, Flickr)
+- Unusual word combos run together (e.g. Grovelink, Dawnshift)
+- Latin/Greek roots made unique (e.g. Solven, Veltrix, Kairos)
+- Short, punchy invented words (5-8 letters)
+
 Return ONLY a valid JSON array with exactly 8 objects. Each object must have:
-- "name": a single word business name (one word only — can be invented, combined, or real)
+- "name": a single invented/uncommon word (one word only)
 - "tagline": a one-line tagline (under 10 words)
 - "why": one sentence explaining why this name works
 
 Example format:
-[{"name":"Example Co","tagline":"Doing things differently.","why":"Short and instantly memorable."}]
+[{"name":"Veltrix","tagline":"Built for what's next.","why":"Invented blend that feels modern and tech-forward."}]
 
 Return only the JSON array, no other text.`;
 
