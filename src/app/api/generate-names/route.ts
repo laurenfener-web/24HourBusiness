@@ -21,6 +21,7 @@ async function checkDomain(name: string): Promise<{ domain: string; available: b
 }
 
 async function generateBatch(
+  category: string,
   description: string,
   vibe: string,
   exclude: string[]
@@ -32,7 +33,8 @@ async function generateBatch(
 
   const prompt = `You are a branding expert. Generate 8 creative, memorable business names for the following business idea.
 
-Business description: ${description}
+${category ? `Industry / type: ${category}` : ""}
+${description ? `More details: ${description}` : ""}
 ${vibe ? `Desired vibe/style: ${vibe}` : ""}${excludeClause}
 
 Return ONLY a valid JSON array with exactly 8 objects. Each object must have:
@@ -57,10 +59,10 @@ Return only the JSON array, no other text.`;
 }
 
 export async function POST(req: NextRequest) {
-  const { description, vibe } = await req.json();
+  const { category, description, vibe } = await req.json();
 
-  if (!description?.trim()) {
-    return NextResponse.json({ error: "Description is required" }, { status: 400 });
+  if (!category?.trim() && !description?.trim()) {
+    return NextResponse.json({ error: "Please select a category or describe your business" }, { status: 400 });
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -73,7 +75,7 @@ export async function POST(req: NextRequest) {
     const seenNames: string[] = [];
 
     for (let attempt = 0; attempt < 3; attempt++) {
-      const batch = await generateBatch(description, vibe, seenNames);
+      const batch = await generateBatch(category, description, vibe, seenNames);
       batch.forEach((n) => seenNames.push(n.name));
 
       const domainChecks = await Promise.all(batch.map((n) => checkDomain(n.name)));

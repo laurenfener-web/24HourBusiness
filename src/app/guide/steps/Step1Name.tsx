@@ -15,6 +15,13 @@ interface Props {
   onComplete: (data: { businessName: string }) => void;
 }
 
+const CATEGORIES = [
+  "Construction", "Coaching", "Consulting", "E-commerce", "Food & Beverage",
+  "Health & Fitness", "Tech / Software", "Real Estate", "Creative / Design",
+  "Legal / Finance", "Education", "Marketing", "Home Services", "Beauty & Wellness",
+  "Events", "Transportation", "Other",
+];
+
 const VIBES = ["Professional", "Fun & Playful", "Bold & Edgy", "Clean & Minimal", "Trustworthy"];
 
 function DomainBadge({ available, domain }: { available: boolean | null; domain: string }) {
@@ -40,6 +47,7 @@ function DomainBadge({ available, domain }: { available: boolean | null; domain:
 export default function Step1Name({ onComplete }: Props) {
   const [mode, setMode] = useState<"generate" | "existing">("generate");
   const [existingName, setExistingName] = useState("");
+  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [vibe, setVibe] = useState("");
   const [results, setResults] = useState<NameResult[]>([]);
@@ -57,7 +65,7 @@ export default function Step1Name({ onComplete }: Props) {
       const res = await fetch("/api/generate-names", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description, vibe }),
+        body: JSON.stringify({ category, description, vibe }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -106,22 +114,47 @@ export default function Step1Name({ onComplete }: Props) {
 
   return (
     <div className="space-y-7">
+      <p className="text-gray-500 text-sm leading-relaxed">
+        Tell us about your business and our AI will generate single-word name options — each checked for <strong className="text-gray-700">.com domain availability</strong> in real time.
+      </p>
+
+      {/* Category */}
       <div>
-        <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-          Describe your business idea and our AI will generate single-word name options — each checked for <strong className="text-gray-700">.com domain availability</strong> in real time.
-        </p>
+        <label className="block text-sm font-semibold text-gray-800 mb-3">
+          What type of business is it?
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {CATEGORIES.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(category === c ? "" : c)}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                category === c
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                  : "border-gray-200 text-gray-600 hover:border-indigo-300 hover:bg-indigo-50"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Description */}
+      <div>
         <label className="block text-sm font-semibold text-gray-800 mb-2">
-          What does your business do?
+          Describe it a bit more <span className="text-gray-400 font-normal">(optional)</span>
         </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="e.g. A service that helps landlords find reliable tenants using background checks and credit scores"
-          rows={4}
+          placeholder="e.g. I help first-time homebuyers navigate the mortgage process and find the best rates"
+          rows={3}
           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm leading-relaxed"
         />
       </div>
 
+      {/* Vibe */}
       <div>
         <label className="block text-sm font-semibold text-gray-800 mb-3">
           Brand vibe <span className="text-gray-400 font-normal">(optional)</span>
@@ -145,7 +178,7 @@ export default function Step1Name({ onComplete }: Props) {
 
       <button
         onClick={generate}
-        disabled={!description.trim() || loading}
+        disabled={(!category && !description.trim()) || loading}
         className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-200 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
         {loading ? (
