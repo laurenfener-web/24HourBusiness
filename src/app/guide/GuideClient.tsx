@@ -29,7 +29,7 @@ const STEPS = [
   { title: "Name your business", sub: "Find the perfect name" },
   { title: "Design your logo", sub: "AI-generated icon concepts", skippable: true },
   { title: "Business structure", sub: "LLC, S-Corp, or sole prop" },
-  { title: "File your LLC", sub: "Official registration" },
+  { title: "File your business", sub: "Official registration" },
   { title: "Get your EIN", sub: "Free from the IRS" },
   { title: "Open a bank account", sub: "Keep money separate" },
   { title: "Business credit card", sub: "Build credit & earn rewards" },
@@ -211,7 +211,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
               {step === 0 && <Step1Name onComplete={(d) => next({ ...data, ...d })} />}
               {step === 1 && <StepLogo businessName={data.businessName} onComplete={() => next()} />}
               {step === 2 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 3 && <Step3LLC businessName={data.businessName} onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 3 && <Step3LLC businessName={data.businessName} structure={data.structure} onComplete={(d) => next({ ...data, ...d })} />}
               {step === 4 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
               {step === 5 && <Step5Bank onComplete={() => next()} />}
               {step === 6 && <Step6CreditCard onComplete={() => next()} />}
