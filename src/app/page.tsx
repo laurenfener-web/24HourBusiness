@@ -1,28 +1,41 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Clock, Shield, Zap } from "lucide-react";
+import { ArrowRight, Building2, CreditCard, FileText, Globe, Landmark, Sparkles } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { sql, Company } from "@/lib/db";
 import HomeNav from "@/components/HomeNav";
 import Logo from "@/components/Logo";
 
-const STEPS = [
-  { num: "01", title: "Name your business", desc: "AI-powered name generator checks .com availability in real time." },
-  { num: "02", title: "Design your logo", desc: "AI generates four icon concepts — pick one and download the SVG." },
-  { num: "03", title: "Choose your structure", desc: "LLC, S-Corp, or sole proprietor — we explain each so you can decide with confidence." },
-  { num: "04", title: "File your LLC", desc: "State-by-state filing guide with exact links, fees, and processing times." },
-  { num: "05", title: "Get your EIN", desc: "Free from the IRS, takes 10 minutes. We walk you through every field." },
-  { num: "06", title: "Open a bank account", desc: "Keep business and personal money separate from day one." },
-  { num: "07", title: "Get a business credit card", desc: "Build business credit and earn rewards on every dollar you spend." },
-  { num: "08", title: "Set up accounting", desc: "The right tool from the start saves you thousands at tax time." },
-  { num: "09", title: "Buy a domain", desc: "Own your web address. We suggest one based on your business name." },
-  { num: "10", title: "Build a website", desc: "Get online fast with the right builder for your needs and budget." },
-  { num: "11", title: "Launch", desc: "Get your first customer. The paperwork is done — now the real work begins." },
-];
-
-const PILLARS = [
-  { icon: Zap, label: "Completely free", desc: "No account, no credit card, no upsells." },
-  { icon: Clock, label: "One weekend", desc: "Most people finish in under 48 hours." },
-  { icon: Shield, label: "Expert guidance", desc: "Every step explained in plain English." },
+const OUTCOMES = [
+  {
+    icon: Sparkles,
+    title: "A name you love",
+    desc: "With an available .com — AI-generated and domain-checked in seconds.",
+  },
+  {
+    icon: Building2,
+    title: "An official LLC",
+    desc: "Filed with your state, real and legal. Your name on paper.",
+  },
+  {
+    icon: FileText,
+    title: "Your EIN",
+    desc: "Your business's tax ID from the IRS — free, and takes 10 minutes.",
+  },
+  {
+    icon: Landmark,
+    title: "A business bank account",
+    desc: "Money goes in, money goes out — all under your business name.",
+  },
+  {
+    icon: Globe,
+    title: "Your domain",
+    desc: "yourbusiness.com, yours. Never lose it to a squatter.",
+  },
+  {
+    icon: CreditCard,
+    title: "A business card",
+    desc: "Build credit and earn rewards on every dollar you spend.",
+  },
 ];
 
 export default async function Home() {
@@ -34,21 +47,22 @@ export default async function Home() {
       companies = rows as Company[];
     } catch {}
   }
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur border-b border-white/5">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Logo />
+          <Logo dark />
           {session ? (
             <HomeNav userEmail={session.email} companies={companies} />
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 px-3 py-2 transition-colors">
+              <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white px-3 py-2 transition-colors">
                 Log in
               </Link>
-              <Link href="/signup" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
-                Sign up free <ArrowRight className="w-3.5 h-3.5" />
+              <Link href="/signup" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+                Start free <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           )}
@@ -56,97 +70,98 @@ export default async function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="bg-slate-950 text-white pt-32 pb-24 px-6">
+      <section className="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center pt-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
+          <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-10">
             <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse" />
-            Free · No account required · Takes one weekend
+            Free · No credit card · Done tonight
           </div>
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.08] mb-6">
-            Stop thinking about it.{" "}
-            <span className="text-indigo-400">Start your business.</span>
+
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-8">
+            You&apos;re going to be a{" "}
+            <span className="text-indigo-400">business owner</span>{" "}
+            by the end of tonight.
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            11 guided steps from idea to official business. Name, logo, LLC, EIN, bank account, domain, website — we walk you through every single one, in plain English.
+
+          <p className="text-xl text-slate-400 max-w-xl mx-auto mb-12 leading-relaxed">
+            Not someday. Tonight. We handle the paperwork — you focus on the idea.
           </p>
+
           <Link
             href={session ? "/guide" : "/signup"}
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-indigo-500/25"
+            className="inline-flex items-center gap-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100"
           >
-            {session ? "Continue your guide" : "Start for free"} <ArrowRight className="w-5 h-5" />
+            {session ? "Keep going →" : "Let's open your business"} <ArrowRight className="w-6 h-6" />
           </Link>
-          <p className="mt-4 text-sm text-slate-500">{session ? `Logged in as ${session.email}` : "Free account. No credit card."}</p>
+
+          <p className="mt-5 text-sm text-slate-600">
+            {session ? `Welcome back, ${session.email}` : "No credit card. No catch. Just your business."}
+          </p>
         </div>
       </section>
 
-      {/* Trust pillars */}
-      <section className="border-b border-gray-100 bg-white">
-        <div className="max-w-4xl mx-auto px-6 py-12 grid sm:grid-cols-3 gap-8">
-          {PILLARS.map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-indigo-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900">{label}</p>
-                <p className="text-sm text-gray-500 mt-0.5">{desc}</p>
-              </div>
-            </div>
-          ))}
+      {/* Bridge */}
+      <section className="bg-white px-6 py-24">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
+            Most people spend months{" "}
+            <span className="text-gray-300">thinking about starting.</span>
+          </p>
+          <p className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight">
+            You&apos;ll be done{" "}
+            <span className="text-indigo-600">before you go to sleep.</span>
+          </p>
         </div>
       </section>
 
-      {/* Steps */}
+      {/* Outcomes */}
       <section className="bg-slate-50 px-6 py-20">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-3">The 11-step process</p>
-            <h2 className="text-3xl font-bold text-gray-900">Everything you need, in order.</h2>
-            <p className="text-gray-500 mt-3 text-lg">No guesswork. No rabbit holes. Just the next step.</p>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-4">
+              By tonight, you&apos;ll have all of this.
+            </h2>
+            <p className="text-gray-500 text-lg">Real things. Yours. Official.</p>
           </div>
-          <div className="space-y-3">
-            {STEPS.map((step, i) => (
-              <div
-                key={step.num}
-                className="bg-white border border-gray-100 rounded-2xl px-6 py-5 flex items-start gap-5 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <span className="text-2xl font-black text-indigo-100 tabular-nums leading-none mt-0.5 select-none">
-                  {step.num}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900">{step.title}</p>
-                  <p className="text-sm text-gray-500 mt-1">{step.desc}</p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {OUTCOMES.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5 text-indigo-600" />
                 </div>
-                {i === 0 && (
-                  <span className="shrink-0 text-xs font-semibold bg-indigo-600 text-white px-2.5 py-1 rounded-full">
-                    AI-powered
-                  </span>
-                )}
+                <p className="font-bold text-gray-900 text-lg mb-1">{title}</p>
+                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-10 text-center">
-            <Link
-              href="/guide"
-              className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
-            >
-              Let&apos;s get started <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
+      {/* Final CTA */}
+      <section className="bg-slate-950 px-6 py-28 text-center">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 leading-tight">
+            Your business is one evening away.
+          </h2>
+          <p className="text-slate-400 text-xl mb-12">
+            Stop waiting for the perfect moment. This is it.
+          </p>
+          <Link
+            href={session ? "/guide" : "/signup"}
+            className="inline-flex items-center gap-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-indigo-500/30 hover:scale-105 active:scale-100"
+          >
+            {session ? "Continue where I left off" : "Open my business tonight"} <ArrowRight className="w-6 h-6" />
+          </Link>
+          <p className="mt-5 text-sm text-slate-600">Free. Always.</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-100 px-6 py-10">
+      <footer className="bg-slate-950 border-t border-white/5 px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Logo size="sm" />
-          </div>
-          <p className="text-sm text-gray-400 flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-            Built to help you stop waiting and start building.
-          </p>
+          <Logo dark size="sm" />
+          <p className="text-sm text-slate-600">Built for the founder who&apos;s ready right now.</p>
         </div>
       </footer>
     </div>
