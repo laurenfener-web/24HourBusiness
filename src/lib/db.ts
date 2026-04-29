@@ -28,6 +28,21 @@ export async function initDb() {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  await sql`
+    CREATE OR REPLACE VIEW companies_with_email AS
+    SELECT
+      c.id,
+      c.name,
+      u.email,
+      c.structure,
+      c.state,
+      c.current_step,
+      c.done,
+      c.created_at,
+      c.updated_at
+    FROM companies c
+    JOIN users u ON c.user_id = u.id
+  `;
 }
 
 export interface Company {
