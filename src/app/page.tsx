@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Clock, Shield, Zap } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { sql, Company } from "@/lib/db";
 import HomeNav from "@/components/HomeNav";
+import Logo from "@/components/Logo";
 
 const STEPS = [
   { num: "01", title: "Name your business", desc: "AI-powered name generator checks .com availability in real time." },
@@ -37,12 +38,7 @@ export default async function Home() {
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xs">MF</span>
-            </div>
-            <span className="font-bold text-gray-900 tracking-tight">The Midnight Founder</span>
-          </div>
+          <Logo />
           {session ? (
             <HomeNav userEmail={session.email} companies={companies} />
           ) : (
@@ -144,10 +140,7 @@ export default async function Home() {
       <footer className="bg-white border-t border-gray-100 px-6 py-10">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-indigo-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs">MF</span>
-            </div>
-            <span className="font-bold text-gray-900 text-sm">The Midnight Founder</span>
+            <Logo size="sm" />
           </div>
           <p className="text-sm text-gray-400 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-green-500" />

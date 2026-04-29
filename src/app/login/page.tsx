@@ -4,17 +4,15 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { login } from "@/actions/auth";
 import { Loader2 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, undefined);
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-6">
-      <Link href="/" className="flex items-center gap-2 mb-10">
-        <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold text-xs">MF</span>
-        </div>
-        <span className="font-bold text-white tracking-tight">The Midnight Founder</span>
+      <Link href="/" className="mb-10">
+        <Logo dark />
       </Link>
 
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-8">

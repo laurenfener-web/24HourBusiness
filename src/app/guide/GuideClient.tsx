@@ -14,6 +14,7 @@ import StepDomain from "./steps/StepDomain";
 import StepWebsite from "./steps/StepWebsite";
 import Step8Launch from "./steps/Step8Launch";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import Logo from "@/components/Logo";
 import { Company } from "@/lib/db";
 
 interface WizardData {
@@ -127,10 +128,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     <div className="min-h-screen flex flex-col bg-slate-50">
       <nav className="bg-white border-b border-gray-100 px-6 h-14 flex items-center justify-between shrink-0 sticky top-0 z-10">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-indigo-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-xs">MF</span>
-          </div>
-          <span className="font-bold text-gray-900 text-sm tracking-tight">The Midnight Founder</span>
+          <Logo size="sm" />
         </Link>
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex h-1.5 w-32 bg-gray-100 rounded-full overflow-hidden">
