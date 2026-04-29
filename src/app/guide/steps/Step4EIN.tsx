@@ -9,7 +9,7 @@ interface Props {
 
 const ITEMS = [
   { label: "Your LLC name", value: (name: string) => name || "your business name" },
-  { label: "State of formation", value: () => "your filing state" },
+  { label: "State of formation", value: () => "California" },
   { label: "Your personal SSN", value: () => "as the responsible party" },
   { label: "About 10 minutes", value: () => "the form is straightforward" },
 ];

@@ -13,8 +13,8 @@ const OUTCOMES = [
   },
   {
     icon: Building2,
-    title: "An official LLC",
-    desc: "Filed with your state, real and legal. Your name on paper.",
+    title: "An official California LLC",
+    desc: "Filed with the California Secretary of State. Real, legal, yours.",
   },
   {
     icon: FileText,
@@ -74,24 +74,23 @@ export default async function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-10">
             <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse" />
-            Free · No credit card · Done tonight
+            Built for California founders · Free · Done tonight
           </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-8">
-            You&apos;re going to be a{" "}
-            <span className="text-indigo-400">business owner</span>{" "}
-            by the end of tonight.
+            Your California business{" "}
+            <span className="text-indigo-400">opens tonight.</span>
           </h1>
 
           <p className="text-xl text-slate-400 max-w-xl mx-auto mb-12 leading-relaxed">
-            Not someday. Tonight. We handle the paperwork — you focus on the idea.
+            Not someday. Tonight. We handle every piece of California paperwork — you focus on the idea.
           </p>
 
           <Link
             href={session ? "/guide" : "/signup"}
             className="inline-flex items-center gap-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100"
           >
-            {session ? "Keep going →" : "Let's open your business"} <ArrowRight className="w-6 h-6" />
+            {session ? "Keep going" : "Open my business"} <ArrowRight className="w-6 h-6" />
           </Link>
 
           <p className="mt-5 text-sm text-slate-600">
@@ -142,7 +141,7 @@ export default async function Home() {
       <section className="bg-slate-950 px-6 py-28 text-center">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 leading-tight">
-            Your business is one evening away.
+            Your California business is one evening away.
           </h2>
           <p className="text-slate-400 text-xl mb-12">
             Stop waiting for the perfect moment. This is it.
@@ -161,7 +160,7 @@ export default async function Home() {
       <footer className="bg-slate-950 border-t border-white/5 px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo dark size="sm" />
-          <p className="text-sm text-slate-600">Built for the founder who&apos;s ready right now.</p>
+          <p className="text-sm text-slate-600">Built for California founders who are ready right now.</p>
         </div>
       </footer>
     </div>

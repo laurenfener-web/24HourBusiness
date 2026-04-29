@@ -67,7 +67,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
   const [activeCompany, setActiveCompany] = useState<Company | null>(initialCompany);
   const [step, setStep] = useState(initialCompany?.current_step ?? 0);
   const [data, setData] = useState<WizardData>(
-    initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "", done: false }
+    initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "California", done: false }
   );
 
   async function next(updatedData?: WizardData) {
