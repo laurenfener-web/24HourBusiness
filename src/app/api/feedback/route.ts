@@ -19,9 +19,9 @@ export async function POST(req: NextRequest) {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: "feedback@24hourbusiness.com",
+      from: "feedback@themidnightfounder.com",
       to: "laurenfener@gmail.com",
-      subject: `24HourBusiness Feedback from ${from}`,
+      subject: `The Midnight Founder Feedback from ${from}`,
       text: body,
     }),
   });

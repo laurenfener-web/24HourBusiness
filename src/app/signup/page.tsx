@@ -12,9 +12,9 @@ export default function SignupPage() {
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-6">
       <Link href="/" className="flex items-center gap-2 mb-10">
         <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold text-xs">24</span>
+          <span className="text-white font-bold text-xs">MF</span>
         </div>
-        <span className="font-bold text-white tracking-tight">HourBusiness</span>
+        <span className="font-bold text-white tracking-tight">The Midnight Founder</span>
       </Link>
 
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-8">

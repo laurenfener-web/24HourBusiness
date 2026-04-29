@@ -5,14 +5,16 @@ import { sql, Company } from "@/lib/db";
 import HomeNav from "@/components/HomeNav";
 
 const STEPS = [
-  { num: "01", title: "Name your business", desc: "AI-powered name generator helps you find the perfect name in minutes." },
+  { num: "01", title: "Name your business", desc: "AI-powered name generator checks .com availability in real time." },
   { num: "02", title: "Choose your structure", desc: "LLC, S-Corp, or sole proprietor — we explain each so you can decide with confidence." },
   { num: "03", title: "File your LLC", desc: "State-by-state filing guide with exact links, fees, and processing times." },
   { num: "04", title: "Get your EIN", desc: "Free from the IRS, takes 10 minutes. We walk you through every field." },
   { num: "05", title: "Open a bank account", desc: "Keep business and personal money separate from day one." },
   { num: "06", title: "Get a business credit card", desc: "Build business credit and earn rewards on every dollar you spend." },
   { num: "07", title: "Set up accounting", desc: "The right tool from the start saves you thousands at tax time." },
-  { num: "08", title: "Launch", desc: "Get your first customer. The paperwork is done — now the real work begins." },
+  { num: "08", title: "Buy a domain", desc: "Own your web address. We suggest one based on your business name." },
+  { num: "09", title: "Build a website", desc: "Get online fast with the right builder for your needs and budget." },
+  { num: "10", title: "Launch", desc: "Get your first customer. The paperwork is done — now the real work begins." },
 ];
 
 const PILLARS = [
@@ -37,9 +39,9 @@ export default async function Home() {
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xs">24</span>
+              <span className="text-white font-bold text-xs">MF</span>
             </div>
-            <span className="font-bold text-gray-900 tracking-tight">HourBusiness</span>
+            <span className="font-bold text-gray-900 tracking-tight">The Midnight Founder</span>
           </div>
           {session ? (
             <HomeNav userEmail={session.email} companies={companies} />
@@ -68,7 +70,7 @@ export default async function Home() {
             <span className="text-indigo-400">Start your business.</span>
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            8 guided steps from idea to official business. Name, LLC, EIN, bank account — we walk you through every single one, in plain English.
+            10 guided steps from idea to official business. Name, LLC, EIN, bank account, domain, website — we walk you through every single one, in plain English.
           </p>
           <Link
             href={session ? "/guide" : "/signup"}
@@ -101,7 +103,7 @@ export default async function Home() {
       <section className="bg-slate-50 px-6 py-20">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <p className="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-3">The 8-step process</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-3">The 10-step process</p>
             <h2 className="text-3xl font-bold text-gray-900">Everything you need, in order.</h2>
             <p className="text-gray-500 mt-3 text-lg">No guesswork. No rabbit holes. Just the next step.</p>
           </div>
@@ -143,9 +145,9 @@ export default async function Home() {
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-indigo-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs">24</span>
+              <span className="text-white font-bold text-xs">MF</span>
             </div>
-            <span className="font-bold text-gray-900 text-sm">HourBusiness</span>
+            <span className="font-bold text-gray-900 text-sm">The Midnight Founder</span>
           </div>
           <p className="text-sm text-gray-400 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-green-500" />

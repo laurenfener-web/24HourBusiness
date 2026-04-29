@@ -8,7 +8,7 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "24 Hour Business — Start your business today",
+  title: "The Midnight Founder — Start your business tonight",
   description: "The simplest step-by-step guide to launching your LLC, getting an EIN, opening a bank account, and more.",
 };
 
