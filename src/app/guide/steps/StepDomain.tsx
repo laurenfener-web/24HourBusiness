@@ -13,14 +13,15 @@ function toDomain(name: string) {
 
 const REGISTRARS = [
   {
+    name: "Cloudflare",
+    desc: "At-cost pricing — no markup ever, free privacy protection, and excellent DNS management.",
+    getUrl: () => "https://www.cloudflare.com/products/registrar/",
+    recommended: true,
+  },
+  {
     name: "Namecheap",
     desc: "Usually the cheapest — ~$9/yr for .com",
     getUrl: (d: string) => `https://www.namecheap.com/domains/registration/results/?domain=${d}`,
-  },
-  {
-    name: "Cloudflare",
-    desc: "At-cost pricing, no markup on renewals",
-    getUrl: () => "https://www.cloudflare.com/products/registrar/",
   },
   {
     name: "Squarespace Domains",
@@ -62,11 +63,20 @@ export default function StepDomain({ businessName, onComplete }: Props) {
               href={r.getUrl(suggested)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 border border-gray-100 rounded-xl px-4 py-3.5 hover:border-indigo-200 hover:bg-indigo-50 transition-colors group"
+              className={`flex items-center gap-3 border rounded-xl px-4 py-3.5 hover:border-indigo-200 hover:bg-indigo-50 transition-colors group ${
+                r.recommended ? "border-indigo-200 bg-indigo-50/50" : "border-gray-100"
+              }`}
             >
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 text-sm">{r.name}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{r.desc}</p>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <p className="font-semibold text-gray-900 text-sm">{r.name}</p>
+                  {r.recommended && (
+                    <span className="text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">
+                      Recommended
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500">{r.desc}</p>
               </div>
               <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-indigo-400 shrink-0 transition-colors" />
             </a>
