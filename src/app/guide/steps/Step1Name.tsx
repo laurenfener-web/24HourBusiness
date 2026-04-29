@@ -15,13 +15,6 @@ interface Props {
   onComplete: (data: { businessName: string }) => void;
 }
 
-const CATEGORIES = [
-  "Construction", "Coaching", "Consulting", "E-commerce", "Food & Beverage",
-  "Health & Fitness", "Tech / Software", "Real Estate", "Creative / Design",
-  "Legal / Finance", "Education", "Marketing", "Home Services", "Beauty & Wellness",
-  "Events", "Transportation", "Other",
-];
-
 const VIBES = ["Professional", "Fun & Playful", "Bold & Edgy", "Clean & Minimal", "Trustworthy"];
 
 function DomainBadge({ available, domain }: { available: boolean | null; domain: string }) {
@@ -120,24 +113,16 @@ export default function Step1Name({ onComplete }: Props) {
 
       {/* Category */}
       <div>
-        <label className="block text-sm font-semibold text-gray-800 mb-3">
+        <label className="block text-sm font-semibold text-gray-800 mb-2">
           What type of business is it?
         </label>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategory(category === c ? "" : c)}
-              className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                category === c
-                  ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                  : "border-gray-200 text-gray-600 hover:border-indigo-300 hover:bg-indigo-50"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
+        <input
+          type="text"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="e.g. Construction, Coaching, E-commerce..."
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+        />
       </div>
 
       {/* Description */}
