@@ -33,7 +33,7 @@ const STEPS = [
   { title: "Get your EIN", sub: "Free from the IRS" },
   { title: "Open a bank account", sub: "Keep money separate" },
   { title: "Business credit card", sub: "Build credit & earn rewards" },
-  { title: "Set up accounting", sub: "Track from day one" },
+  { title: "Set up accounting", sub: "Track from day one", skippable: true },
   { title: "Buy a domain", sub: "Own your web address", skippable: true },
   { title: "Build a website", sub: "Get online fast", skippable: true },
   { title: "Launch", sub: "Go get that first customer" },

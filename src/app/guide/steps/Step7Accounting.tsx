@@ -100,6 +100,12 @@ export default function Step7Accounting({ onComplete }: Props) {
       >
         I&apos;m already set up → Continue <ArrowRight className="w-4 h-4" />
       </button>
+      <button
+        onClick={onComplete}
+        className="w-full text-gray-400 hover:text-gray-600 text-sm font-medium py-2 transition-colors"
+      >
+        Skip this step →
+      </button>
     </div>
   );
 }
