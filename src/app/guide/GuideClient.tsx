@@ -41,6 +41,28 @@ const STEPS = [
   { title: "Launch", sub: "Go get that first customer" },
 ];
 
+const FILING_STEP = 4;
+
+// State-specific filing sub-steps for the 4 focus states
+export const FILING_SUBSTEPS: Record<string, Array<{ title: string; desc: string; optional?: boolean }>> = {
+  California: [
+    { title: "Check name availability", desc: "Confirm your name is available before filing", optional: true },
+    { title: "File Articles of Organization", desc: "$70 fee · 3–5 business days" },
+    { title: "File Statement of Information", desc: "$20 fee · due within 90 days" },
+  ],
+  "New York": [
+    { title: "File Articles of Organization", desc: "$200 fee · 2–3 weeks" },
+    { title: "Publish in two newspapers", desc: "Required by NY law · 6 weeks · $1,000–2,000+" },
+    { title: "File Certificate of Publication", desc: "$50 fee · after publication ends" },
+  ],
+  Florida: [
+    { title: "File Articles of Organization", desc: "$125 fee · same day" },
+  ],
+  Texas: [
+    { title: "File Certificate of Formation", desc: "$300 fee · same day" },
+  ],
+};
+
 function companyToData(company: Company): WizardData {
   return {
     businessName: company.name === "New Business" ? "" : company.name,
@@ -68,6 +90,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
   const [companies, setCompanies] = useState<Company[]>(initialCompanies);
   const [activeCompany, setActiveCompany] = useState<Company | null>(initialCompany);
   const [step, setStep] = useState(initialCompany?.current_step ?? 0);
+  const [filingSubStep, setFilingSubStep] = useState(0);
   const [data, setData] = useState<WizardData>(
     initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "", done: false }
   );
@@ -77,6 +100,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     const nextData = updatedData ?? data;
     setStep(nextStep);
     setData(nextData);
+    setFilingSubStep(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (activeCompany) {
@@ -93,12 +117,14 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
   function back() {
     setStep(s => Math.max(s - 1, 0));
+    setFilingSubStep(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleSelectCompany(company: Company) {
     setActiveCompany(company);
     setStep(company.current_step);
+    setFilingSubStep(0);
     setData(companyToData(company));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -107,9 +133,12 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     setCompanies(prev => [company, ...prev]);
     setActiveCompany(company);
     setStep(0);
+    setFilingSubStep(0);
     setData({ businessName: "", structure: "llc", state: "", done: false });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  const subSteps = FILING_SUBSTEPS[data.state];
 
   if (data.done) {
     return (
@@ -161,31 +190,59 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
             {STEPS.map((s, i) => {
               const done = i < step;
               const active = i === step;
+              const isFilingStep = i === FILING_STEP;
+              const showSubSteps = isFilingStep && subSteps && subSteps.length > 1 && (active || done);
+
               return (
-                <div
-                  key={i}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
-                    active ? "bg-indigo-50" : done ? "opacity-60" : "opacity-40"
-                  }`}
-                >
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
-                    done || active ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-400"
-                  }`}>
-                    {done ? <Check className="w-3 h-3" /> : <span>{i + 1}</span>}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className={`text-sm font-semibold truncate ${active ? "text-indigo-700" : "text-gray-700"}`}>
-                        {s.title}
-                      </p>
-                      {s.skippable && (
-                        <span className="shrink-0 text-xs text-gray-400 border border-gray-200 rounded-full px-1.5 py-0.5 leading-none">
-                          optional
-                        </span>
-                      )}
+                <div key={i}>
+                  <div
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
+                      active ? "bg-indigo-50" : done ? "opacity-60" : "opacity-40"
+                    }`}
+                  >
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
+                      done || active ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-400"
+                    }`}>
+                      {done ? <Check className="w-3 h-3" /> : <span>{i + 1}</span>}
                     </div>
-                    <p className="text-xs text-gray-400 truncate">{s.sub}</p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className={`text-sm font-semibold truncate ${active ? "text-indigo-700" : "text-gray-700"}`}>
+                          {s.title}
+                        </p>
+                        {s.skippable && (
+                          <span className="shrink-0 text-xs text-gray-400 border border-gray-200 rounded-full px-1.5 py-0.5 leading-none">
+                            optional
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-400 truncate">{s.sub}</p>
+                    </div>
                   </div>
+
+                  {showSubSteps && (
+                    <div className="ml-8 mt-1 mb-1 space-y-1">
+                      {subSteps.map((sub, si) => {
+                        const subDone = done || si < filingSubStep;
+                        const subActive = active && si === filingSubStep;
+                        return (
+                          <div key={si} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${subActive ? "bg-indigo-50" : ""}`}>
+                            <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                              subDone ? "bg-indigo-600" : subActive ? "border-2 border-indigo-600" : "border-2 border-gray-200"
+                            }`}>
+                              {subDone && <Check className="w-2.5 h-2.5 text-white" />}
+                            </div>
+                            <div className="min-w-0">
+                              <p className={`text-xs font-medium truncate ${subActive ? "text-indigo-700" : subDone ? "text-gray-500" : "text-gray-400"}`}>
+                                {sub.title}
+                                {sub.optional && <span className="ml-1 text-gray-300">(optional)</span>}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -214,7 +271,16 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
               {step === 1 && <StepLogo businessName={data.businessName} onComplete={() => next()} />}
               {step === 2 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
               {step === 3 && <StepSelectState onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 4 && <Step3LLC businessName={data.businessName} structure={data.structure} state={data.state} onComplete={() => next()} />}
+              {step === 4 && (
+                <Step3LLC
+                  businessName={data.businessName}
+                  structure={data.structure}
+                  state={data.state}
+                  subStep={filingSubStep}
+                  onSubStepChange={setFilingSubStep}
+                  onComplete={() => next()}
+                />
+              )}
               {step === 5 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
               {step === 6 && <Step5Bank onComplete={() => next()} />}
               {step === 7 && <Step6CreditCard onComplete={() => next()} />}
