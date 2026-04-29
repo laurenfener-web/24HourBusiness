@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
-  const { businessName, style, color } = await req.json();
+  const { businessName, style, color, description } = await req.json();
 
   if (!businessName?.trim()) {
     return NextResponse.json({ error: "Business name is required" }, { status: 400 });
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const prompt = `You are an expert SVG logo designer. Generate 4 distinct icon mark concepts for the business: "${businessName}"
 
 Style: ${style || "Minimal"}
-Primary color: ${color || "#4f46e5"}
+Primary color: ${color || "#4f46e5"}${description?.trim() ? `\nAdditional direction: ${description.trim()}` : ""}
 
 STRICT REQUIREMENTS:
 - Each SVG must have: viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"

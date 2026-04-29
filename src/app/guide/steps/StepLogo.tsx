@@ -43,6 +43,7 @@ function downloadSvg(svg: string, businessName: string) {
 export default function StepLogo({ businessName, onComplete }: Props) {
   const [style, setStyle] = useState("Minimal");
   const [color, setColor] = useState("#4f46e5");
+  const [description, setDescription] = useState("");
   const [logos, setLogos] = useState<LogoConcept[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ export default function StepLogo({ businessName, onComplete }: Props) {
       const res = await fetch("/api/generate-logo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessName, style, color }),
+        body: JSON.stringify({ businessName, style, color, description }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -111,6 +112,20 @@ export default function StepLogo({ businessName, onComplete }: Props) {
             />
           ))}
         </div>
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-800 mb-2">
+          Describe your vision <span className="text-gray-400 font-normal">(optional)</span>
+        </label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="e.g. Something with a mountain or upward arrow, feels modern and trustworthy"
+          rows={2}
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm leading-relaxed"
+        />
       </div>
 
       {/* Generate */}
