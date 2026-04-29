@@ -33,7 +33,7 @@ const STATES: Record<string, { fee: string; time: string; url: string }> = {
   "Michigan": { fee: "$50", time: "10 days", url: "https://www.michigan.gov/lara/0,4601,7-154-89334_61343_35413---,00.html" },
   "Minnesota": { fee: "$155", time: "3–5 days", url: "https://mblsportal.sos.state.mn.us" },
   "Mississippi": { fee: "$50", time: "1–2 weeks", url: "https://www.sos.ms.gov/Business-Services/Pages/default.aspx" },
-  "Missouri": { fee: "$50", time: "3–5 days", url: "https://www.sos.mo.gov/business" },
+  "Missouri": { fee: "$50", time: "3–5 days", url: "https://bsd.sos.mo.gov/" },
   "Montana": { fee: "$35", time: "3–5 days", url: "https://sosmt.gov/business" },
   "Nebraska": { fee: "$100", time: "2–3 weeks", url: "https://www.sos.ne.gov/business/corp_serv" },
   "Nevada": { fee: "$425", time: "Same day", url: "https://esos.nv.gov" },
