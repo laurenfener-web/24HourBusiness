@@ -10,6 +10,7 @@ import Step4EIN from "./steps/Step4EIN";
 import Step5Bank from "./steps/Step5Bank";
 import Step6CreditCard from "./steps/Step6CreditCard";
 import Step7Accounting from "./steps/Step7Accounting";
+import StepLogo from "./steps/StepLogo";
 import StepDomain from "./steps/StepDomain";
 import StepWebsite from "./steps/StepWebsite";
 import Step8Launch from "./steps/Step8Launch";
@@ -26,6 +27,7 @@ interface WizardData {
 
 const STEPS = [
   { title: "Name your business", sub: "Find the perfect name" },
+  { title: "Design your logo", sub: "AI-generated icon concepts", skippable: true },
   { title: "Business structure", sub: "LLC, S-Corp, or sole prop" },
   { title: "File your LLC", sub: "Official registration" },
   { title: "Get your EIN", sub: "Free from the IRS" },
@@ -207,15 +209,16 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
               {step === 0 && <Step1Name onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 1 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 2 && <Step3LLC businessName={data.businessName} onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 3 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
-              {step === 4 && <Step5Bank onComplete={() => next()} />}
-              {step === 5 && <Step6CreditCard onComplete={() => next()} />}
-              {step === 6 && <Step7Accounting onComplete={() => next()} />}
-              {step === 7 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
-              {step === 8 && <StepWebsite onComplete={() => next()} />}
-              {step === 9 && (
+              {step === 1 && <StepLogo businessName={data.businessName} onComplete={() => next()} />}
+              {step === 2 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 3 && <Step3LLC businessName={data.businessName} onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 4 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
+              {step === 5 && <Step5Bank onComplete={() => next()} />}
+              {step === 6 && <Step6CreditCard onComplete={() => next()} />}
+              {step === 7 && <Step7Accounting onComplete={() => next()} />}
+              {step === 8 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
+              {step === 9 && <StepWebsite onComplete={() => next()} />}
+              {step === 10 && (
                 <Step8Launch
                   businessName={data.businessName}
                   userEmail={userEmail}
