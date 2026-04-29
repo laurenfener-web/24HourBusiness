@@ -13,62 +13,34 @@ export async function GET() {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          justifyContent: "flex-end",
+          justifyContent: "center",
           padding: "80px",
           fontFamily: "sans-serif",
-          position: "relative",
-          overflow: "hidden",
         }}
       >
-        {/* Background glow */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-120px",
-            right: "-80px",
-            width: "600px",
-            height: "600px",
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle, rgba(79,70,229,0.25) 0%, transparent 70%)",
-          }}
-        />
-
-        {/* Moon */}
-        <div
-          style={{
-            position: "absolute",
-            top: "72px",
-            right: "80px",
-            fontSize: "120px",
-            lineHeight: 1,
-          }}
-        >
-          🌙
-        </div>
-
-        {/* Tag */}
+        {/* Pill tag */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            background: "rgba(79,70,229,0.2)",
-            border: "1px solid rgba(99,102,241,0.4)",
+            gap: "10px",
+            background: "rgba(99,102,241,0.2)",
+            border: "1px solid rgba(99,102,241,0.5)",
             borderRadius: "100px",
-            padding: "8px 20px",
-            marginBottom: "28px",
+            padding: "10px 24px",
+            marginBottom: "36px",
           }}
         >
           <div
             style={{
-              width: "8px",
-              height: "8px",
+              width: "10px",
+              height: "10px",
               borderRadius: "50%",
               background: "#818cf8",
+              display: "flex",
             }}
           />
-          <span style={{ color: "#a5b4fc", fontSize: "18px", fontWeight: 600 }}>
+          <span style={{ color: "#a5b4fc", fontSize: "22px", fontWeight: 600 }}>
             Free · No account required · 11 guided steps
           </span>
         </div>
@@ -76,22 +48,54 @@ export async function GET() {
         {/* Headline */}
         <div
           style={{
-            fontSize: "72px",
-            fontWeight: 800,
-            color: "#ffffff",
-            lineHeight: 1.1,
-            marginBottom: "24px",
-            letterSpacing: "-2px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            marginBottom: "28px",
           }}
         >
-          Start your business
-          <br />
-          <span style={{ color: "#818cf8" }}>tonight.</span>
+          <span
+            style={{
+              fontSize: "80px",
+              fontWeight: 800,
+              color: "#ffffff",
+              lineHeight: 1.05,
+              letterSpacing: "-2px",
+            }}
+          >
+            Start your business
+          </span>
+          <span
+            style={{
+              fontSize: "80px",
+              fontWeight: 800,
+              color: "#818cf8",
+              lineHeight: 1.05,
+              letterSpacing: "-2px",
+            }}
+          >
+            tonight.
+          </span>
         </div>
 
-        {/* Subtext */}
-        <div style={{ fontSize: "26px", color: "#94a3b8", fontWeight: 400 }}>
-          The Midnight Founder — themidnightfounder.com
+        {/* Footer */}
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "48px",
+              height: "48px",
+              background: "#4f46e5",
+              borderRadius: "12px",
+            }}
+          >
+            <span style={{ color: "white", fontSize: "20px", fontWeight: 700 }}>MF</span>
+          </div>
+          <span style={{ color: "#64748b", fontSize: "26px", fontWeight: 500 }}>
+            The Midnight Founder
+          </span>
         </div>
       </div>
     ),
