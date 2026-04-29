@@ -36,7 +36,7 @@ Business description: ${description}
 ${vibe ? `Desired vibe/style: ${vibe}` : ""}${excludeClause}
 
 Return ONLY a valid JSON array with exactly 8 objects. Each object must have:
-- "name": the business name (2-4 words max, punchy and memorable)
+- "name": a single word business name (one word only — can be invented, combined, or real)
 - "tagline": a one-line tagline (under 10 words)
 - "why": one sentence explaining why this name works
 

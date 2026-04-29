@@ -73,7 +73,7 @@ export default function Step1Name({ onComplete }: Props) {
     <div className="space-y-7">
       <div>
         <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-          Describe your business idea and our AI will generate six name options — each checked for <strong className="text-gray-700">.com domain availability</strong> in real time.
+          Describe your business idea and our AI will generate single-word name options — each checked for <strong className="text-gray-700">.com domain availability</strong> in real time.
         </p>
         <label className="block text-sm font-semibold text-gray-800 mb-2">
           What does your business do?
