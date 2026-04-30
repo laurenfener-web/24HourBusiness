@@ -18,6 +18,7 @@ export default function HomeNav({ userEmail, companies }: Props) {
       activeCompanyId={companies[0]?.id ?? ""}
       onSelectCompany={() => router.push("/guide")}
       onNewCompany={() => router.push("/guide")}
+      onDeleteCompany={() => {}}
     />
   );
 }

@@ -24,6 +24,15 @@ export async function POST() {
   return NextResponse.json({ company: rows[0] as Company });
 }
 
+export async function DELETE(req: NextRequest) {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await req.json();
+  await sql`DELETE FROM companies WHERE id = ${id} AND user_id = ${session.userId}`;
+  return NextResponse.json({ ok: true });
+}
+
 export async function PUT(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

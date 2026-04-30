@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { LogOut, MessageSquare, Plus, ChevronDown, Building2, Loader2, Check } from "lucide-react";
+import { LogOut, MessageSquare, Plus, ChevronDown, Building2, Loader2, Check, Trash2 } from "lucide-react";
 import { logout } from "@/actions/auth";
 import { Company } from "@/lib/db";
 
@@ -22,6 +22,7 @@ interface Props {
   activeCompanyId: string;
   onSelectCompany: (company: Company) => void;
   onNewCompany: (company: Company) => void;
+  onDeleteCompany: (id: string) => void;
 }
 
 function FeedbackModal({ onClose }: { onClose: () => void }) {
@@ -94,10 +95,23 @@ function FeedbackModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function ProfileDropdown({ userEmail, companies, activeCompanyId, onSelectCompany, onNewCompany }: Props) {
+export default function ProfileDropdown({ userEmail, companies, activeCompanyId, onSelectCompany, onNewCompany, onDeleteCompany }: Props) {
   const [open, setOpen] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [creatingNew, setCreatingNew] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  async function handleDelete(e: React.MouseEvent, id: string) {
+    e.stopPropagation();
+    setDeletingId(id);
+    await fetch("/api/companies", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    onDeleteCompany(id);
+    setDeletingId(null);
+  }
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -153,30 +167,38 @@ export default function ProfileDropdown({ userEmail, companies, activeCompanyId,
                 <div className="space-y-1">
                   {companies.map((c) => {
                     const isActive = c.id === activeCompanyId;
-                    const stepLabel = c.done ? "Complete 🎉" : `Step ${c.current_step + 1} of 8 — ${STEP_LABELS[c.current_step]}`;
+                    const stepLabel = c.done ? "Complete" : `Step ${c.current_step + 1} of 8 — ${STEP_LABELS[c.current_step]}`;
                     return (
-                      <button
-                        key={c.id}
-                        onClick={() => { onSelectCompany(c); setOpen(false); }}
-                        className={`w-full text-left px-3 py-2.5 rounded-xl transition-colors flex items-start gap-3 ${
-                          isActive ? "bg-indigo-50" : "hover:bg-gray-50"
-                        }`}
-                      >
-                        <Building2 className={`w-4 h-4 mt-0.5 shrink-0 ${isActive ? "text-indigo-500" : "text-gray-300"}`} />
-                        <div className="min-w-0">
-                          <p className={`text-sm font-semibold truncate ${isActive ? "text-indigo-700" : "text-gray-800"}`}>
-                            {c.name}
-                          </p>
-                          <p className="text-xs text-gray-400 mt-0.5">{stepLabel}</p>
-                          {/* Mini progress bar */}
-                          <div className="h-1 bg-gray-100 rounded-full mt-1.5 w-full">
-                            <div
-                              className="h-full bg-indigo-400 rounded-full transition-all"
-                              style={{ width: `${c.done ? 100 : (c.current_step / 8) * 100}%` }}
-                            />
+                      <div key={c.id} className={`flex items-center gap-1 rounded-xl ${isActive ? "bg-indigo-50" : "hover:bg-gray-50"}`}>
+                        <button
+                          onClick={() => { onSelectCompany(c); setOpen(false); }}
+                          className="flex-1 min-w-0 text-left px-3 py-2.5 flex items-start gap-3"
+                        >
+                          <Building2 className={`w-4 h-4 mt-0.5 shrink-0 ${isActive ? "text-indigo-500" : "text-gray-300"}`} />
+                          <div className="min-w-0">
+                            <p className={`text-sm font-semibold truncate ${isActive ? "text-indigo-700" : "text-gray-800"}`}>
+                              {c.name}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-0.5">{stepLabel}</p>
+                            <div className="h-1 bg-gray-100 rounded-full mt-1.5 w-full">
+                              <div
+                                className="h-full bg-indigo-400 rounded-full transition-all"
+                                style={{ width: `${c.done ? 100 : (c.current_step / 8) * 100}%` }}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </button>
+                        </button>
+                        <button
+                          onClick={(e) => handleDelete(e, c.id)}
+                          disabled={deletingId === c.id}
+                          className="shrink-0 p-2 mr-1 text-gray-300 hover:text-red-400 transition-colors rounded-lg"
+                          title="Delete"
+                        >
+                          {deletingId === c.id
+                            ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            : <Trash2 className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
                     );
                   })}
                 </div>

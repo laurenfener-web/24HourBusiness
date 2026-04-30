@@ -161,6 +161,19 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function handleDeleteCompany(id: string) {
+    const remaining = companies.filter(c => c.id !== id);
+    setCompanies(remaining);
+    if (activeCompany?.id === id) {
+      const next = remaining[0] ?? null;
+      setActiveCompany(next);
+      setStep(next?.current_step ?? 0);
+      setOfficialSubStep(0);
+      setData(next ? companyToData(next) : { businessName: "", structure: "llc", state: "", done: false });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
   function handleStructureChange(structure: string) {
     const newData = { ...data, structure };
     setData(newData);
@@ -209,6 +222,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
           activeCompanyId={activeCompany?.id ?? ""}
           onSelectCompany={handleSelectCompany}
           onNewCompany={handleNewCompany}
+          onDeleteCompany={handleDeleteCompany}
         />
       </nav>
 
