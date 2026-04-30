@@ -184,16 +184,16 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
   if (companies.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-center px-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Ready to start a business?</h1>
-        <p className="text-gray-500 text-sm mb-6">You don&apos;t have any in progress. Let&apos;s build one.</p>
+      <div className="min-h-screen bg-[#1A0533] flex flex-col items-center justify-center text-center px-6">
+        <h1 className="text-2xl font-bold text-white mb-2">Ready to start a business?</h1>
+        <p className="text-white/60 text-sm mb-6">You don&apos;t have any in progress. Let&apos;s build one.</p>
         <button
           onClick={async () => {
             const res = await fetch("/api/companies", { method: "POST" });
             const data = await res.json();
             handleNewCompany(data.company);
           }}
-          className="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+          className="bg-[#FF8C42] hover:bg-[#E87030] text-white font-semibold px-6 py-3 rounded-xl transition-colors"
         >
           Start a new business
         </button>
@@ -203,7 +203,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
   if (data.done) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-center px-6">
+      <div className="min-h-screen bg-[#1A0533] flex flex-col items-center justify-center text-center px-6">
         <div className="text-7xl mb-6">🏆</div>
         <h1 className="text-4xl font-bold text-white mb-4">
           {data.businessName ? `${data.businessName} is officially open.` : "You're officially in business."}
@@ -211,7 +211,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
         <p className="text-slate-400 text-lg max-w-md mb-10">
           You&apos;ve done what most people only talk about. The boring stuff is handled — now go get your first customer.
         </p>
-        <Link href="/" className="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">
+        <Link href="/" className="text-[#FF8C42] hover:text-[#FF8C42]/70 text-sm font-medium transition-colors">
           ← Back to home
         </Link>
       </div>
@@ -219,7 +219,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-[#1A0533]">
       <nav className="bg-white border-b border-gray-100 px-6 h-14 flex items-center justify-between shrink-0 sticky top-0 z-10">
         <Link href="/" className="flex items-center gap-2">
           <Logo size="sm" />
@@ -227,7 +227,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex h-1.5 w-32 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+              className="h-full bg-[#FF8C42] rounded-full transition-all duration-500"
               style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
             />
           </div>
@@ -259,17 +259,17 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                 <div key={i}>
                   <div
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
-                      active ? "bg-indigo-50" : done ? "opacity-60" : "opacity-40"
+                      active ? "bg-[#FF8C42]/10" : done ? "opacity-60" : "opacity-40"
                     }`}
                   >
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
-                      done || active ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-400"
+                      done || active ? "bg-[#FF8C42] text-white" : "bg-gray-100 text-gray-400"
                     }`}>
                       {done ? <Check className="w-3 h-3" /> : <span>{i + 1}</span>}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className={`text-sm font-semibold truncate ${active ? "text-indigo-700" : "text-gray-700"}`}>
+                        <p className={`text-sm font-semibold truncate ${active ? "text-[#E87030]" : "text-gray-700"}`}>
                           {s.title}
                         </p>
                         {s.skippable && (
@@ -288,19 +288,19 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                         const subDone = done || si < officialSubStep;
                         const subActive = active && si === officialSubStep;
                         return (
-                          <div key={si} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${subActive ? "bg-indigo-50" : ""}`}>
+                          <div key={si} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${subActive ? "bg-[#FF8C42]/10" : ""}`}>
                             <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                              subDone ? "bg-indigo-600" : subActive ? "border-2 border-indigo-600" : "border-2 border-gray-200"
+                              subDone ? "bg-[#FF8C42]" : subActive ? "border-2 border-[#FF8C42]" : "border-2 border-gray-200"
                             }`}>
                               {subDone && <Check className="w-2.5 h-2.5 text-white" />}
                             </div>
                             <div className="min-w-0">
-                              <p className={`text-xs font-medium truncate ${subActive ? "text-indigo-700" : subDone ? "text-gray-500" : "text-gray-400"}`}>
+                              <p className={`text-xs font-medium truncate ${subActive ? "text-[#E87030]" : subDone ? "text-gray-500" : "text-gray-400"}`}>
                                 {sub.title}
                                 {sub.optional && <span className="ml-1 text-gray-300">(optional)</span>}
                               </p>
                               {sub.hint && subActive && (
-                                <p className="text-xs text-indigo-400 truncate italic">{sub.hint}</p>
+                                <p className="text-xs text-[#FF8C42] truncate italic">{sub.hint}</p>
                               )}
                             </div>
                           </div>
@@ -318,7 +318,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
           <div className="max-w-xl mx-auto">
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-indigo-500">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#FF8C42]">
                   Step {step + 1} of {STEPS.length}
                 </p>
                 {STEPS[step].skippable && (

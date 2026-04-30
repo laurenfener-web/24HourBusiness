@@ -53,7 +53,7 @@ export default function StepWebsite({ onComplete }: Props) {
             href={b.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 border border-gray-100 rounded-xl px-4 py-3.5 hover:border-indigo-200 hover:bg-indigo-50 transition-colors group"
+            className="flex items-center gap-3 border border-gray-100 rounded-xl px-4 py-3.5 hover:border-[#FF8C42]/40 hover:bg-[#FF8C42]/10 transition-colors group"
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 mb-0.5">
@@ -62,7 +62,7 @@ export default function StepWebsite({ onComplete }: Props) {
               </div>
               <p className="text-xs text-gray-500">{b.desc}</p>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-indigo-400 shrink-0 transition-colors" />
+            <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#FF8C42] shrink-0 transition-colors" />
           </a>
         ))}
       </div>

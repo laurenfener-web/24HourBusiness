@@ -39,7 +39,7 @@ export default function Step4EIN({ businessName, onComplete }: Props) {
         <ul className="space-y-2.5">
           {ITEMS.map((item, i) => (
             <li key={i} className="flex items-start gap-3">
-              <span className="w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+              <span className="w-6 h-6 bg-[#FF8C42]/20 text-[#E87030] rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                 {i + 1}
               </span>
               <div>
@@ -60,7 +60,7 @@ export default function Step4EIN({ businessName, onComplete }: Props) {
 
       <button
         onClick={() => { window.open("https://sa.www4.irs.gov/applyein/", "_blank", "noopener,noreferrer"); onComplete(); }}
-        className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-sm text-sm"
+        className="flex items-center justify-center gap-2 w-full bg-[#FF8C42] hover:bg-[#E87030] text-white font-semibold py-3.5 rounded-xl transition-colors shadow-sm text-sm"
       >
         Apply for your EIN on IRS.gov
         <ExternalLink className="w-4 h-4" />

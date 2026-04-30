@@ -67,14 +67,14 @@ export default function Step2Structure({ onComplete }: Props) {
             onClick={() => setSelected(opt.id)}
             className={`w-full text-left border rounded-xl p-5 transition-all ${
               selected === opt.id
-                ? "border-indigo-500 bg-indigo-50 shadow-sm"
+                ? "border-[#FF8C42] bg-[#FF8C42]/10 shadow-sm"
                 : "border-gray-100 bg-gray-50 hover:bg-white hover:border-gray-200"
             }`}
           >
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                  selected === opt.id ? "bg-indigo-600 border-indigo-600" : "border-gray-300"
+                  selected === opt.id ? "bg-[#FF8C42] border-[#FF8C42]" : "border-gray-300"
                 }`}>
                   {selected === opt.id && <Check className="w-3 h-3 text-white" />}
                 </div>
@@ -83,7 +83,7 @@ export default function Step2Structure({ onComplete }: Props) {
                     <span className="font-bold text-gray-900">{opt.label}</span>
                     <span className="text-gray-400 text-sm">— {opt.subtitle}</span>
                     {opt.recommended && (
-                      <span className="text-xs font-semibold bg-indigo-600 text-white px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-semibold bg-[#FF8C42] text-white px-2 py-0.5 rounded-full">
                         Recommended
                       </span>
                     )}

@@ -49,9 +49,9 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-[#1A0533]">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A0533]/90 backdrop-blur border-b border-white/5">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Logo dark />
           {session ? (
@@ -61,7 +61,7 @@ export default async function Home() {
               <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white px-3 py-2 transition-colors">
                 Log in
               </Link>
-              <Link href="/signup" className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+              <Link href="/signup" className="flex items-center gap-1.5 bg-[#FF8C42] hover:bg-[#E87030] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
                 Start free <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -70,16 +70,16 @@ export default async function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center pt-16 px-6">
+      <section className="bg-[#1A0533] text-white min-h-screen flex flex-col items-center justify-center pt-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full mb-10">
-            <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-[#FF8C42]/10 border border-[#FF8C42]/20 text-[#FF8C42]/70 text-sm font-medium px-4 py-1.5 rounded-full mb-10">
+            <span className="w-1.5 h-1.5 bg-[#FF8C42] rounded-full animate-pulse" />
             Free · No credit card · Done tonight
           </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-8">
             You&apos;re going to be a{" "}
-            <span className="text-indigo-400">business owner</span>{" "}
+            <span className="text-[#FF8C42]">business owner</span>{" "}
             by the end of tonight.
           </h1>
 
@@ -89,7 +89,7 @@ export default async function Home() {
 
           <Link
             href={session ? "/guide" : "/signup"}
-            className="inline-flex items-center gap-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 active:scale-100"
+            className="inline-flex items-center gap-2.5 bg-[#FF8C42] hover:bg-[#E87030] text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-[#FF8C42]/30 hover:shadow-[#FF8C42]/50 hover:scale-105 active:scale-100"
           >
             {session ? "Keep going" : "Open my business"} <ArrowRight className="w-6 h-6" />
           </Link>
@@ -101,37 +101,37 @@ export default async function Home() {
       </section>
 
       {/* Bridge */}
-      <section className="bg-white px-6 py-24">
+      <section className="bg-[#220840] px-6 py-24">
         <div className="max-w-2xl mx-auto text-center">
-          <p className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
+          <p className="text-4xl sm:text-5xl font-black text-white leading-tight mb-6">
             Most people spend months{" "}
-            <span className="text-gray-300">thinking about starting.</span>
+            <span className="text-[#7A5A9A]">thinking about starting.</span>
           </p>
-          <p className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight">
+          <p className="text-4xl sm:text-5xl font-black text-white leading-tight">
             You&apos;ll be done{" "}
-            <span className="text-indigo-600">before you go to sleep.</span>
+            <span className="text-[#FF8C42]">before you go to sleep.</span>
           </p>
         </div>
       </section>
 
       {/* Outcomes */}
-      <section className="bg-slate-50 px-6 py-20">
+      <section className="bg-[#1A0533] px-6 py-20">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
               By tonight, you&apos;ll have all of this.
             </h2>
-            <p className="text-gray-500 text-lg">Real things. Yours. Official.</p>
+            <p className="text-white/60 text-lg">Real things. Yours. Official.</p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {OUTCOMES.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-indigo-600" />
+              <div key={title} className="bg-white/5 rounded-2xl border border-white/10 p-6 hover:bg-white/8 transition-colors">
+                <div className="w-11 h-11 bg-[#FF8C42]/10 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5 text-[#FF8C42]" />
                 </div>
-                <p className="font-bold text-gray-900 text-lg mb-1">{title}</p>
-                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                <p className="font-bold text-white text-lg mb-1">{title}</p>
+                <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -139,7 +139,7 @@ export default async function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-slate-950 px-6 py-28 text-center">
+      <section className="bg-[#1A0533] px-6 py-28 text-center">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 leading-tight">
             Your business is one evening away.
@@ -149,7 +149,7 @@ export default async function Home() {
           </p>
           <Link
             href={session ? "/guide" : "/signup"}
-            className="inline-flex items-center gap-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-indigo-500/30 hover:scale-105 active:scale-100"
+            className="inline-flex items-center gap-2.5 bg-[#FF8C42] hover:bg-[#E87030] text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-[#FF8C42]/30 hover:scale-105 active:scale-100"
           >
             {session ? "Continue where I left off" : "Open my business tonight"} <ArrowRight className="w-6 h-6" />
           </Link>
@@ -158,7 +158,7 @@ export default async function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-white/5 px-6 py-8">
+      <footer className="bg-[#1A0533] border-t border-white/5 px-6 py-8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo dark size="sm" />
           <p className="text-sm text-slate-600">Built for the founder who&apos;s ready right now.</p>

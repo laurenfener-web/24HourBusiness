@@ -83,7 +83,7 @@ export default function Step1Name({ onComplete }: Props) {
             onChange={(e) => setExistingName(e.target.value)}
             placeholder="e.g. Acme"
             autoFocus
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg font-semibold"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent text-lg font-semibold"
           />
         </div>
         <button
@@ -119,7 +119,7 @@ export default function Step1Name({ onComplete }: Props) {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           placeholder="e.g. Construction, Coaching, E-commerce..."
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent text-sm"
         />
       </div>
 
@@ -133,14 +133,14 @@ export default function Step1Name({ onComplete }: Props) {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="e.g. I help first-time homebuyers navigate the mortgage process and find the best rates"
           rows={3}
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm leading-relaxed"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent resize-none text-sm leading-relaxed"
         />
       </div>
 
       <button
         onClick={generate}
         disabled={(!category && !description.trim()) || loading}
-        className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-200 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+        className="w-full bg-[#FF8C42] hover:bg-[#E87030] disabled:bg-[#FF8C42]/40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
         {loading ? (
           <>
@@ -172,8 +172,8 @@ export default function Step1Name({ onComplete }: Props) {
               onClick={() => setSelected(r.name)}
               className={`w-full text-left border rounded-xl p-5 transition-all ${
                 selected === r.name
-                  ? "border-indigo-500 bg-indigo-50 shadow-sm"
-                  : "border-gray-100 bg-gray-50 hover:border-indigo-200 hover:bg-white"
+                  ? "border-[#FF8C42] bg-[#FF8C42]/10 shadow-sm"
+                  : "border-gray-100 bg-gray-50 hover:border-[#FF8C42]/40 hover:bg-white"
               }`}
             >
               <div className="flex items-start justify-between gap-3">
@@ -182,7 +182,7 @@ export default function Step1Name({ onComplete }: Props) {
                     <p className="font-bold text-gray-900 text-xl">{r.name}</p>
                     <DomainBadge available={r.domainAvailable} domain={r.domain} />
                   </div>
-                  <p className="text-indigo-600 text-sm font-medium mt-1">&ldquo;{r.tagline}&rdquo;</p>
+                  <p className="text-[#FF8C42] text-sm font-medium mt-1">&ldquo;{r.tagline}&rdquo;</p>
                   <p className="text-gray-400 text-sm mt-2 leading-relaxed">{r.why}</p>
 
                   {/* Trademark check link */}
@@ -191,13 +191,13 @@ export default function Step1Name({ onComplete }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-indigo-600 mt-2 transition-colors underline underline-offset-2"
+                    className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#FF8C42] mt-2 transition-colors underline underline-offset-2"
                   >
                     Check trademark →
                   </a>
                 </div>
                 <div className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 ${
-                  selected === r.name ? "bg-indigo-600 border-indigo-600" : "border-gray-200"
+                  selected === r.name ? "bg-[#FF8C42] border-[#FF8C42]" : "border-gray-200"
                 }`}>
                   {selected === r.name && <Check className="w-3 h-3 text-white" />}
                 </div>
@@ -207,7 +207,7 @@ export default function Step1Name({ onComplete }: Props) {
 
           <button
             onClick={generate}
-            className="w-full flex items-center justify-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium py-2 transition-colors"
+            className="w-full flex items-center justify-center gap-2 text-sm text-[#FF8C42] hover:text-[#E87030] font-medium py-2 transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Generate different names
@@ -238,7 +238,7 @@ export default function Step1Name({ onComplete }: Props) {
       <div className="pt-2 border-t border-gray-100 text-center">
         <button
           onClick={() => setMode("existing")}
-          className="text-sm text-gray-400 hover:text-indigo-600 font-medium transition-colors"
+          className="text-sm text-gray-400 hover:text-[#FF8C42] font-medium transition-colors"
         >
           I already have a name →
         </button>

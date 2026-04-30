@@ -108,7 +108,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
           <li className="border border-gray-100 rounded-xl overflow-hidden">
             <button
               onClick={() => setTell10Open((o) => !o)}
-              className="w-full flex items-start gap-4 bg-gray-50 px-4 py-4 text-left hover:bg-indigo-50 transition-colors"
+              className="w-full flex items-start gap-4 bg-gray-50 px-4 py-4 text-left hover:bg-[#FF8C42]/10 transition-colors"
             >
               <span className="text-2xl shrink-0 leading-none mt-0.5">📣</span>
               <div className="flex-1 min-w-0">
@@ -135,12 +135,12 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                       {recipients.map((email) => (
                         <span
                           key={email}
-                          className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-100 text-xs font-medium px-2.5 py-1 rounded-full"
+                          className="inline-flex items-center gap-1 bg-[#FF8C42]/10 text-[#E87030] border border-[#FF8C42]/20 text-xs font-medium px-2.5 py-1 rounded-full"
                         >
                           {email}
                           <button
                             onClick={() => removeRecipient(email)}
-                            className="text-indigo-400 hover:text-indigo-700 transition-colors ml-0.5"
+                            className="text-[#FF8C42] hover:text-[#E87030] transition-colors ml-0.5"
                             aria-label={`Remove ${email}`}
                           >
                             <X className="w-3 h-3" />
@@ -160,11 +160,11 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                         onChange={(e) => { setInputEmail(e.target.value); setInputError(""); }}
                         onKeyDown={handleKeyDown}
                         placeholder="friend@example.com"
-                        className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent"
                       />
                       <button
                         onClick={addRecipient}
-                        className="shrink-0 w-9 h-9 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+                        className="shrink-0 w-9 h-9 flex items-center justify-center bg-[#FF8C42] hover:bg-[#E87030] text-white rounded-lg transition-colors"
                         aria-label="Add recipient"
                       >
                         <Plus className="w-4 h-4" />
@@ -178,7 +178,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                 <button
                   onClick={generateTemplate}
                   disabled={genLoading || !businessName}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-200 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                  className="w-full bg-[#FF8C42] hover:bg-[#E87030] disabled:bg-[#FF8C42]/40 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
                 >
                   {genLoading ? (
                     <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> Writing your email...</>
@@ -201,7 +201,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                         type="text"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -212,7 +212,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
                         rows={10}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-y font-mono leading-relaxed"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent resize-y font-mono leading-relaxed"
                       />
                     </div>
                     <button
@@ -248,7 +248,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
           href="https://stripe.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 transition-colors"
+          className="flex items-center justify-center gap-1.5 border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:border-[#FF8C42]/70 hover:bg-[#FF8C42]/10 transition-colors"
         >
           Stripe <ExternalLink className="w-3.5 h-3.5" />
         </a>
@@ -256,7 +256,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
           href="https://carrd.co"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 transition-colors"
+          className="flex items-center justify-center gap-1.5 border border-gray-200 rounded-xl py-3 text-sm font-semibold text-gray-700 hover:border-[#FF8C42]/70 hover:bg-[#FF8C42]/10 transition-colors"
         >
           Carrd.co <ExternalLink className="w-3.5 h-3.5" />
         </a>
@@ -264,7 +264,7 @@ export default function Step8Launch({ businessName, userEmail, onComplete }: Pro
 
       <button
         onClick={onComplete}
-        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-xl transition-colors flex items-center justify-center gap-2 text-lg shadow-lg shadow-indigo-500/20"
+        className="w-full bg-[#FF8C42] hover:bg-[#E87030] text-white font-bold py-5 rounded-xl transition-colors flex items-center justify-center gap-2 text-lg shadow-lg shadow-[#FF8C42]/20"
       >
         I&apos;m launched. Let&apos;s go. <ArrowRight className="w-5 h-5" />
       </button>

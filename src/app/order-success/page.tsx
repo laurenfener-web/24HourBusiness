@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function OrderSuccessPage() {
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-center px-6">
+    <div className="min-h-screen bg-[#1A0533] flex flex-col items-center justify-center text-center px-6">
       <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mb-8">
         <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -21,7 +21,7 @@ export default function OrderSuccessPage() {
 
       <Link
         href="/guide"
-        className="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors"
+        className="text-[#FF8C42] hover:text-[#FF8C42]/70 text-sm font-medium transition-colors"
       >
         Back to your guide
       </Link>

@@ -40,7 +40,7 @@ export async function GET() {
               display: "flex",
             }}
           />
-          <span style={{ color: "#a5b4fc", fontSize: "22px", fontWeight: 600 }}>
+          <span style={{ color: "#FF8C42", fontSize: "22px", fontWeight: 600 }}>
             Free · No account required · 11 guided steps
           </span>
         </div>
@@ -87,7 +87,7 @@ export async function GET() {
               justifyContent: "center",
               width: "48px",
               height: "48px",
-              background: "#4f46e5",
+              background: "#FF8C42",
               borderRadius: "12px",
             }}
           >

@@ -25,7 +25,7 @@ function ActionLink({ href, label }: { href: string; label: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-between w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-5 rounded-xl transition-colors shadow-sm"
+      className="flex items-center justify-between w-full bg-[#FF8C42] hover:bg-[#E87030] text-white font-semibold py-4 px-5 rounded-xl transition-colors shadow-sm"
     >
       {label}
       <ExternalLink className="w-4 h-4 shrink-0 ml-2" />
@@ -38,14 +38,14 @@ function FeeTimeGrid({ fee, time }: { fee: string; time: string }) {
   return (
     <div className="grid grid-cols-2 gap-3">
       <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-3">
-        <DollarSign className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+        <DollarSign className="w-5 h-5 text-[#FF8C42] shrink-0 mt-0.5" />
         <div>
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Filing fee</p>
           <p className="font-bold text-gray-900 text-lg mt-0.5">{fee}</p>
         </div>
       </div>
       <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-3">
-        <Clock className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+        <Clock className="w-5 h-5 text-[#FF8C42] shrink-0 mt-0.5" />
         <div>
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Processing</p>
           <p className="font-bold text-gray-900 text-lg mt-0.5">{time}</p>
@@ -153,13 +153,13 @@ function StructureContent({
             onClick={() => setSelected(opt.id)}
             className={`w-full text-left border rounded-xl p-5 transition-all ${
               selected === opt.id
-                ? "border-indigo-500 bg-indigo-50 shadow-sm"
+                ? "border-[#FF8C42] bg-[#FF8C42]/10 shadow-sm"
                 : "border-gray-100 bg-gray-50 hover:bg-white hover:border-gray-200"
             }`}
           >
             <div className="flex items-center gap-3">
               <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                selected === opt.id ? "bg-indigo-600 border-indigo-600" : "border-gray-300"
+                selected === opt.id ? "bg-[#FF8C42] border-[#FF8C42]" : "border-gray-300"
               }`}>
                 {selected === opt.id && <Check className="w-3 h-3 text-white" />}
               </div>
@@ -168,7 +168,7 @@ function StructureContent({
                   <span className="font-bold text-gray-900">{opt.label}</span>
                   <span className="text-gray-400 text-sm">— {opt.subtitle}</span>
                   {opt.recommended && (
-                    <span className="text-xs font-semibold bg-indigo-600 text-white px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-semibold bg-[#FF8C42] text-white px-2 py-0.5 rounded-full">
                       Recommended
                     </span>
                   )}
@@ -236,8 +236,8 @@ function NameCheckContent({
         Before filing, confirm your business name is available in California. This prevents a rejected filing and only takes a minute.
       </p>
       {businessName && (
-        <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
-          <p className="text-sm text-indigo-800">
+        <div className="bg-[#FF8C42]/10 border border-[#FF8C42]/20 rounded-xl p-4">
+          <p className="text-sm text-[#FF8C42]">
             Search for <strong>&ldquo;{businessName}&rdquo;</strong> in the California Secretary of State&apos;s business name database to confirm it&apos;s available.
           </p>
         </div>
@@ -287,7 +287,7 @@ function FilingContent({
             ["Separate bank account", "Keep business money separate from personal — makes taxes much easier."],
           ].map(([title, desc]) => (
             <li key={title} className="flex items-start gap-3 bg-gray-50 border border-gray-100 rounded-xl p-4">
-              <span className="text-indigo-500 font-bold shrink-0 mt-0.5">✓</span>
+              <span className="text-[#FF8C42] font-bold shrink-0 mt-0.5">✓</span>
               <div>
                 <p className="font-semibold text-gray-800">{title}</p>
                 <p className="text-gray-500 mt-0.5">{desc}</p>
@@ -307,15 +307,15 @@ function FilingContent({
           Most investors expect a Delaware C-Corp. You can incorporate there even if you operate in {state}.
         </p>
         <div className="space-y-2">
-          <a href="https://stripe.com/atlas" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-50 rounded-xl px-4 py-3.5 transition-colors">
+          <a href="https://stripe.com/atlas" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-[#FF8C42]/40 bg-[#FF8C42]/5 hover:bg-[#FF8C42]/10 rounded-xl px-4 py-3.5 transition-colors">
             <div>
               <div className="flex items-center gap-2 mb-0.5">
                 <p className="font-semibold text-gray-900 text-sm">Stripe Atlas</p>
-                <span className="text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">Recommended</span>
+                <span className="text-xs font-semibold text-[#FF8C42] bg-[#FF8C42]/20 px-2 py-0.5 rounded-full">Recommended</span>
               </div>
               <p className="text-xs text-gray-500">$500 flat — Delaware C-Corp, EIN, Mercury bank account, and cap table all in one.</p>
             </div>
-            <ExternalLink className="w-4 h-4 text-indigo-400 shrink-0 ml-3" />
+            <ExternalLink className="w-4 h-4 text-[#FF8C42] shrink-0 ml-3" />
           </a>
           <a href="https://icis.corp.delaware.gov/Ecorp/EntitySearch/NameSearch.aspx" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-gray-100 hover:border-gray-200 hover:bg-gray-50 rounded-xl px-4 py-3.5 transition-colors">
             <div>
@@ -360,10 +360,10 @@ function FilingContent({
         </div>
         <ActionLink href="https://dos.myflorida.com/sunbiz" label="File with Florida Division of Corporations" />
         {structure === "scorp" && (
-          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
+          <div className="bg-[#FF8C42]/10 border border-[#FF8C42]/20 rounded-xl p-4 text-sm text-[#FF8C42]">
             <p className="font-semibold mb-1">S-Corp election</p>
             <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — it&apos;s free.</p>
-            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-[#E87030] font-semibold hover:text-[#FF8C42] text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -397,10 +397,10 @@ function FilingContent({
         </div>
         <ActionLink href="https://bizfileonline.sos.ca.gov" label="File with California Secretary of State" />
         {structure === "scorp" && (
-          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
+          <div className="bg-[#FF8C42]/10 border border-[#FF8C42]/20 rounded-xl p-4 text-sm text-[#FF8C42]">
             <p className="font-semibold mb-1">S-Corp election</p>
             <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free.</p>
-            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-[#E87030] font-semibold hover:text-[#FF8C42] text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -428,10 +428,10 @@ function FilingContent({
         </div>
         <ActionLink href="https://www.dos.ny.gov/corps/bus_entity_search.html" label="File with New York Department of State" />
         {structure === "scorp" && (
-          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
+          <div className="bg-[#FF8C42]/10 border border-[#FF8C42]/20 rounded-xl p-4 text-sm text-[#FF8C42]">
             <p className="font-semibold mb-1">S-Corp election</p>
             <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free.</p>
-            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-[#E87030] font-semibold hover:text-[#FF8C42] text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -462,10 +462,10 @@ function FilingContent({
         </div>
         <ActionLink href="https://www.sos.state.tx.us/corp/forms_boc.shtml" label="File with Texas Secretary of State" />
         {structure === "scorp" && (
-          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
+          <div className="bg-[#FF8C42]/10 border border-[#FF8C42]/20 rounded-xl p-4 text-sm text-[#FF8C42]">
             <p className="font-semibold mb-1">S-Corp election</p>
             <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free.</p>
-            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-[#E87030] font-semibold hover:text-[#FF8C42] text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -524,7 +524,7 @@ function EINContent({
             ["About 10 minutes", "the form is straightforward"],
           ].map(([label, detail], i) => (
             <li key={i} className="flex items-start gap-3">
-              <span className="w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+              <span className="w-6 h-6 bg-[#FF8C42]/20 text-[#E87030] rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                 {i + 1}
               </span>
               <div>
@@ -559,14 +559,14 @@ function StatementOfInfoContent({ onNext }: { onNext: () => void }) {
       </p>
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-3">
-          <DollarSign className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+          <DollarSign className="w-5 h-5 text-[#FF8C42] shrink-0 mt-0.5" />
           <div>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Filing fee</p>
             <p className="font-bold text-gray-900 text-lg mt-0.5">$20</p>
           </div>
         </div>
         <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-3">
-          <Clock className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+          <Clock className="w-5 h-5 text-[#FF8C42] shrink-0 mt-0.5" />
           <div>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Deadline</p>
             <p className="font-bold text-gray-900 text-lg mt-0.5">90 days</p>
@@ -634,14 +634,14 @@ function CertOfPubContent({ onNext }: { onNext: () => void }) {
       </p>
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-3">
-          <DollarSign className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+          <DollarSign className="w-5 h-5 text-[#FF8C42] shrink-0 mt-0.5" />
           <div>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Filing fee</p>
             <p className="font-bold text-gray-900 text-lg mt-0.5">$50</p>
           </div>
         </div>
         <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-start gap-3">
-          <Clock className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+          <Clock className="w-5 h-5 text-[#FF8C42] shrink-0 mt-0.5" />
           <div>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Deadline</p>
             <p className="font-bold text-gray-900 text-lg mt-0.5">120 days</p>
@@ -671,8 +671,8 @@ function SubStepHeader({
       {subSteps.map((s, i) => (
         <div key={i} className="flex items-center gap-1.5 shrink-0">
           <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-            i < current ? "bg-indigo-100 text-indigo-600" :
-            i === current ? "bg-indigo-600 text-white" :
+            i < current ? "bg-[#FF8C42]/20 text-[#FF8C42]" :
+            i === current ? "bg-[#FF8C42] text-white" :
             "bg-gray-100 text-gray-400"
           }`}>
             {i < current && "✓ "}{s.title}

@@ -51,14 +51,14 @@ export default function Step5Bank({ onComplete }: Props) {
         {BANKS.map((bank) => (
           <div
             key={bank.name}
-            className={`border rounded-xl p-5 ${bank.recommended ? "border-indigo-200 bg-indigo-50" : "border-gray-100 bg-gray-50"}`}
+            className={`border rounded-xl p-5 ${bank.recommended ? "border-[#FF8C42]/40 bg-[#FF8C42]/10" : "border-gray-100 bg-gray-50"}`}
           >
             <div className="flex items-start justify-between mb-2">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-bold text-gray-900 text-base">{bank.name}</span>
                   {bank.recommended && (
-                    <span className="text-xs font-semibold bg-indigo-600 text-white px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-semibold bg-[#FF8C42] text-white px-2 py-0.5 rounded-full">
                       Recommended
                     </span>
                   )}
@@ -76,7 +76,7 @@ export default function Step5Bank({ onComplete }: Props) {
             </div>
             <button
               onClick={() => { window.open(bank.url, "_blank", "noopener,noreferrer"); onComplete(); }}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#FF8C42] hover:text-[#E87030] transition-colors"
             >
               Open with {bank.name} <ExternalLink className="w-3.5 h-3.5" />
             </button>

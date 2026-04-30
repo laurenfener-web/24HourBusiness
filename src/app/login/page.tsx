@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(login, undefined);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-[#1A0533] flex flex-col items-center justify-center px-6">
       <Link href="/" className="mb-10">
         <Logo dark />
       </Link>
@@ -33,7 +33,7 @@ export default function LoginPage() {
               autoComplete="email"
               required
               placeholder="you@example.com"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent"
             />
           </div>
 
@@ -48,7 +48,7 @@ export default function LoginPage() {
               autoComplete="current-password"
               required
               placeholder="Your password"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent"
             />
           </div>
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mt-2"
+            className="w-full bg-[#FF8C42] hover:bg-[#E87030] disabled:bg-[#FF8C42]/70 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mt-2"
           >
             {pending ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Logging in...</>
@@ -73,7 +73,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-gray-400 mt-6">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-indigo-600 hover:text-indigo-700 font-medium">
+          <Link href="/signup" className="text-[#FF8C42] hover:text-[#E87030] font-medium">
             Sign up free
           </Link>
         </p>
