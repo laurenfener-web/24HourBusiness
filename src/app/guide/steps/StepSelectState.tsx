@@ -18,7 +18,7 @@ const FOCUS_STATES = [
   {
     name: "New York",
     abbr: "NY",
-    note: "Publication required after filing — adds $1,000–$2,000+ in costs",
+    note: "Publication required after filing — we'll show you how to do it for under $100",
     noteType: "warning" as const,
   },
   {

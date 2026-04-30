@@ -378,14 +378,14 @@ function FilingContent({
           File your Articles of Organization with the New York Department of State to officially create your LLC.
         </p>
         <FeeTimeGrid fee="$200" time="2–3 weeks" />
-        <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 flex items-start gap-3">
-          <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-800">
-            <strong>Plan ahead:</strong> After this, New York requires you to publish in two newspapers — adds $1,000–2,000+ in costs. You&apos;ll get your EIN while you wait for Articles to process (2–3 weeks), then begin publication.
-          </p>
-        </div>
+        <WhatYouNeed items={[
+          ["Business name", businessName || "your chosen name"],
+          ["Registered agent", "New York address required (can be yours)"],
+          ["Member names", "everyone who owns the LLC"],
+          ["Credit card", "for the $200 filing fee"],
+        ]} />
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
-          <strong>While you wait (2–3 weeks):</strong> Get your EIN — next step. Then you&apos;ll start the publication process once your Articles are approved.
+          <strong>While you wait (2–3 weeks):</strong> Get your EIN — next step. Once your Articles are approved, you&apos;ll complete a quick publication step.
         </div>
         <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
           File through the <strong className="text-gray-800">New York Department of State</strong> online portal at dos.ny.gov/corps.
@@ -556,27 +556,34 @@ function StatementOfInfoContent({ onNext }: { onNext: () => void }) {
 function PublishContent({ onNext }: { onNext: () => void }) {
   return (
     <div className="space-y-5">
-      <div className="bg-red-50 border border-red-100 rounded-xl p-5">
-        <p className="font-semibold text-red-800 mb-1">New York&apos;s publication requirement</p>
-        <p className="text-sm text-red-700 leading-relaxed">
-          Within 120 days of your LLC being approved, New York law requires you to publish a notice in <strong>two newspapers</strong> in your county for 6 consecutive weeks. This typically costs <strong>$1,000–2,000+</strong> depending on your county.
+      <p className="text-sm text-gray-500 leading-relaxed">
+        New York requires publishing a notice in two newspapers for 6 weeks. Most people overpay for this — here&apos;s how to do it for under $100.
+      </p>
+
+      <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
+        <p className="font-semibold text-emerald-800 mb-2">The cheap way — under $100 total</p>
+        <p className="text-sm text-emerald-700 leading-relaxed">
+          Publication rates depend on the county your LLC is registered in. Use a registered agent with an upstate NY address (Wyoming or Cattaraugus County) — legal newspapers there charge <strong>$35–50 per paper</strong>, so both papers together run well under $100.
         </p>
       </div>
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-2 text-sm text-gray-600">
+
+      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3 text-sm text-gray-600">
         <p className="font-semibold text-gray-800">How to do it:</p>
-        <ol className="space-y-1.5 list-decimal list-inside">
-          <li>Contact your county clerk for the list of approved newspapers</li>
-          <li>Contact each newspaper to place the required notice (~$500–1,000 each)</li>
-          <li>After 6 weeks, each paper provides an Affidavit of Publication</li>
-          <li>Use those affidavits to file the Certificate of Publication (next step)</li>
+        <ol className="space-y-2 list-decimal list-inside leading-relaxed">
+          <li>Get a registered agent with an upstate NY address — Northwest Registered Agent (~$125/yr) has addresses in low-cost counties</li>
+          <li>Contact that county&apos;s two approved legal newspapers directly and request an LLC publication notice</li>
+          <li>After 6 weeks of publication, each paper sends you an Affidavit of Publication</li>
+          <li>Use both affidavits to file the Certificate of Publication (next step)</li>
         </ol>
       </div>
+
       <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 flex items-start gap-3">
         <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
         <p className="text-sm text-amber-800">
-          Start this as soon as your Articles are approved — you only have 120 days, and publication itself takes 6 weeks.
+          Start this as soon as your Articles are approved — you have 120 days, and publication takes 6 weeks.
         </p>
       </div>
+
       <ContinueBtn label="I've published for 6 weeks → Continue" onClick={onNext} />
     </div>
   );
