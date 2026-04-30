@@ -182,6 +182,25 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
   const officialSubSteps = OFFICIAL_SUBSTEPS[data.state];
 
+  if (companies.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-center px-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Ready to start a business?</h1>
+        <p className="text-gray-500 text-sm mb-6">You don&apos;t have any in progress. Let&apos;s build one.</p>
+        <button
+          onClick={async () => {
+            const res = await fetch("/api/companies", { method: "POST" });
+            const data = await res.json();
+            handleNewCompany(data.company);
+          }}
+          className="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+        >
+          Start a new business
+        </button>
+      </div>
+    );
+  }
+
   if (data.done) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-center px-6">

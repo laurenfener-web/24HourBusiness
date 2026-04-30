@@ -29,6 +29,8 @@ export async function DELETE(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await req.json();
+  // Remove any filing orders first to avoid FK constraint errors
+  await sql`DELETE FROM filing_orders WHERE company_id = ${id}`.catch(() => {});
   await sql`DELETE FROM companies WHERE id = ${id} AND user_id = ${session.userId}`;
   return NextResponse.json({ ok: true });
 }

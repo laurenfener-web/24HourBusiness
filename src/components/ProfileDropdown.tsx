@@ -104,13 +104,19 @@ export default function ProfileDropdown({ userEmail, companies, activeCompanyId,
   async function handleDelete(e: React.MouseEvent, id: string) {
     e.stopPropagation();
     setDeletingId(id);
-    await fetch("/api/companies", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    onDeleteCompany(id);
-    setDeletingId(null);
+    try {
+      const res = await fetch("/api/companies", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      onDeleteCompany(id);
+    } catch {
+      alert("Couldn't delete — please try again.");
+    } finally {
+      setDeletingId(null);
+    }
   }
   const ref = useRef<HTMLDivElement>(null);
 
