@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Check, ChevronRight, DollarSign, Clock, AlertCircle } from "lucide-react";
+import { ArrowRight, Check, ChevronRight, DollarSign, Clock, AlertCircle, ExternalLink } from "lucide-react";
 import { OFFICIAL_SUBSTEPS, type SubStepKind } from "../GuideClient";
 
 interface Props {
@@ -15,6 +15,21 @@ interface Props {
 }
 
 // ─── Shared UI helpers ──────────────────────────────────────────────────────
+
+function ActionLink({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-between w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-5 rounded-xl transition-colors shadow-sm"
+    >
+      {label}
+      <ExternalLink className="w-4 h-4 shrink-0 ml-2" />
+    </a>
+  );
+}
+
 
 function FeeTimeGrid({ fee, time }: { fee: string; time: string }) {
   return (
@@ -224,9 +239,7 @@ function NameCheckContent({
           </p>
         </div>
       )}
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-        Search the <strong className="text-gray-800">California Secretary of State</strong> business name database at bizfileonline.sos.ca.gov before you file.
-      </div>
+      <ActionLink href="https://bizfileonline.sos.ca.gov" label="Search California business name database" />
       <ContinueBtn label="Name is available → Continue" onClick={onNext} />
       <button
         onClick={onSkip}
@@ -287,17 +300,23 @@ function FilingContent({
           Most investors expect a Delaware C-Corp. You can incorporate there even if you operate in {state}.
         </p>
         <div className="space-y-2">
-          <div className="border border-indigo-200 bg-indigo-50/50 rounded-xl px-4 py-3.5">
-            <div className="flex items-center gap-2 mb-0.5">
-              <p className="font-semibold text-gray-900 text-sm">Stripe Atlas</p>
-              <span className="text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">Recommended</span>
+          <a href="https://stripe.com/atlas" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-indigo-200 bg-indigo-50/50 hover:bg-indigo-50 rounded-xl px-4 py-3.5 transition-colors">
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <p className="font-semibold text-gray-900 text-sm">Stripe Atlas</p>
+                <span className="text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">Recommended</span>
+              </div>
+              <p className="text-xs text-gray-500">$500 flat — Delaware C-Corp, EIN, Mercury bank account, and cap table all in one.</p>
             </div>
-            <p className="text-xs text-gray-500">$500 flat — Delaware C-Corp, EIN, Mercury bank account, and cap table all in one. Search "Stripe Atlas" to get started.</p>
-          </div>
-          <div className="border border-gray-100 rounded-xl px-4 py-3.5">
-            <p className="font-semibold text-gray-900 text-sm">File directly in Delaware</p>
-            <p className="text-xs text-gray-500">$90 fee, 1–3 day processing. You&apos;ll need a Delaware registered agent (~$50/yr). Search "Delaware Division of Corporations."</p>
-          </div>
+            <ExternalLink className="w-4 h-4 text-indigo-400 shrink-0 ml-3" />
+          </a>
+          <a href="https://icis.corp.delaware.gov/Ecorp/EntitySearch/NameSearch.aspx" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between border border-gray-100 hover:border-gray-200 hover:bg-gray-50 rounded-xl px-4 py-3.5 transition-colors">
+            <div>
+              <p className="font-semibold text-gray-900 text-sm">File directly in Delaware</p>
+              <p className="text-xs text-gray-500">$90 fee, 1–3 day processing. You&apos;ll need a Delaware registered agent (~$50/yr).</p>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-400 shrink-0 ml-3" />
+          </a>
         </div>
         <ContinueBtn label="I've filed my C-Corp → Continue" onClick={onNext} />
       </div>
@@ -321,13 +340,12 @@ function FilingContent({
         <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-sm text-emerald-800">
           Florida has <strong>no state income tax</strong> and no publication requirement — one of the friendliest states for small businesses.
         </div>
-        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-          File through the <strong className="text-gray-800">Florida Division of Corporations</strong> (Sunbiz) online portal at dos.myflorida.com/sunbiz.
-        </div>
+        <ActionLink href="https://dos.myflorida.com/sunbiz" label="File with Florida Division of Corporations" />
         {structure === "scorp" && (
           <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
             <p className="font-semibold mb-1">S-Corp election</p>
-            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — it&apos;s free. Find it at irs.gov.</p>
+            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — it&apos;s free.</p>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -357,13 +375,12 @@ function FilingContent({
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
           <strong>While you wait (3–5 days):</strong> Use the processing time to get your EIN — that&apos;s the very next step.
         </div>
-        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-          File through the <strong className="text-gray-800">California Secretary of State</strong> at bizfileonline.sos.ca.gov.
-        </div>
+        <ActionLink href="https://bizfileonline.sos.ca.gov" label="File with California Secretary of State" />
         {structure === "scorp" && (
           <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
             <p className="font-semibold mb-1">S-Corp election</p>
-            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free at irs.gov.</p>
+            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free.</p>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -387,13 +404,12 @@ function FilingContent({
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
           <strong>While you wait (2–3 weeks):</strong> Get your EIN — next step. Once your Articles are approved, you&apos;ll complete a quick publication step.
         </div>
-        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-          File through the <strong className="text-gray-800">New York Department of State</strong> online portal at dos.ny.gov/corps.
-        </div>
+        <ActionLink href="https://www.dos.ny.gov/corps/bus_entity_search.html" label="File with New York Department of State" />
         {structure === "scorp" && (
           <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
             <p className="font-semibold mb-1">S-Corp election</p>
-            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free at irs.gov.</p>
+            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free.</p>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -420,13 +436,12 @@ function FilingContent({
             Texas has a <strong>franchise tax</strong> only for businesses with over $2.47M in revenue. Most small businesses owe nothing.
           </p>
         </div>
-        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-          File through the <strong className="text-gray-800">Texas Secretary of State</strong> (SOSDirect) at sos.state.tx.us.
-        </div>
+        <ActionLink href="https://www.sos.state.tx.us/corp/forms_boc.shtml" label="File with Texas Secretary of State" />
         {structure === "scorp" && (
           <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-indigo-800">
             <p className="font-semibold mb-1">S-Corp election</p>
-            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free at irs.gov.</p>
+            <p>After your LLC is approved, file IRS Form 2553 within 75 days to elect S-Corp tax treatment — free.</p>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2553" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 text-indigo-700 font-semibold hover:text-indigo-900 text-sm">IRS Form 2553 <ExternalLink className="w-3 h-3" /></a>
           </div>
         )}
         <ContinueBtn label="I've filed → Continue" onClick={onNext} />
@@ -504,10 +519,7 @@ function EINContent({
         </p>
       </div>
 
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-        Apply at <strong className="text-gray-800">IRS.gov</strong> — search "IRS EIN online application" or go to sa.www4.irs.gov/applyein.
-      </div>
-
+      <ActionLink href="https://sa.www4.irs.gov/modiein/individual/index.jsp" label="Apply for EIN on IRS.gov — free, instant" />
       <ContinueBtn label="I have my EIN → Continue" onClick={onNext} />
     </div>
   );
@@ -543,9 +555,7 @@ function StatementOfInfoContent({ onNext }: { onNext: () => void }) {
           Don&apos;t miss this — failing to file the Statement of Information on time can result in a $250 penalty and suspension of your LLC.
         </p>
       </div>
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-        File through the <strong className="text-gray-800">California Secretary of State</strong> — same portal as your Articles of Organization at bizfileonline.sos.ca.gov.
-      </div>
+      <ActionLink href="https://bizfileonline.sos.ca.gov" label="File Statement of Information — California SOS" />
       <ContinueBtn label="Statement filed → Continue" onClick={onNext} />
     </div>
   );
@@ -570,12 +580,13 @@ function PublishContent({ onNext }: { onNext: () => void }) {
       <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3 text-sm text-gray-600">
         <p className="font-semibold text-gray-800">How to do it:</p>
         <ol className="space-y-2 list-decimal list-inside leading-relaxed">
-          <li>Get a registered agent with an upstate NY address — Northwest Registered Agent (~$125/yr) has addresses in low-cost counties</li>
+          <li>Get a registered agent with an upstate NY address — Northwest Registered Agent has addresses in low-cost counties (~$125/yr)</li>
           <li>Contact that county&apos;s two approved legal newspapers directly and request an LLC publication notice</li>
           <li>After 6 weeks of publication, each paper sends you an Affidavit of Publication</li>
           <li>Use both affidavits to file the Certificate of Publication (next step)</li>
         </ol>
       </div>
+      <ActionLink href="https://www.northwestregisteredagent.com/registered-agent/new-york" label="Northwest Registered Agent — upstate NY address" />
 
       <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 flex items-start gap-3">
         <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
@@ -616,9 +627,7 @@ function CertOfPubContent({ onNext }: { onNext: () => void }) {
       <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-sm text-emerald-800">
         Once this is filed, your New York LLC is fully formed. The hardest part — publication — is behind you.
       </div>
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-600">
-        File through the <strong className="text-gray-800">New York Department of State</strong> — same portal as your Articles of Organization at dos.ny.gov/corps.
-      </div>
+      <ActionLink href="https://www.dos.ny.gov/corps/bus_entity_search.html" label="File Certificate of Publication — NY DOS" />
       <ContinueBtn label="Certificate filed → Continue" onClick={onNext} />
     </div>
   );
