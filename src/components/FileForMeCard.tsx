@@ -21,13 +21,25 @@ interface Props {
 export default function FileForMeCard({ state, structure, businessName, companyId, userEmail }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Partial<typeof form>>({});
   const [form, setForm] = useState({ organizerName: "", addressLine1: "", city: "", zip: "", phone: "" });
 
   const price = PRICES[state];
   if (!price) return null;
 
+  function validate() {
+    const e: Partial<typeof form> = {};
+    if (!form.organizerName.trim()) e.organizerName = "Required";
+    if (!form.addressLine1.trim()) e.addressLine1 = "Required";
+    if (!form.city.trim()) e.city = "Required";
+    if (!form.zip.trim()) e.zip = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!validate()) return;
     setLoading(true);
     const res = await fetch("/api/checkout", {
       method: "POST",
@@ -92,45 +104,45 @@ export default function FileForMeCard({ state, structure, businessName, companyI
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">Your full legal name</label>
             <input
-              required
               value={form.organizerName}
-              onChange={e => setForm(f => ({ ...f, organizerName: e.target.value }))}
+              onChange={e => { setForm(f => ({ ...f, organizerName: e.target.value })); setErrors(er => ({ ...er, organizerName: undefined })); }}
               placeholder="Jane Smith"
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              className={`w-full border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] ${errors.organizerName ? "border-red-400 bg-red-50" : "border-gray-200"}`}
             />
+            {errors.organizerName && <p className="text-xs text-red-500 mt-1">{errors.organizerName}</p>}
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">Street address</label>
             <input
-              required
               value={form.addressLine1}
-              onChange={e => setForm(f => ({ ...f, addressLine1: e.target.value }))}
+              onChange={e => { setForm(f => ({ ...f, addressLine1: e.target.value })); setErrors(er => ({ ...er, addressLine1: undefined })); }}
               placeholder="123 Main St"
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              className={`w-full border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] ${errors.addressLine1 ? "border-red-400 bg-red-50" : "border-gray-200"}`}
             />
+            {errors.addressLine1 && <p className="text-xs text-red-500 mt-1">{errors.addressLine1}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">City</label>
               <input
-                required
                 value={form.city}
-                onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
+                onChange={e => { setForm(f => ({ ...f, city: e.target.value })); setErrors(er => ({ ...er, city: undefined })); }}
                 placeholder="Los Angeles"
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] ${errors.city ? "border-red-400 bg-red-50" : "border-gray-200"}`}
               />
+              {errors.city && <p className="text-xs text-red-500 mt-1">{errors.city}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">ZIP code</label>
               <input
-                required
                 value={form.zip}
-                onChange={e => setForm(f => ({ ...f, zip: e.target.value }))}
+                onChange={e => { setForm(f => ({ ...f, zip: e.target.value })); setErrors(er => ({ ...er, zip: undefined })); }}
                 placeholder="90001"
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] ${errors.zip ? "border-red-400 bg-red-50" : "border-gray-200"}`}
               />
+              {errors.zip && <p className="text-xs text-red-500 mt-1">{errors.zip}</p>}
             </div>
           </div>
 
