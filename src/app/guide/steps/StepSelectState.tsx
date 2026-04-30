@@ -8,12 +8,7 @@ interface Props {
   onComplete: (data: { state: string }) => void;
 }
 
-const FOCUS_STATES = [
-  { name: "California", abbr: "CA" },
-  { name: "New York",   abbr: "NY" },
-  { name: "Florida",    abbr: "FL" },
-  { name: "Texas",      abbr: "TX" },
-];
+const FOCUS_STATES = ["California", "New York", "Florida", "Texas"];
 
 export default function StepSelectState({ onComplete }: Props) {
   const [selected, setSelected] = useState("");
@@ -26,34 +21,25 @@ export default function StepSelectState({ onComplete }: Props) {
       </p>
 
       <div className="space-y-2">
-        {FOCUS_STATES.map(({ name, abbr }) => {
+        {FOCUS_STATES.map((name) => {
           const isSelected = selected === name;
           return (
             <button
               key={name}
               onClick={() => setSelected(name)}
-              className={`w-full text-left rounded-xl border-2 p-5 transition-all ${
+              className={`w-full text-left rounded-xl border-2 px-5 py-4 transition-all flex items-center justify-between ${
                 isSelected
                   ? "border-indigo-500 bg-indigo-50"
                   : "border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <span className={`text-xs font-bold font-mono px-2 py-1 rounded-md shrink-0 tracking-wide transition-colors ${
-                    isSelected ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500"
-                  }`}>
-                    {abbr}
-                  </span>
-                  <p className={`font-bold text-lg transition-colors ${isSelected ? "text-indigo-900" : "text-gray-900"}`}>
-                    {name}
-                  </p>
-                </div>
-                <div className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                  isSelected ? "bg-indigo-600 border-indigo-600" : "border-gray-200"
-                }`}>
-                  {isSelected && <Check className="w-3 h-3 text-white" />}
-                </div>
+              <p className={`font-semibold text-base transition-colors ${isSelected ? "text-indigo-900" : "text-gray-900"}`}>
+                {name}
+              </p>
+              <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                isSelected ? "bg-indigo-600 border-indigo-600" : "border-gray-200"
+              }`}>
+                {isSelected && <Check className="w-3 h-3 text-white" />}
               </div>
             </button>
           );
