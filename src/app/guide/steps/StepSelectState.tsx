@@ -48,9 +48,15 @@ export default function StepSelectState({ onComplete }: Props) {
 
       {selected && info && (
         <div className="rounded-xl border border-gray-100 bg-gray-50 px-5 py-4 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">State filing fee</p>
-            <p className="text-2xl font-bold text-gray-900">{info.fee}</p>
+          <div className="flex gap-6">
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Filing fee</p>
+              <p className="text-2xl font-bold text-gray-900">{info.fee}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Processing time</p>
+              <p className="text-2xl font-bold text-gray-900">{info.time}</p>
+            </div>
           </div>
           <button
             onClick={() => onComplete({ state: selected })}
