@@ -61,7 +61,7 @@ export default async function Home() {
               <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white px-3 py-2 transition-colors">
                 Log in
               </Link>
-              <Link href="/signup" className="flex items-center gap-1.5 bg-[#FF8C42] hover:bg-[#E87030] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+              <Link href="/signup" className="flex items-center gap-1.5 bg-[#D4AF37] hover:bg-[#B8962E] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
                 Start free <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -72,14 +72,14 @@ export default async function Home() {
       {/* Hero */}
       <section className="bg-[#1A0533] text-white min-h-screen flex flex-col items-center justify-center pt-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-[#FF8C42]/10 border border-[#FF8C42]/20 text-[#FF8C42]/70 text-sm font-medium px-4 py-1.5 rounded-full mb-10">
-            <span className="w-1.5 h-1.5 bg-[#FF8C42] rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37]/70 text-sm font-medium px-4 py-1.5 rounded-full mb-10">
+            <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-pulse" />
             Free · No credit card · Done tonight
           </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-8">
             You&apos;re going to be a{" "}
-            <span className="text-[#FF8C42]">business owner</span>{" "}
+            <span className="text-[#D4AF37]">business owner</span>{" "}
             by the end of tonight.
           </h1>
 
@@ -89,7 +89,7 @@ export default async function Home() {
 
           <Link
             href={session ? "/guide" : "/signup"}
-            className="inline-flex items-center gap-2.5 bg-[#FF8C42] hover:bg-[#E87030] text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-[#FF8C42]/30 hover:shadow-[#FF8C42]/50 hover:scale-105 active:scale-100"
+            className="inline-flex items-center gap-2.5 bg-[#D4AF37] hover:bg-[#B8962E] text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-[#D4AF37]/30 hover:shadow-[#D4AF37]/50 hover:scale-105 active:scale-100"
           >
             {session ? "Keep going" : "Open my business"} <ArrowRight className="w-6 h-6" />
           </Link>
@@ -109,7 +109,7 @@ export default async function Home() {
           </p>
           <p className="text-4xl sm:text-5xl font-black text-white leading-tight">
             You&apos;ll be done{" "}
-            <span className="text-[#FF8C42]">before you go to sleep.</span>
+            <span className="text-[#D4AF37]">before you go to sleep.</span>
           </p>
         </div>
       </section>
@@ -127,8 +127,8 @@ export default async function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {OUTCOMES.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-white/5 rounded-2xl border border-white/10 p-6 hover:bg-white/8 transition-colors">
-                <div className="w-11 h-11 bg-[#FF8C42]/10 rounded-xl flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-[#FF8C42]" />
+                <div className="w-11 h-11 bg-[#D4AF37]/10 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5 text-[#D4AF37]" />
                 </div>
                 <p className="font-bold text-white text-lg mb-1">{title}</p>
                 <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
@@ -149,7 +149,7 @@ export default async function Home() {
           </p>
           <Link
             href={session ? "/guide" : "/signup"}
-            className="inline-flex items-center gap-2.5 bg-[#FF8C42] hover:bg-[#E87030] text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-[#FF8C42]/30 hover:scale-105 active:scale-100"
+            className="inline-flex items-center gap-2.5 bg-[#D4AF37] hover:bg-[#B8962E] text-white font-bold px-10 py-5 rounded-2xl text-xl transition-all shadow-2xl shadow-[#D4AF37]/30 hover:scale-105 active:scale-100"
           >
             {session ? "Continue where I left off" : "Open my business tonight"} <ArrowRight className="w-6 h-6" />
           </Link>

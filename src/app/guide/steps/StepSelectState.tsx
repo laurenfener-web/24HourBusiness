@@ -29,15 +29,15 @@ export default function StepSelectState({ onComplete }: Props) {
               onClick={() => setSelected(name)}
               className={`w-full text-left rounded-xl border-2 px-5 py-4 transition-all flex items-center justify-between ${
                 isSelected
-                  ? "border-[#FF8C42] bg-[#FF8C42]/10"
+                  ? "border-[#D4AF37] bg-[#D4AF37]/10"
                   : "border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50"
               }`}
             >
-              <p className={`font-semibold text-base transition-colors ${isSelected ? "text-[#FF8C42]" : "text-gray-900"}`}>
+              <p className={`font-semibold text-base transition-colors ${isSelected ? "text-[#D4AF37]" : "text-gray-900"}`}>
                 {name}
               </p>
               <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                isSelected ? "bg-[#FF8C42] border-[#FF8C42]" : "border-gray-200"
+                isSelected ? "bg-[#D4AF37] border-[#D4AF37]" : "border-gray-200"
               }`}>
                 {isSelected && <Check className="w-3 h-3 text-white" />}
               </div>

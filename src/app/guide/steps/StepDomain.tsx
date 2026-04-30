@@ -45,11 +45,11 @@ export default function StepDomain({ businessName, onComplete }: Props) {
       </p>
 
       {businessName && (
-        <div className="bg-[#FF8C42]/10 border border-[#FF8C42]/20 rounded-xl px-4 py-4 flex items-center gap-3">
-          <Globe className="w-5 h-5 text-[#FF8C42] shrink-0" />
+        <div className="bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-xl px-4 py-4 flex items-center gap-3">
+          <Globe className="w-5 h-5 text-[#D4AF37] shrink-0" />
           <div>
-            <p className="text-xs font-semibold text-[#E87030] uppercase tracking-wide mb-0.5">Suggested domain</p>
-            <p className="font-bold text-[#FF8C42] text-lg">{suggested}</p>
+            <p className="text-xs font-semibold text-[#B8962E] uppercase tracking-wide mb-0.5">Suggested domain</p>
+            <p className="font-bold text-[#D4AF37] text-lg">{suggested}</p>
           </div>
         </div>
       )}
@@ -63,22 +63,22 @@ export default function StepDomain({ businessName, onComplete }: Props) {
               href={r.getUrl(suggested)}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center gap-3 border rounded-xl px-4 py-3.5 hover:border-[#FF8C42]/40 hover:bg-[#FF8C42]/10 transition-colors group ${
-                r.recommended ? "border-[#FF8C42]/40 bg-[#FF8C42]/5" : "border-gray-100"
+              className={`flex items-center gap-3 border rounded-xl px-4 py-3.5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/10 transition-colors group ${
+                r.recommended ? "border-[#D4AF37]/40 bg-[#D4AF37]/5" : "border-gray-100"
               }`}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                   <p className="font-semibold text-gray-900 text-sm">{r.name}</p>
                   {r.recommended && (
-                    <span className="text-xs font-semibold text-[#FF8C42] bg-[#FF8C42]/20 px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-semibold text-[#D4AF37] bg-[#D4AF37]/20 px-2 py-0.5 rounded-full">
                       Recommended
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-gray-500">{r.desc}</p>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#FF8C42] shrink-0 transition-colors" />
+              <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#D4AF37] shrink-0 transition-colors" />
             </a>
           ))}
         </div>

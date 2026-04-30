@@ -12,7 +12,7 @@ export default function Logo({ dark = false, size = "md" }: Props) {
         className={size === "sm" ? "w-4 h-4" : "w-5 h-5"}
         fill="currentColor"
         strokeWidth={0}
-        style={{ color: dark ? "#FF8C42" : "#FF8C42" }}
+        style={{ color: dark ? "#D4AF37" : "#D4AF37" }}
       />
       <span
         className={`font-bold tracking-tight ${dark ? "text-white" : "text-gray-900"} ${size === "sm" ? "text-sm" : "text-base"}`}

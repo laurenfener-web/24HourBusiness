@@ -70,7 +70,7 @@ function FeedbackModal({ onClose }: { onClose: () => void }) {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Your feedback..."
               rows={5}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] resize-none mb-4"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] resize-none mb-4"
               autoFocus
             />
             <div className="flex gap-2">
@@ -83,7 +83,7 @@ function FeedbackModal({ onClose }: { onClose: () => void }) {
               <button
                 onClick={send}
                 disabled={!message.trim() || status === "sending"}
-                className="flex-1 bg-[#FF8C42] hover:bg-[#E87030] disabled:bg-[#FF8C42]/40 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+                className="flex-1 bg-[#D4AF37] hover:bg-[#B8962E] disabled:bg-[#D4AF37]/40 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
               >
                 {status === "sending" ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Sending...</> : "Send feedback"}
               </button>
@@ -149,7 +149,7 @@ export default function ProfileDropdown({ userEmail, companies, activeCompanyId,
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full pl-1 pr-3 py-1 transition-colors"
         >
-          <div className="w-7 h-7 bg-[#FF8C42] rounded-full flex items-center justify-center text-white text-xs font-bold">
+          <div className="w-7 h-7 bg-[#D4AF37] rounded-full flex items-center justify-center text-white text-xs font-bold">
             {initials}
           </div>
           <span className="hidden sm:block text-xs font-medium text-gray-700 max-w-[120px] truncate">{userEmail}</span>
@@ -175,20 +175,20 @@ export default function ProfileDropdown({ userEmail, companies, activeCompanyId,
                     const isActive = c.id === activeCompanyId;
                     const stepLabel = c.done ? "Complete" : `Step ${c.current_step + 1} of 8 — ${STEP_LABELS[c.current_step]}`;
                     return (
-                      <div key={c.id} className={`flex items-center gap-1 rounded-xl ${isActive ? "bg-[#FF8C42]/10" : "hover:bg-gray-50"}`}>
+                      <div key={c.id} className={`flex items-center gap-1 rounded-xl ${isActive ? "bg-[#D4AF37]/10" : "hover:bg-gray-50"}`}>
                         <button
                           onClick={() => { onSelectCompany(c); setOpen(false); }}
                           className="flex-1 min-w-0 text-left px-3 py-2.5 flex items-start gap-3"
                         >
-                          <Building2 className={`w-4 h-4 mt-0.5 shrink-0 ${isActive ? "text-[#FF8C42]" : "text-gray-300"}`} />
+                          <Building2 className={`w-4 h-4 mt-0.5 shrink-0 ${isActive ? "text-[#D4AF37]" : "text-gray-300"}`} />
                           <div className="min-w-0">
-                            <p className={`text-sm font-semibold truncate ${isActive ? "text-[#E87030]" : "text-gray-800"}`}>
+                            <p className={`text-sm font-semibold truncate ${isActive ? "text-[#B8962E]" : "text-gray-800"}`}>
                               {c.name}
                             </p>
                             <p className="text-xs text-gray-400 mt-0.5">{stepLabel}</p>
                             <div className="h-1 bg-gray-100 rounded-full mt-1.5 w-full">
                               <div
-                                className="h-full bg-[#FF8C42] rounded-full transition-all"
+                                className="h-full bg-[#D4AF37] rounded-full transition-all"
                                 style={{ width: `${c.done ? 100 : (c.current_step / 8) * 100}%` }}
                               />
                             </div>
@@ -213,7 +213,7 @@ export default function ProfileDropdown({ userEmail, companies, activeCompanyId,
               <button
                 onClick={handleNewCompany}
                 disabled={creatingNew}
-                className="w-full mt-2 flex items-center gap-2 text-xs font-semibold text-[#FF8C42] hover:text-[#E87030] px-3 py-2 rounded-xl hover:bg-[#FF8C42]/10 transition-colors"
+                className="w-full mt-2 flex items-center gap-2 text-xs font-semibold text-[#D4AF37] hover:text-[#B8962E] px-3 py-2 rounded-xl hover:bg-[#D4AF37]/10 transition-colors"
               >
                 {creatingNew ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
                 Start a new business

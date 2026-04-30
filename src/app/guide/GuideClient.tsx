@@ -193,7 +193,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
             const data = await res.json();
             handleNewCompany(data.company);
           }}
-          className="bg-[#FF8C42] hover:bg-[#E87030] text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+          className="bg-[#D4AF37] hover:bg-[#B8962E] text-white font-semibold px-6 py-3 rounded-xl transition-colors"
         >
           Start a new business
         </button>
@@ -211,7 +211,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
         <p className="text-slate-400 text-lg max-w-md mb-10">
           You&apos;ve done what most people only talk about. The boring stuff is handled — now go get your first customer.
         </p>
-        <Link href="/" className="text-[#FF8C42] hover:text-[#FF8C42]/70 text-sm font-medium transition-colors">
+        <Link href="/" className="text-[#D4AF37] hover:text-[#D4AF37]/70 text-sm font-medium transition-colors">
           ← Back to home
         </Link>
       </div>
@@ -227,7 +227,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex h-1.5 w-32 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#FF8C42] rounded-full transition-all duration-500"
+              className="h-full bg-[#D4AF37] rounded-full transition-all duration-500"
               style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
             />
           </div>
@@ -259,17 +259,17 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                 <div key={i}>
                   <div
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
-                      active ? "bg-[#FF8C42]/10" : done ? "opacity-60" : "opacity-40"
+                      active ? "bg-[#D4AF37]/10" : done ? "opacity-60" : "opacity-40"
                     }`}
                   >
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
-                      done || active ? "bg-[#FF8C42] text-white" : "bg-gray-100 text-gray-400"
+                      done || active ? "bg-[#D4AF37] text-white" : "bg-gray-100 text-gray-400"
                     }`}>
                       {done ? <Check className="w-3 h-3" /> : <span>{i + 1}</span>}
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className={`text-sm font-semibold truncate ${active ? "text-[#E87030]" : "text-gray-700"}`}>
+                        <p className={`text-sm font-semibold truncate ${active ? "text-[#B8962E]" : "text-gray-700"}`}>
                           {s.title}
                         </p>
                         {s.skippable && (
@@ -288,19 +288,19 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                         const subDone = done || si < officialSubStep;
                         const subActive = active && si === officialSubStep;
                         return (
-                          <div key={si} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${subActive ? "bg-[#FF8C42]/10" : ""}`}>
+                          <div key={si} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${subActive ? "bg-[#D4AF37]/10" : ""}`}>
                             <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                              subDone ? "bg-[#FF8C42]" : subActive ? "border-2 border-[#FF8C42]" : "border-2 border-gray-200"
+                              subDone ? "bg-[#D4AF37]" : subActive ? "border-2 border-[#D4AF37]" : "border-2 border-gray-200"
                             }`}>
                               {subDone && <Check className="w-2.5 h-2.5 text-white" />}
                             </div>
                             <div className="min-w-0">
-                              <p className={`text-xs font-medium truncate ${subActive ? "text-[#E87030]" : subDone ? "text-gray-500" : "text-gray-400"}`}>
+                              <p className={`text-xs font-medium truncate ${subActive ? "text-[#B8962E]" : subDone ? "text-gray-500" : "text-gray-400"}`}>
                                 {sub.title}
                                 {sub.optional && <span className="ml-1 text-gray-300">(optional)</span>}
                               </p>
                               {sub.hint && subActive && (
-                                <p className="text-xs text-[#FF8C42] truncate italic">{sub.hint}</p>
+                                <p className="text-xs text-[#D4AF37] truncate italic">{sub.hint}</p>
                               )}
                             </div>
                           </div>
@@ -318,7 +318,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
           <div className="max-w-xl mx-auto">
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-[#FF8C42]">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
                   Step {step + 1} of {STEPS.length}
                 </p>
                 {STEPS[step].skippable && (

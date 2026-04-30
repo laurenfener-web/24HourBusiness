@@ -11,7 +11,7 @@ interface Props {
 const STYLES = ["Minimal", "Bold", "Playful", "Elegant", "Tech"];
 
 const PALETTES = [
-  { name: "Indigo",   color: "#FF8C42" },
+  { name: "Indigo",   color: "#D4AF37" },
   { name: "Ocean",    color: "#0891b2" },
   { name: "Forest",   color: "#059669" },
   { name: "Crimson",  color: "#dc2626" },
@@ -42,7 +42,7 @@ function downloadSvg(svg: string, businessName: string) {
 
 export default function StepLogo({ businessName, onComplete }: Props) {
   const [style, setStyle] = useState("Minimal");
-  const [color, setColor] = useState("#FF8C42");
+  const [color, setColor] = useState("#D4AF37");
   const [description, setDescription] = useState("");
   const [logos, setLogos] = useState<LogoConcept[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
@@ -86,8 +86,8 @@ export default function StepLogo({ businessName, onComplete }: Props) {
               onClick={() => setStyle(s)}
               className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all ${
                 style === s
-                  ? "bg-[#FF8C42] text-white border-[#FF8C42]"
-                  : "border-gray-200 text-gray-600 hover:border-[#FF8C42]/70 hover:bg-[#FF8C42]/10"
+                  ? "bg-[#D4AF37] text-white border-[#D4AF37]"
+                  : "border-gray-200 text-gray-600 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/10"
               }`}
             >
               {s}
@@ -124,7 +124,7 @@ export default function StepLogo({ businessName, onComplete }: Props) {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="e.g. Something with a mountain or upward arrow, feels modern and trustworthy"
           rows={2}
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF8C42] focus:border-transparent resize-none text-sm leading-relaxed"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent resize-none text-sm leading-relaxed"
         />
       </div>
 
@@ -132,7 +132,7 @@ export default function StepLogo({ businessName, onComplete }: Props) {
       <button
         onClick={generate}
         disabled={loading || !businessName}
-        className="w-full bg-[#FF8C42] hover:bg-[#E87030] disabled:bg-[#FF8C42]/40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+        className="w-full bg-[#D4AF37] hover:bg-[#B8962E] disabled:bg-[#D4AF37]/40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
         {loading ? (
           <><RefreshCw className="w-4 h-4 animate-spin" /> Generating logos...</>
@@ -158,12 +158,12 @@ export default function StepLogo({ businessName, onComplete }: Props) {
                 onClick={() => setSelected(i)}
                 className={`relative flex flex-col items-center gap-3 rounded-xl border-2 p-5 transition-all ${
                   selected === i
-                    ? "border-[#FF8C42] bg-[#FF8C42]/10"
-                    : "border-gray-100 bg-gray-50 hover:border-[#FF8C42]/40 hover:bg-white"
+                    ? "border-[#D4AF37] bg-[#D4AF37]/10"
+                    : "border-gray-100 bg-gray-50 hover:border-[#D4AF37]/40 hover:bg-white"
                 }`}
               >
                 {selected === i && (
-                  <div className="absolute top-2 right-2 w-5 h-5 bg-[#FF8C42] rounded-full flex items-center justify-center">
+                  <div className="absolute top-2 right-2 w-5 h-5 bg-[#D4AF37] rounded-full flex items-center justify-center">
                     <Check className="w-3 h-3 text-white" />
                   </div>
                 )}
@@ -194,7 +194,7 @@ export default function StepLogo({ businessName, onComplete }: Props) {
             </div>
             <button
               onClick={() => downloadSvg(logos[selected].svg, businessName)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-[#FF8C42] hover:text-[#E87030] border border-[#FF8C42]/40 rounded-lg px-3 py-2 hover:bg-[#FF8C42]/10 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-semibold text-[#D4AF37] hover:text-[#B8962E] border border-[#D4AF37]/40 rounded-lg px-3 py-2 hover:bg-[#D4AF37]/10 transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               Download SVG

@@ -7,7 +7,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
   pending_payment: { label: "Awaiting payment", color: "bg-gray-100 text-gray-600" },
   paid:            { label: "Paid — needs filing", color: "bg-amber-100 text-amber-700" },
   filed:           { label: "Filed", color: "bg-emerald-100 text-emerald-700" },
-  complete:        { label: "Complete", color: "bg-[#FF8C42]/20 text-[#E87030]" },
+  complete:        { label: "Complete", color: "bg-[#D4AF37]/20 text-[#B8962E]" },
 };
 
 export default function AdminClient() {
@@ -72,7 +72,7 @@ export default function AdminClient() {
                       {order.status === "filed" && (
                         <button
                           onClick={() => updateStatus(order.id, "complete")}
-                          className="bg-[#FF8C42] hover:bg-[#E87030] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+                          className="bg-[#D4AF37] hover:bg-[#B8962E] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
                         >
                           Mark complete
                         </button>

@@ -44,12 +44,12 @@ export default function Step6CreditCard({ onComplete }: Props) {
         {CARDS.map((card) => (
           <div
             key={card.name}
-            className={`border rounded-xl p-5 ${card.recommended ? "border-[#FF8C42]/40 bg-[#FF8C42]/10" : "border-gray-100 bg-gray-50"}`}
+            className={`border rounded-xl p-5 ${card.recommended ? "border-[#D4AF37]/40 bg-[#D4AF37]/10" : "border-gray-100 bg-gray-50"}`}
           >
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <span className="font-bold text-gray-900">{card.name}</span>
               {card.recommended && (
-                <span className="text-xs font-semibold bg-[#FF8C42] text-white px-2 py-0.5 rounded-full">
+                <span className="text-xs font-semibold bg-[#D4AF37] text-white px-2 py-0.5 rounded-full">
                   Recommended
                 </span>
               )}
@@ -65,7 +65,7 @@ export default function Step6CreditCard({ onComplete }: Props) {
             </div>
             <button
               onClick={() => { window.open(card.url, "_blank", "noopener,noreferrer"); onComplete(); }}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#FF8C42] hover:text-[#E87030] transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#D4AF37] hover:text-[#B8962E] transition-colors"
             >
               Apply now <ExternalLink className="w-3.5 h-3.5" />
             </button>

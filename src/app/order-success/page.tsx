@@ -21,7 +21,7 @@ export default function OrderSuccessPage() {
 
       <Link
         href="/guide"
-        className="text-[#FF8C42] hover:text-[#FF8C42]/70 text-sm font-medium transition-colors"
+        className="text-[#D4AF37] hover:text-[#D4AF37]/70 text-sm font-medium transition-colors"
       >
         Back to your guide
       </Link>
