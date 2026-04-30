@@ -167,7 +167,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     if (activeCompany?.id === id) {
       const next = remaining[0] ?? null;
       setActiveCompany(next);
-      setStep(next?.current_step ?? 0);
+      setStep(Math.min(next?.current_step ?? 0, STEPS.length - 1));
       setOfficialSubStep(0);
       setData(next ? companyToData(next) : { businessName: "", structure: "llc", state: "", done: false });
       window.scrollTo({ top: 0, behavior: "smooth" });
