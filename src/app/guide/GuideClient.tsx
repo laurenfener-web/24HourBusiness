@@ -112,7 +112,7 @@ interface Props {
 export default function GuideClient({ userEmail, initialCompanies, initialCompany }: Props) {
   const [companies, setCompanies] = useState<Company[]>(initialCompanies);
   const [activeCompany, setActiveCompany] = useState<Company | null>(initialCompany);
-  const [step, setStep] = useState(initialCompany?.current_step ?? 0);
+  const [step, setStep] = useState(Math.min(initialCompany?.current_step ?? 0, STEPS.length - 1));
   const [officialSubStep, setOfficialSubStep] = useState(0);
   const [data, setData] = useState<WizardData>(
     initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "", done: false }
@@ -146,7 +146,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
   function handleSelectCompany(company: Company) {
     setActiveCompany(company);
-    setStep(company.current_step);
+    setStep(Math.min(company.current_step, STEPS.length - 1));
     setOfficialSubStep(0);
     setData(companyToData(company));
     window.scrollTo({ top: 0, behavior: "smooth" });
