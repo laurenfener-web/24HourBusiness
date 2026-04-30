@@ -311,6 +311,8 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                   onSubStepChange={setOfficialSubStep}
                   onStructureChange={handleStructureChange}
                   onComplete={() => next()}
+                  companyId={activeCompany?.id ?? ""}
+                  userEmail={userEmail}
                 />
               )}
               {step === 4 && <Step5Bank onComplete={() => next()} />}

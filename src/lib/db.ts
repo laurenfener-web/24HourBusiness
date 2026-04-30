@@ -45,6 +45,50 @@ export async function initDb() {
   `;
 }
 
+export async function initOrdersTable() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS filing_orders (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      company_id UUID REFERENCES companies(id),
+      user_email TEXT NOT NULL,
+      business_name TEXT NOT NULL,
+      state TEXT NOT NULL,
+      structure TEXT NOT NULL,
+      organizer_name TEXT NOT NULL,
+      address_line1 TEXT NOT NULL,
+      city TEXT NOT NULL,
+      zip TEXT NOT NULL,
+      phone TEXT DEFAULT '',
+      stripe_session_id TEXT,
+      amount_cents INT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending_payment',
+      filed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+}
+
+export interface FilingOrder {
+  id: string;
+  company_id: string;
+  user_email: string;
+  business_name: string;
+  state: string;
+  structure: string;
+  organizer_name: string;
+  address_line1: string;
+  city: string;
+  zip: string;
+  phone: string;
+  stripe_session_id: string | null;
+  amount_cents: number;
+  status: string;
+  filed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Company {
   id: string;
   user_id: string;

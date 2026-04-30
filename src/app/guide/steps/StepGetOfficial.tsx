@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Check, ChevronRight, DollarSign, Clock, AlertCircle, ExternalLink } from "lucide-react";
 import { OFFICIAL_SUBSTEPS, type SubStepKind } from "../GuideClient";
+import FileForMeCard from "@/components/FileForMeCard";
 
 interface Props {
   businessName: string;
@@ -12,6 +13,8 @@ interface Props {
   onSubStepChange: (n: number) => void;
   onStructureChange: (s: string) => void;
   onComplete: () => void;
+  companyId: string;
+  userEmail: string;
 }
 
 // ─── Shared UI helpers ──────────────────────────────────────────────────────
@@ -257,11 +260,15 @@ function FilingContent({
   state,
   structure,
   businessName,
+  companyId,
+  userEmail,
   onNext,
 }: {
   state: string;
   structure: string;
   businessName: string;
+  companyId: string;
+  userEmail: string;
   onNext: () => void;
 }) {
   if (structure === "sole") {
@@ -323,10 +330,21 @@ function FilingContent({
     );
   }
 
+  const showFileForMe = structure === "llc" || structure === "scorp";
+  const diyDivider = showFileForMe ? (
+    <div className="flex items-center gap-3">
+      <div className="flex-1 h-px bg-gray-100" />
+      <span className="text-xs text-gray-400 font-medium">or file it yourself</span>
+      <div className="flex-1 h-px bg-gray-100" />
+    </div>
+  ) : null;
+
   // LLC / S-Corp — state-specific content
   if (state === "Florida") {
     return (
       <div className="space-y-5">
+        {showFileForMe && <FileForMeCard state={state} structure={structure} businessName={businessName} companyId={companyId} userEmail={userEmail} />}
+        {diyDivider}
         <p className="text-sm text-gray-500 leading-relaxed">
           File your Articles of Organization with the Florida Division of Corporations. Florida processes same-day — one of the fastest in the country.
         </p>
@@ -356,6 +374,8 @@ function FilingContent({
   if (state === "California") {
     return (
       <div className="space-y-5">
+        {showFileForMe && <FileForMeCard state={state} structure={structure} businessName={businessName} companyId={companyId} userEmail={userEmail} />}
+        {diyDivider}
         <p className="text-sm text-gray-500 leading-relaxed">
           File your Articles of Organization with the California Secretary of State. This is the official document that creates your LLC.
         </p>
@@ -391,6 +411,8 @@ function FilingContent({
   if (state === "New York") {
     return (
       <div className="space-y-5">
+        {showFileForMe && <FileForMeCard state={state} structure={structure} businessName={businessName} companyId={companyId} userEmail={userEmail} />}
+        {diyDivider}
         <p className="text-sm text-gray-500 leading-relaxed">
           File your Articles of Organization with the New York Department of State to officially create your LLC.
         </p>
@@ -420,6 +442,8 @@ function FilingContent({
   if (state === "Texas") {
     return (
       <div className="space-y-5">
+        {showFileForMe && <FileForMeCard state={state} structure={structure} businessName={businessName} companyId={companyId} userEmail={userEmail} />}
+        {diyDivider}
         <p className="text-sm text-gray-500 leading-relaxed">
           File a Certificate of Formation with the Texas Secretary of State. Texas processes same-day and has no publication requirement.
         </p>
@@ -671,6 +695,8 @@ export default function StepGetOfficial({
   onSubStepChange,
   onStructureChange,
   onComplete,
+  companyId,
+  userEmail,
 }: Props) {
   const subSteps = OFFICIAL_SUBSTEPS[state] ?? [];
   const current = subSteps[subStep];
@@ -718,6 +744,8 @@ export default function StepGetOfficial({
           state={state}
           structure={structure}
           businessName={businessName}
+          companyId={companyId}
+          userEmail={userEmail}
           onNext={advance}
         />
       )}
