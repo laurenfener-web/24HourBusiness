@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { STATE_FILING_DATA } from "@/lib/state-data";
 
 interface Props {
@@ -36,8 +35,6 @@ const FOCUS_STATES = [
 ];
 
 export default function StepSelectState({ onComplete }: Props) {
-  const [selected, setSelected] = useState("");
-
   return (
     <div className="space-y-5">
       <p className="text-sm text-gray-500 leading-relaxed">
@@ -47,27 +44,20 @@ export default function StepSelectState({ onComplete }: Props) {
       <div className="space-y-2">
         {FOCUS_STATES.map(({ name, abbr, note, noteType }) => {
           const info = STATE_FILING_DATA[name];
-          const isSelected = selected === name;
 
           return (
             <button
               key={name}
-              onClick={() => setSelected(name)}
-              className={`w-full text-left rounded-xl border-2 p-5 transition-all ${
-                isSelected
-                  ? "border-indigo-500 bg-indigo-50"
-                  : "border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50"
-              }`}
+              onClick={() => onComplete({ state: name })}
+              className="w-full text-left rounded-xl border-2 border-gray-100 bg-white hover:border-indigo-400 hover:bg-indigo-50 p-5 transition-all group"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className={`text-xs font-bold font-mono px-2 py-1 rounded-md shrink-0 tracking-wide ${
-                    isSelected ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500"
-                  }`}>
+                  <span className="text-xs font-bold font-mono px-2 py-1 rounded-md shrink-0 tracking-wide bg-gray-100 text-gray-500 group-hover:bg-indigo-100 group-hover:text-indigo-700 transition-colors">
                     {abbr}
                   </span>
                   <div className="min-w-0">
-                    <p className={`font-bold text-lg leading-tight ${isSelected ? "text-indigo-900" : "text-gray-900"}`}>
+                    <p className="font-bold text-lg leading-tight text-gray-900 group-hover:text-indigo-900 transition-colors">
                       {name}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
@@ -77,10 +67,8 @@ export default function StepSelectState({ onComplete }: Props) {
                     </div>
                   </div>
                 </div>
-                <div className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 ${
-                  isSelected ? "bg-indigo-600 border-indigo-600" : "border-gray-200"
-                }`}>
-                  {isSelected && <Check className="w-3 h-3 text-white" />}
+                <div className="shrink-0 w-6 h-6 rounded-full border-2 border-gray-200 group-hover:border-indigo-600 group-hover:bg-indigo-600 flex items-center justify-center transition-colors mt-0.5">
+                  <Check className="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
               <p className={`text-xs mt-3 leading-relaxed ${
@@ -92,14 +80,6 @@ export default function StepSelectState({ onComplete }: Props) {
           );
         })}
       </div>
-
-      <button
-        onClick={() => onComplete({ state: selected })}
-        disabled={!selected}
-        className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
-      >
-        {selected ? `Continue with ${selected}` : "Select your state"} <ArrowRight className="w-4 h-4" />
-      </button>
     </div>
   );
 }
