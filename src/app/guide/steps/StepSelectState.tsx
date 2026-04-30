@@ -1,61 +1,61 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 interface Props {
   onComplete: (data: { state: string }) => void;
 }
 
-const STATES = [
-  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
-  "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
-  "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
-  "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
-  "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
-  "New Hampshire", "New Jersey", "New Mexico", "New York",
-  "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
-  "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
-  "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
-  "West Virginia", "Wisconsin", "Wyoming",
+const FOCUS_STATES = [
+  { name: "California", emoji: "☀️" },
+  { name: "New York",   emoji: "🗽" },
+  { name: "Florida",    emoji: "🌴" },
+  { name: "Texas",      emoji: "⭐" },
 ];
 
 export default function StepSelectState({ onComplete }: Props) {
-  const [state, setState] = useState("");
+  const [selected, setSelected] = useState("");
 
   return (
     <div className="space-y-6">
       <p className="text-sm text-gray-500 leading-relaxed">
-        Select the state where you live or primarily do business. This determines your filing requirements, fees, and timelines — they vary a lot by state.
+        Where do you live? Your state determines your filing steps, fees, and timeline — we&apos;ll customize the rest of the guide for you.
       </p>
 
-      <div>
-        <label className="block text-sm font-semibold text-gray-800 mb-2">
-          Which state are you in?
-        </label>
-        <select
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-          autoFocus
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white text-sm"
-        >
-          <option value="">Select your state...</option>
-          {STATES.map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-500 leading-relaxed">
-        <strong className="text-gray-700">Not sure which state?</strong> Pick where you actually live and work — not necessarily where filing is cheapest. Operating in a state you didn&apos;t register in usually requires registering there anyway.
+      <div className="grid grid-cols-2 gap-3">
+        {FOCUS_STATES.map(({ name, emoji }) => {
+          const isSelected = selected === name;
+          return (
+            <button
+              key={name}
+              onClick={() => setSelected(name)}
+              className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all ${
+                isSelected
+                  ? "border-indigo-500 bg-indigo-50"
+                  : "border-gray-100 bg-gray-50 hover:border-gray-200 hover:bg-white"
+              }`}
+            >
+              {isSelected && (
+                <div className="absolute top-3 right-3 w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center">
+                  <Check className="w-3 h-3 text-white" />
+                </div>
+              )}
+              <span className="text-4xl leading-none">{emoji}</span>
+              <span className={`font-bold text-base ${isSelected ? "text-indigo-700" : "text-gray-900"}`}>
+                {name}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <button
-        onClick={() => onComplete({ state })}
-        disabled={!state}
+        onClick={() => onComplete({ state: selected })}
+        disabled={!selected}
         className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
       >
-        Continue with {state || "…"} <ArrowRight className="w-4 h-4" />
+        {selected ? `Continue with ${selected}` : "Select your state"} <ArrowRight className="w-4 h-4" />
       </button>
     </div>
   );

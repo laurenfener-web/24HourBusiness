@@ -4,14 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check, ChevronLeft } from "lucide-react";
 import Step1Name from "./steps/Step1Name";
-import Step2Structure from "./steps/Step2Structure";
+import StepLogo from "./steps/StepLogo";
 import StepSelectState from "./steps/StepSelectState";
-import Step3LLC from "./steps/Step3LLC";
-import Step4EIN from "./steps/Step4EIN";
+import StepGetOfficial from "./steps/StepGetOfficial";
 import Step5Bank from "./steps/Step5Bank";
 import Step6CreditCard from "./steps/Step6CreditCard";
 import Step7Accounting from "./steps/Step7Accounting";
-import StepLogo from "./steps/StepLogo";
 import StepDomain from "./steps/StepDomain";
 import StepWebsite from "./steps/StepWebsite";
 import Step8Launch from "./steps/Step8Launch";
@@ -29,10 +27,8 @@ interface WizardData {
 const STEPS = [
   { title: "Name your business", sub: "Find the perfect name" },
   { title: "Design your logo", sub: "AI-generated icon concepts", skippable: true },
-  { title: "Business structure", sub: "LLC, S-Corp, or sole prop" },
   { title: "Select your state", sub: "Laws vary by state" },
-  { title: "File your business", sub: "Official registration" },
-  { title: "Get your EIN", sub: "Free from the IRS" },
+  { title: "Get official", sub: "Structure, filing & tax ID" },
   { title: "Open a bank account", sub: "Keep money separate" },
   { title: "Business credit card", sub: "Build credit & earn rewards" },
   { title: "Set up accounting", sub: "Track from day one", skippable: true },
@@ -41,25 +37,52 @@ const STEPS = [
   { title: "Launch", sub: "Go get that first customer" },
 ];
 
-const FILING_STEP = 4;
+const OFFICIAL_STEP = 3;
 
-// State-specific filing sub-steps for the 4 focus states
-export const FILING_SUBSTEPS: Record<string, Array<{ title: string; desc: string; optional?: boolean }>> = {
+export type SubStepKind =
+  | "structure"
+  | "name-check"
+  | "file"
+  | "ein"
+  | "statement-of-info"
+  | "publish"
+  | "cert-of-pub";
+
+export interface OfficialSubStepDef {
+  kind: SubStepKind;
+  title: string;
+  hint?: string;
+  optional?: boolean;
+}
+
+// Per-state ordering of the "Get official" sub-steps.
+// EIN is placed where it makes most sense given processing time:
+//   - CA & NY: after filing (do EIN during the processing wait)
+//   - FL & TX: after filing (same-day processing, EIN follows immediately)
+export const OFFICIAL_SUBSTEPS: Record<string, OfficialSubStepDef[]> = {
   California: [
-    { title: "Check name availability", desc: "Confirm your name is available before filing", optional: true },
-    { title: "File Articles of Organization", desc: "$70 fee · 3–5 business days" },
-    { title: "File Statement of Information", desc: "$20 fee · due within 90 days" },
+    { kind: "structure", title: "Business structure" },
+    { kind: "name-check", title: "Reserve your name", optional: true },
+    { kind: "file", title: "File Articles" },
+    { kind: "ein", title: "Get your EIN", hint: "Do this during your 3–5 day wait" },
+    { kind: "statement-of-info", title: "Statement of Information" },
   ],
   "New York": [
-    { title: "File Articles of Organization", desc: "$200 fee · 2–3 weeks" },
-    { title: "Publish in two newspapers", desc: "Required by NY law · 6 weeks · $1,000–2,000+" },
-    { title: "File Certificate of Publication", desc: "$50 fee · after publication ends" },
+    { kind: "structure", title: "Business structure" },
+    { kind: "file", title: "File Articles" },
+    { kind: "ein", title: "Get your EIN", hint: "Do this during your 2–3 week wait" },
+    { kind: "publish", title: "Publish notice" },
+    { kind: "cert-of-pub", title: "Certificate of Publication" },
   ],
   Florida: [
-    { title: "File Articles of Organization", desc: "$125 fee · same day" },
+    { kind: "structure", title: "Business structure" },
+    { kind: "file", title: "File with Florida" },
+    { kind: "ein", title: "Get your EIN" },
   ],
   Texas: [
-    { title: "File Certificate of Formation", desc: "$300 fee · same day" },
+    { kind: "structure", title: "Business structure" },
+    { kind: "file", title: "File Certificate" },
+    { kind: "ein", title: "Get your EIN" },
   ],
 };
 
@@ -90,7 +113,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
   const [companies, setCompanies] = useState<Company[]>(initialCompanies);
   const [activeCompany, setActiveCompany] = useState<Company | null>(initialCompany);
   const [step, setStep] = useState(initialCompany?.current_step ?? 0);
-  const [filingSubStep, setFilingSubStep] = useState(0);
+  const [officialSubStep, setOfficialSubStep] = useState(0);
   const [data, setData] = useState<WizardData>(
     initialCompany ? companyToData(initialCompany) : { businessName: "", structure: "llc", state: "", done: false }
   );
@@ -100,7 +123,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     const nextData = updatedData ?? data;
     setStep(nextStep);
     setData(nextData);
-    setFilingSubStep(0);
+    setOfficialSubStep(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (activeCompany) {
@@ -117,14 +140,14 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
   function back() {
     setStep(s => Math.max(s - 1, 0));
-    setFilingSubStep(0);
+    setOfficialSubStep(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleSelectCompany(company: Company) {
     setActiveCompany(company);
     setStep(company.current_step);
-    setFilingSubStep(0);
+    setOfficialSubStep(0);
     setData(companyToData(company));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -133,12 +156,18 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
     setCompanies(prev => [company, ...prev]);
     setActiveCompany(company);
     setStep(0);
-    setFilingSubStep(0);
+    setOfficialSubStep(0);
     setData({ businessName: "", structure: "llc", state: "", done: false });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const subSteps = FILING_SUBSTEPS[data.state];
+  function handleStructureChange(structure: string) {
+    const newData = { ...data, structure };
+    setData(newData);
+    if (activeCompany) saveCompany(activeCompany.id, { structure });
+  }
+
+  const officialSubSteps = OFFICIAL_SUBSTEPS[data.state];
 
   if (data.done) {
     return (
@@ -190,8 +219,8 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
             {STEPS.map((s, i) => {
               const done = i < step;
               const active = i === step;
-              const isFilingStep = i === FILING_STEP;
-              const showSubSteps = isFilingStep && subSteps && subSteps.length > 1 && (active || done);
+              const isOfficialStep = i === OFFICIAL_STEP;
+              const showSubSteps = isOfficialStep && officialSubSteps && officialSubSteps.length > 0 && (active || done);
 
               return (
                 <div key={i}>
@@ -222,9 +251,9 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
                   {showSubSteps && (
                     <div className="ml-8 mt-1 mb-1 space-y-1">
-                      {subSteps.map((sub, si) => {
-                        const subDone = done || si < filingSubStep;
-                        const subActive = active && si === filingSubStep;
+                      {officialSubSteps.map((sub, si) => {
+                        const subDone = done || si < officialSubStep;
+                        const subActive = active && si === officialSubStep;
                         return (
                           <div key={si} className={`flex items-center gap-2 px-2 py-1.5 rounded-lg ${subActive ? "bg-indigo-50" : ""}`}>
                             <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors ${
@@ -237,6 +266,9 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                                 {sub.title}
                                 {sub.optional && <span className="ml-1 text-gray-300">(optional)</span>}
                               </p>
+                              {sub.hint && subActive && (
+                                <p className="text-xs text-indigo-400 truncate italic">{sub.hint}</p>
+                              )}
                             </div>
                           </div>
                         );
@@ -269,25 +301,24 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
               {step === 0 && <Step1Name onComplete={(d) => next({ ...data, ...d })} />}
               {step === 1 && <StepLogo businessName={data.businessName} onComplete={() => next()} />}
-              {step === 2 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 3 && <StepSelectState onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 4 && (
-                <Step3LLC
+              {step === 2 && <StepSelectState onComplete={(d) => next({ ...data, ...d })} />}
+              {step === OFFICIAL_STEP && (
+                <StepGetOfficial
                   businessName={data.businessName}
-                  structure={data.structure}
                   state={data.state}
-                  subStep={filingSubStep}
-                  onSubStepChange={setFilingSubStep}
+                  structure={data.structure}
+                  subStep={officialSubStep}
+                  onSubStepChange={setOfficialSubStep}
+                  onStructureChange={handleStructureChange}
                   onComplete={() => next()}
                 />
               )}
-              {step === 5 && <Step4EIN businessName={data.businessName} onComplete={() => next()} />}
-              {step === 6 && <Step5Bank onComplete={() => next()} />}
-              {step === 7 && <Step6CreditCard onComplete={() => next()} />}
-              {step === 8 && <Step7Accounting onComplete={() => next()} />}
-              {step === 9 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
-              {step === 10 && <StepWebsite onComplete={() => next()} />}
-              {step === 11 && (
+              {step === 4 && <Step5Bank onComplete={() => next()} />}
+              {step === 5 && <Step6CreditCard onComplete={() => next()} />}
+              {step === 6 && <Step7Accounting onComplete={() => next()} />}
+              {step === 7 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
+              {step === 8 && <StepWebsite onComplete={() => next()} />}
+              {step === 9 && (
                 <Step8Launch
                   businessName={data.businessName}
                   userEmail={userEmail}
