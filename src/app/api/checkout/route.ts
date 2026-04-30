@@ -19,7 +19,7 @@ const STATE_FEE: Record<string, number> = {
 export async function POST(req: NextRequest) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const body = await req.json();
-  const { companyId, userEmail, businessName, state, structure, organizerName, addressLine1, city, zip, phone } = body;
+  const { companyId, userEmail, businessName, state, structure, organizerName, addressLine1, city, zip, phone, details } = body;
 
   const totalCents = PRICES[state];
   if (!totalCents) return NextResponse.json({ error: "Unsupported state" }, { status: 400 });
@@ -28,9 +28,9 @@ export async function POST(req: NextRequest) {
 
   const [order] = await sql`
     INSERT INTO filing_orders
-      (company_id, user_email, business_name, state, structure, organizer_name, address_line1, city, zip, phone, amount_cents)
+      (company_id, user_email, business_name, state, structure, organizer_name, address_line1, city, zip, phone, amount_cents, details)
     VALUES
-      (${companyId}, ${userEmail}, ${businessName}, ${state}, ${structure}, ${organizerName}, ${addressLine1}, ${city}, ${zip}, ${phone ?? ""}, ${totalCents})
+      (${companyId}, ${userEmail}, ${businessName}, ${state}, ${structure}, ${organizerName}, ${addressLine1}, ${city}, ${zip}, ${phone ?? ""}, ${totalCents}, ${details ? JSON.stringify(details) : null})
     RETURNING id
   `;
 

@@ -13,6 +13,7 @@ import Step7Accounting from "./steps/Step7Accounting";
 import StepDomain from "./steps/StepDomain";
 import StepWebsite from "./steps/StepWebsite";
 import Step8Launch from "./steps/Step8Launch";
+import StepFilingDetails from "./steps/StepFilingDetails";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Logo from "@/components/Logo";
 import { Company } from "@/lib/db";
@@ -34,6 +35,7 @@ const STEPS = [
   { title: "Set up accounting", sub: "Track from day one", skippable: true },
   { title: "Buy a domain", sub: "Own your web address", skippable: true },
   { title: "Build a website", sub: "Get online fast", skippable: true },
+  { title: "File your LLC", sub: "Professional filing service" },
   { title: "Launch", sub: "Go get that first customer" },
 ];
 
@@ -354,6 +356,16 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
               {step === 7 && <StepDomain businessName={data.businessName} onComplete={() => next()} />}
               {step === 8 && <StepWebsite onComplete={() => next()} />}
               {step === 9 && (
+                <StepFilingDetails
+                  businessName={data.businessName}
+                  state={data.state}
+                  structure={data.structure}
+                  companyId={activeCompany?.id ?? ""}
+                  userEmail={userEmail}
+                  onComplete={() => next()}
+                />
+              )}
+              {step === 10 && (
                 <Step8Launch
                   businessName={data.businessName}
                   userEmail={userEmail}

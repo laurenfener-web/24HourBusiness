@@ -61,6 +61,7 @@ export async function initOrdersTable() {
       phone TEXT DEFAULT '',
       stripe_session_id TEXT,
       amount_cents INT NOT NULL,
+      details TEXT,
       status TEXT NOT NULL DEFAULT 'pending_payment',
       filed_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -83,6 +84,7 @@ export interface FilingOrder {
   phone: string;
   stripe_session_id: string | null;
   amount_cents: number;
+  details: string | null;
   status: string;
   filed_at: string | null;
   created_at: string;
