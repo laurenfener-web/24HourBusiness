@@ -1,22 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Check, X } from "lucide-react";
+import { ArrowRight, Check, Plus, Trash2 } from "lucide-react";
 
-interface Props {
-  businessName: string;
-  state: string;
-  structure: string;
-  companyId: string;
-  userEmail: string;
-  onComplete: () => void;
-}
-
-const PRICES: Record<string, { display: string; stateFee: string }> = {
-  California: { display: "$149", stateFee: "$70" },
-  Florida:    { display: "$199", stateFee: "$125" },
-  "New York": { display: "$279", stateFee: "$200" },
-  Texas:      { display: "$379", stateFee: "$300" },
+const PRICES: Record<string, { display: string; stateFee: string; stateCents: number; totalCents: number }> = {
+  California: { display: "$149", stateFee: "$70",  stateCents: 7000,  totalCents: 14900 },
+  Florida:    { display: "$199", stateFee: "$125", stateCents: 12500, totalCents: 19900 },
+  "New York": { display: "$279", stateFee: "$200", stateCents: 20000, totalCents: 27900 },
+  Texas:      { display: "$379", stateFee: "$300", stateCents: 30000, totalCents: 37900 },
 };
 
 const US_STATES = [
@@ -29,591 +20,524 @@ const US_STATES = [
   "Virginia","Washington","West Virginia","Wisconsin","Wyoming",
 ];
 
-const INPUT_CLS =
-  "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]";
-const SECTION_HEADING_CLS = "text-xs font-bold uppercase tracking-widest text-gray-500 mb-3";
+type SubStep = "package" | "contact" | "address" | "agent" | "ownership" | "management" | "review";
 
-interface Member {
-  name: string;
-  ownership: string;
-}
+const SUBSTEP_LABELS: Record<SubStep, string> = {
+  package:    "How would you like to file?",
+  contact:    "Your contact info",
+  address:    "Your address",
+  agent:      "Registered agent",
+  ownership:  "Who owns this LLC?",
+  management: "Management structure",
+  review:     "Review your order",
+};
 
-interface FormState {
-  organizerName: string;
-  phone: string;
-  street: string;
-  city: string;
-  organizerState: string;
-  zip: string;
-  isSelfAgent: boolean;
-  agentName: string;
-  agentStreet: string;
-  agentCity: string;
-  agentState: string;
-  agentZip: string;
-  managementType: "member-managed" | "manager-managed";
-  businessPurpose: string;
-}
+const PROGRESS_STEPS: SubStep[] = ["contact", "address", "agent", "ownership", "management", "review"];
 
-export default function StepFilingDetails({
-  businessName,
-  state,
-  structure,
-  companyId,
-  userEmail,
-  onComplete,
-}: Props) {
-  // Sole proprietor — no filing needed
-  if (structure === "sole") {
-    return (
-      <div className="space-y-5">
-        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
-          <p className="font-semibold text-emerald-800 mb-1">No filing service needed</p>
-          <p className="text-sm text-emerald-700">
-            Sole proprietors don&apos;t file with the state to form their business, so there&apos;s nothing for us to file on your behalf.
-          </p>
-        </div>
-        <button
-          onClick={onComplete}
-          className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
-        >
-          Continue <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
+interface Member { name: string; ownership: string; }
 
-  // C-Corp — handled elsewhere
-  if (structure === "ccorp") {
-    return (
-      <div className="space-y-5">
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
-          <p className="font-semibold text-blue-800 mb-1">C-Corp filing via Stripe Atlas or Delaware direct</p>
-          <p className="text-sm text-blue-700">
-            C-Corp formation is handled through Stripe Atlas (recommended) or by filing directly with Delaware. Our service covers LLCs and S-Corps only.
-          </p>
-        </div>
-        <button
-          onClick={onComplete}
-          className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
-        >
-          Continue <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
-
-  // LLC / S-Corp but state not supported
-  const price = PRICES[state];
-  if (!price) {
-    return (
-      <div className="space-y-5">
-        <div className="bg-gray-50 border border-gray-100 rounded-xl p-5">
-          <p className="font-semibold text-gray-800 mb-1">Filing service not yet available for {state || "your state"}</p>
-          <p className="text-sm text-gray-500">
-            We currently support California, Florida, New York, and Texas. You can file directly with {state || "your state"}&apos;s Secretary of State using the instructions in the previous step.
-          </p>
-        </div>
-        <button
-          onClick={onComplete}
-          className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
-        >
-          Continue <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
-
-  // LLC / S-Corp with supported state — show full form
-  return (
-    <FilingServiceForm
-      businessName={businessName}
-      state={state}
-      structure={structure}
-      companyId={companyId}
-      userEmail={userEmail}
-      price={price}
-      onComplete={onComplete}
-    />
-  );
-}
-
-function FilingServiceForm({
-  businessName,
-  state,
-  structure,
-  companyId,
-  userEmail,
-  price,
-  onComplete,
-}: {
+interface Props {
   businessName: string;
   state: string;
   structure: string;
   companyId: string;
   userEmail: string;
-  price: { display: string; stateFee: string };
   onComplete: () => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+}
 
-  const [form, setForm] = useState<FormState>({
-    organizerName: "",
-    phone: "",
-    street: "",
-    city: "",
-    organizerState: state,
-    zip: "",
-    isSelfAgent: true,
-    agentName: "",
-    agentStreet: "",
-    agentCity: "",
-    agentState: state,
-    agentZip: "",
-    managementType: "member-managed",
-    businessPurpose: "To engage in any lawful business activity",
-  });
-
-  const [members, setMembers] = useState<Member[]>([{ name: "", ownership: "100" }]);
-
-  function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  function addMember() {
-    setMembers((m) => [...m, { name: "", ownership: "" }]);
-  }
-
-  function removeMember(idx: number) {
-    setMembers((m) => m.filter((_, i) => i !== idx));
-  }
-
-  function updateMember(idx: number, field: keyof Member, value: string) {
-    setMembers((m) => m.map((mem, i) => (i === idx ? { ...mem, [field]: value } : mem)));
-  }
-
-  const totalOwnership = members.reduce((sum, m) => {
-    const pct = parseFloat(m.ownership);
-    return sum + (isNaN(pct) ? 0 : pct);
-  }, 0);
-  const ownershipOk = Math.round(totalOwnership) === 100;
-
-  const isComplete =
-    form.organizerName.trim() !== "" &&
-    form.phone.trim() !== "" &&
-    form.street.trim() !== "" &&
-    form.city.trim() !== "" &&
-    form.organizerState.trim() !== "" &&
-    form.zip.trim() !== "" &&
-    (form.isSelfAgent ||
-      (form.agentName.trim() !== "" &&
-        form.agentStreet.trim() !== "" &&
-        form.agentCity.trim() !== "" &&
-        form.agentState.trim() !== "" &&
-        form.agentZip.trim() !== "")) &&
-    members.every((m) => m.name.trim() !== "" && m.ownership.trim() !== "") &&
-    ownershipOk;
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!isComplete) return;
-    setLoading(true);
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        companyId,
-        userEmail,
-        businessName,
-        state,
-        structure,
-        organizerName: form.organizerName,
-        addressLine1: form.street,
-        city: form.city,
-        zip: form.zip,
-        phone: form.phone,
-        details: {
-          organizerState: form.organizerState,
-          managementType: form.managementType,
-          businessPurpose: form.businessPurpose,
-          isSelfAgent: form.isSelfAgent,
-          registeredAgent: form.isSelfAgent
-            ? null
-            : {
-                name: form.agentName,
-                street: form.agentStreet,
-                city: form.agentCity,
-                state: form.agentState,
-                zip: form.agentZip,
-              },
-          members,
-        },
-      }),
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else setLoading(false);
-  }
-
+function ProgressBar({ current }: { current: SubStep }) {
+  const idx = PROGRESS_STEPS.indexOf(current);
+  if (idx < 0) return null;
   return (
-    <div className="rounded-xl border-2 border-[#D4AF37]/40 bg-[#D4AF37]/6 overflow-hidden">
-      {/* Card header */}
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="font-bold text-gray-900 text-base">We&apos;ll file it for you</p>
-            <p className="text-sm text-gray-500 mt-0.5">You focus on the business. We handle the paperwork.</p>
-          </div>
-          <p className="font-bold text-2xl text-gray-900 shrink-0">{price.display}</p>
-        </div>
+    <div className="flex gap-1 mb-5">
+      {PROGRESS_STEPS.map((_, i) => (
+        <div key={i} className={`h-1 flex-1 rounded-full transition-all ${i <= idx ? "bg-[#D4AF37]" : "bg-gray-200"}`} />
+      ))}
+    </div>
+  );
+}
 
-        <ul className="mt-4 space-y-1.5">
-          {[
-            `File your Articles of Organization with ${state}`,
-            "Track your filing status",
-            "Forward your approval certificate",
-            `Includes ${price.stateFee} state filing fee`,
-          ].map((item) => (
-            <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
-              <Check className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-              {item}
-            </li>
-          ))}
-        </ul>
-
-        {!open && (
-          <button
-            onClick={() => setOpen(true)}
-            className="mt-5 w-full bg-[#D4AF37] hover:bg-[#B8962E] text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
-          >
-            File my {state} {structure === "scorp" ? "S-Corp" : "LLC"} for {price.display}{" "}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        )}
-      </div>
-
-      {/* Expanded form */}
-      {open && (
-        <form onSubmit={handleSubmit} className="bg-white p-5 space-y-6 border-t border-[#D4AF37]/40">
-          {/* Section: Organizer */}
-          <div>
-            <p className={SECTION_HEADING_CLS}>Your information (organizer)</p>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  Full legal name <span className="text-red-400">*</span>
-                </label>
-                <input
-                  value={form.organizerName}
-                  onChange={(e) => setField("organizerName", e.target.value)}
-                  placeholder="Jane Smith"
-                  className={INPUT_CLS}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  Phone number <span className="text-red-400">*</span>
-                </label>
-                <input
-                  value={form.phone}
-                  onChange={(e) => setField("phone", e.target.value)}
-                  placeholder="(555) 000-0000"
-                  className={INPUT_CLS}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  Street address <span className="text-red-400">*</span>
-                </label>
-                <input
-                  value={form.street}
-                  onChange={(e) => setField("street", e.target.value)}
-                  placeholder="123 Main St"
-                  className={INPUT_CLS}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">
-                    City <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    value={form.city}
-                    onChange={(e) => setField("city", e.target.value)}
-                    placeholder="Los Angeles"
-                    className={INPUT_CLS}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">
-                    ZIP <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    value={form.zip}
-                    onChange={(e) => setField("zip", e.target.value)}
-                    placeholder="90001"
-                    className={INPUT_CLS}
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  State <span className="text-red-400">*</span>
-                </label>
-                <select
-                  value={form.organizerState}
-                  onChange={(e) => setField("organizerState", e.target.value)}
-                  className={INPUT_CLS}
-                >
-                  {US_STATES.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Section: Registered agent */}
-          <div>
-            <p className={SECTION_HEADING_CLS}>Registered agent</p>
-            <label className="flex items-start gap-3 cursor-pointer mb-3">
-              <input
-                type="checkbox"
-                checked={form.isSelfAgent}
-                onChange={(e) => setField("isSelfAgent", e.target.checked)}
-                className="mt-0.5 accent-[#D4AF37] w-4 h-4 shrink-0"
-              />
-              <span className="text-sm text-gray-700">
-                <span className="font-semibold">I&apos;ll be my own registered agent</span>
-                <span className="block text-gray-400 text-xs mt-0.5">
-                  A registered agent receives legal documents on behalf of your LLC. This can be you.
-                </span>
-              </span>
-            </label>
-
-            {!form.isSelfAgent && (
-              <div className="space-y-3 pl-4 border-l-2 border-[#D4AF37]/30">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">
-                    Agent full name <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    value={form.agentName}
-                    onChange={(e) => setField("agentName", e.target.value)}
-                    placeholder="John Doe"
-                    className={INPUT_CLS}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">
-                    Agent street address <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    value={form.agentStreet}
-                    onChange={(e) => setField("agentStreet", e.target.value)}
-                    placeholder="456 Agent Ave"
-                    className={INPUT_CLS}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">
-                      Agent city <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      value={form.agentCity}
-                      onChange={(e) => setField("agentCity", e.target.value)}
-                      placeholder="Austin"
-                      className={INPUT_CLS}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">
-                      Agent ZIP <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      value={form.agentZip}
-                      onChange={(e) => setField("agentZip", e.target.value)}
-                      placeholder="73301"
-                      className={INPUT_CLS}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">
-                    Agent state <span className="text-red-400">*</span>
-                  </label>
-                  <select
-                    value={form.agentState}
-                    onChange={(e) => setField("agentState", e.target.value)}
-                    className={INPUT_CLS}
-                  >
-                    {US_STATES.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Section: Management structure */}
-          <div>
-            <p className={SECTION_HEADING_CLS}>Management structure</p>
-            <div className="space-y-2">
-              {(
-                [
-                  {
-                    value: "member-managed",
-                    label: "Member-managed",
-                    description: "All owners manage the business day-to-day. Best for most small LLCs.",
-                  },
-                  {
-                    value: "manager-managed",
-                    label: "Manager-managed",
-                    description:
-                      "You appoint one or more managers to run operations. Common when some members are passive investors.",
-                  },
-                ] as const
-              ).map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setField("managementType", opt.value)}
-                  className={`w-full text-left border rounded-xl p-4 transition-all ${
-                    form.managementType === opt.value
-                      ? "border-[#D4AF37] bg-[#D4AF37]/10"
-                      : "border-gray-100 bg-gray-50 hover:bg-white hover:border-gray-200"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                        form.managementType === opt.value
-                          ? "bg-[#D4AF37] border-[#D4AF37]"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      {form.managementType === opt.value && <Check className="w-3 h-3 text-white" />}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">{opt.label}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{opt.description}</p>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Section: Members */}
-          <div>
-            <p className={SECTION_HEADING_CLS}>Who owns this LLC?</p>
-            <div className="space-y-2">
-              {members.map((member, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <input
-                    value={member.name}
-                    onChange={(e) => updateMember(idx, "name", e.target.value)}
-                    placeholder="Full name"
-                    className={INPUT_CLS + " flex-1"}
-                  />
-                  <div className="relative w-24 shrink-0">
-                    <input
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={member.ownership}
-                      onChange={(e) => updateMember(idx, "ownership", e.target.value)}
-                      placeholder="100"
-                      className={INPUT_CLS + " pr-6"}
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
-                  </div>
-                  {members.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeMember(idx)}
-                      className="text-gray-300 hover:text-red-400 transition-colors p-1 shrink-0"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={addMember}
-              className="mt-2 text-xs font-semibold text-[#D4AF37] hover:text-[#B8962E] transition-colors"
-            >
-              + Add member
-            </button>
-
-            {members.length > 1 && (
-              <p
-                className={`mt-2 text-xs font-medium ${
-                  ownershipOk ? "text-emerald-600" : "text-red-500"
-                }`}
-              >
-                Total: {Math.round(totalOwnership * 100) / 100}%{!ownershipOk && " — must equal 100%"}
-              </p>
-            )}
-          </div>
-
-          {/* Section: Business purpose */}
-          <div>
-            <p className={SECTION_HEADING_CLS}>Business purpose</p>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Business purpose</label>
-            <textarea
-              value={form.businessPurpose}
-              onChange={(e) => setField("businessPurpose", e.target.value)}
-              rows={3}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] resize-none"
-            />
-            <p className="text-xs text-gray-400 mt-1">
-              Most LLCs use a general purpose. You can be more specific if you prefer.
-            </p>
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={!isComplete || loading}
-            className="w-full bg-[#D4AF37] hover:bg-[#B8962E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2"
-          >
-            {loading ? "Redirecting to checkout…" : `File my LLC — ${price.display}`}
-            {!loading && <ArrowRight className="w-4 h-4" />}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            className="w-full text-sm text-gray-400 hover:text-gray-600 transition-colors py-1"
-          >
-            Cancel
-          </button>
-        </form>
+function StepLabel({ sub }: { sub: SubStep }) {
+  const idx = PROGRESS_STEPS.indexOf(sub);
+  return (
+    <div className="mb-5">
+      {idx >= 0 && (
+        <p className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-1">
+          Step {idx + 1} of {PROGRESS_STEPS.length}
+        </p>
       )}
+      <h3 className="text-xl font-bold text-gray-900">{SUBSTEP_LABELS[sub]}</h3>
+    </div>
+  );
+}
 
-      {/* "I'll file it myself" link shown when card is collapsed */}
-      {!open && (
-        <div className="px-5 pb-4 text-center">
-          <button
-            type="button"
-            onClick={onComplete}
-            className="text-sm text-gray-400 hover:text-gray-600 transition-colors font-medium"
-          >
-            I&apos;ll file it myself →
-          </button>
-        </div>
+function ReviewRow({ label, value, onEdit }: { label: string; value: string; onEdit?: () => void }) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide w-28 shrink-0 pt-0.5">{label}</p>
+      <p className="text-sm text-gray-900 flex-1 leading-snug">{value || "—"}</p>
+      {onEdit && (
+        <button onClick={onEdit} className="text-xs text-[#D4AF37] hover:text-[#B8962E] font-semibold shrink-0 transition-colors">
+          Edit
+        </button>
       )}
     </div>
   );
+}
+
+function ContinueBtn({ disabled, onClick, label = "Continue" }: { disabled?: boolean; onClick: () => void; label?: string }) {
+  return (
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className="w-full bg-[#D4AF37] hover:bg-[#B8962E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
+    >
+      {label} <ArrowRight className="w-4 h-4" />
+    </button>
+  );
+}
+
+export default function StepFilingDetails({ businessName, state, structure, companyId, userEmail, onComplete }: Props) {
+  const price = PRICES[state];
+
+  const [sub, setSub] = useState<SubStep>("package");
+  const [loading, setLoading] = useState(false);
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [orgState, setOrgState] = useState(state || US_STATES[0]);
+  const [zip, setZip] = useState("");
+  const [isSelfAgent, setIsSelfAgent] = useState(true);
+  const [agentName, setAgentName] = useState("");
+  const [agentStreet, setAgentStreet] = useState("");
+  const [agentCity, setAgentCity] = useState("");
+  const [agentState, setAgentState] = useState(state || US_STATES[0]);
+  const [agentZip, setAgentZip] = useState("");
+  const [members, setMembers] = useState<Member[]>([{ name: "", ownership: "100" }]);
+  const [mgmt, setMgmt] = useState<"member-managed" | "manager-managed">("member-managed");
+
+  function go(next: SubStep) {
+    setSub(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function handlePlaceOrder() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyId, userEmail, businessName, state, structure,
+          organizerName: name,
+          addressLine1: street,
+          city, zip, phone,
+          details: {
+            organizerState: orgState,
+            managementType: mgmt,
+            businessPurpose: "any lawful business purpose",
+            isSelfAgent,
+            registeredAgent: isSelfAgent ? null : { name: agentName, street: agentStreet, city: agentCity, state: agentState, zip: agentZip },
+            members,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else setLoading(false);
+    } catch {
+      setLoading(false);
+    }
+  }
+
+  // Sole prop / C-Corp bypass
+  if (structure === "sole") {
+    return (
+      <div className="space-y-5">
+        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
+          <p className="font-semibold text-emerald-800">No filing service needed</p>
+          <p className="text-sm text-emerald-700 mt-1">Sole proprietors don't file formation documents — you're already in business.</p>
+        </div>
+        <ContinueBtn onClick={onComplete} />
+      </div>
+    );
+  }
+
+  if (structure === "ccorp") {
+    return (
+      <div className="space-y-5">
+        <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
+          <p className="font-semibold text-blue-800">C-Corp filing is handled separately</p>
+          <p className="text-sm text-blue-700 mt-1">Use Stripe Atlas or file directly with Delaware — covered in the Get Official step.</p>
+        </div>
+        <ContinueBtn onClick={onComplete} />
+      </div>
+    );
+  }
+
+  // Package selection
+  if (sub === "package") {
+    return (
+      <div className="space-y-5">
+        <StepLabel sub="package" />
+        <p className="text-sm text-gray-500 -mt-3">
+          You're forming a <strong className="text-gray-800">{state} {structure === "scorp" ? "S-Corp" : "LLC"}</strong>.
+        </p>
+        <div className="space-y-3">
+          <button
+            onClick={onComplete}
+            className="w-full text-left border border-gray-200 hover:border-gray-300 hover:bg-gray-50 rounded-xl p-5 transition-all"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="font-bold text-gray-900">File it myself</p>
+                <p className="text-sm text-gray-500 mt-1">I'll handle the paperwork on the state website.</p>
+                <ul className="mt-3 space-y-1.5">
+                  {["File directly on the state website", "Takes 30–60 minutes", "Pay state fee directly"].map(item => (
+                    <li key={item} className="flex items-center gap-2 text-xs text-gray-400">
+                      <span className="text-gray-300">→</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <span className="text-lg font-bold text-gray-400 shrink-0">Free</span>
+            </div>
+          </button>
+
+          {price ? (
+            <button
+              onClick={() => go("contact")}
+              className="w-full text-left border-2 border-[#D4AF37] bg-[#D4AF37]/5 hover:bg-[#D4AF37]/10 rounded-xl p-5 transition-all"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="font-bold text-gray-900">We file it for you</p>
+                    <span className="text-xs font-semibold bg-[#D4AF37] text-white px-2 py-0.5 rounded-full">Recommended</span>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">We handle the paperwork, track your filing, and send your certificate.</p>
+                  <ul className="mt-3 space-y-1.5">
+                    {[
+                      `Includes ${price.stateFee} state filing fee`,
+                      "We prepare & file Articles of Organization",
+                      "Filing status updates by email",
+                      "Certificate forwarded when approved",
+                    ].map(item => (
+                      <li key={item} className="flex items-center gap-2 text-xs text-gray-700">
+                        <Check className="w-3 h-3 text-[#D4AF37] shrink-0" />{item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <span className="text-2xl font-bold text-gray-900 shrink-0">{price.display}</span>
+              </div>
+            </button>
+          ) : (
+            <div className="border border-gray-100 rounded-xl p-5 text-sm text-gray-400">
+              Filing service not yet available for {state}.
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Contact
+  if (sub === "contact") {
+    const ok = name.trim() !== "" && phone.trim() !== "";
+    return (
+      <div className="space-y-5">
+        <ProgressBar current={sub} />
+        <StepLabel sub={sub} />
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Full legal name</label>
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="Jane Smith"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Phone number</label>
+            <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="(555) 000-0000" type="tel"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+          </div>
+        </div>
+        <ContinueBtn disabled={!ok} onClick={() => go("address")} />
+      </div>
+    );
+  }
+
+  // Address
+  if (sub === "address") {
+    const ok = street.trim() !== "" && city.trim() !== "" && zip.trim() !== "";
+    return (
+      <div className="space-y-5">
+        <ProgressBar current={sub} />
+        <StepLabel sub={sub} />
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Street address</label>
+            <input value={street} onChange={e => setStreet(e.target.value)} placeholder="123 Main St"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">City</label>
+            <input value={city} onChange={e => setCity(e.target.value)} placeholder="Los Angeles"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">State</label>
+              <select value={orgState} onChange={e => setOrgState(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]">
+                {US_STATES.map(s => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">ZIP code</label>
+              <input value={zip} onChange={e => setZip(e.target.value)} placeholder="90001"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+            </div>
+          </div>
+        </div>
+        <ContinueBtn disabled={!ok} onClick={() => go("agent")} />
+      </div>
+    );
+  }
+
+  // Registered agent
+  if (sub === "agent") {
+    const customOk = agentName.trim() !== "" && agentStreet.trim() !== "" && agentCity.trim() !== "" && agentZip.trim() !== "";
+    const ok = isSelfAgent || customOk;
+    return (
+      <div className="space-y-5">
+        <ProgressBar current={sub} />
+        <StepLabel sub={sub} />
+        <p className="text-sm text-gray-500 -mt-3">
+          A registered agent receives official mail and legal documents for your LLC. They must have a {state} address.
+        </p>
+        <div className="space-y-3">
+          {([
+            { value: true,  label: "I'll be my own registered agent", desc: "Use your own address. Free. Works for most small LLCs." },
+            { value: false, label: "Use a different registered agent", desc: `Enter the name and ${state} address of another person or service.` },
+          ] as const).map(opt => (
+            <button
+              key={String(opt.value)}
+              onClick={() => setIsSelfAgent(opt.value)}
+              className={`w-full text-left border rounded-xl p-4 transition-all ${
+                isSelfAgent === opt.value ? "border-[#D4AF37] bg-[#D4AF37]/5" : "border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                  isSelfAgent === opt.value ? "border-[#D4AF37] bg-[#D4AF37]" : "border-gray-300"
+                }`}>
+                  {isSelfAgent === opt.value && <Check className="w-3 h-3 text-white" />}
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">{opt.label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{opt.desc}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+        {!isSelfAgent && (
+          <div className="space-y-4 pt-1">
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Agent full name</label>
+              <input value={agentName} onChange={e => setAgentName(e.target.value)} placeholder="Jane Smith"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Street address</label>
+              <input value={agentStreet} onChange={e => setAgentStreet(e.target.value)} placeholder="123 Main St"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">City</label>
+              <input value={agentCity} onChange={e => setAgentCity(e.target.value)} placeholder="Los Angeles"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">State</label>
+                <select value={agentState} onChange={e => setAgentState(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]">
+                  {US_STATES.map(s => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">ZIP code</label>
+                <input value={agentZip} onChange={e => setAgentZip(e.target.value)} placeholder="90001"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" />
+              </div>
+            </div>
+          </div>
+        )}
+        <ContinueBtn disabled={!ok} onClick={() => go("ownership")} />
+      </div>
+    );
+  }
+
+  // Ownership
+  if (sub === "ownership") {
+    const total = Math.round(members.reduce((s, m) => s + (parseFloat(m.ownership) || 0), 0));
+    const ok = members.every(m => m.name.trim() !== "" && m.ownership.trim() !== "") && total === 100;
+    return (
+      <div className="space-y-5">
+        <ProgressBar current={sub} />
+        <StepLabel sub={sub} />
+        <p className="text-sm text-gray-500 -mt-3">Add each owner and their ownership %. Total must equal 100%.</p>
+        <div className="space-y-2">
+          {members.map((m, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <input
+                value={m.name}
+                onChange={e => setMembers(ms => ms.map((x, j) => j === i ? { ...x, name: e.target.value } : x))}
+                placeholder="Full legal name"
+                className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              />
+              <div className="relative w-24 shrink-0">
+                <input
+                  value={m.ownership}
+                  onChange={e => setMembers(ms => ms.map((x, j) => j === i ? { ...x, ownership: e.target.value } : x))}
+                  placeholder="100"
+                  type="number"
+                  min="0"
+                  max="100"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] pr-6"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none">%</span>
+              </div>
+              {members.length > 1 && (
+                <button onClick={() => setMembers(ms => ms.filter((_, j) => j !== i))} className="text-gray-300 hover:text-red-400 transition-colors shrink-0">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => setMembers(ms => [...ms, { name: "", ownership: "" }])}
+          className="flex items-center gap-1.5 text-sm text-[#D4AF37] hover:text-[#B8962E] font-semibold transition-colors"
+        >
+          <Plus className="w-4 h-4" /> Add another member
+        </button>
+        <p className={`text-sm font-semibold ${total === 100 ? "text-emerald-600" : "text-red-500"}`}>
+          Total: {total}%{total === 100 ? " ✓" : " — must equal 100%"}
+        </p>
+        <ContinueBtn disabled={!ok} onClick={() => go("management")} />
+      </div>
+    );
+  }
+
+  // Management
+  if (sub === "management") {
+    return (
+      <div className="space-y-5">
+        <ProgressBar current={sub} />
+        <StepLabel sub={sub} />
+        <p className="text-sm text-gray-500 -mt-3">How will your LLC be managed day-to-day?</p>
+        <div className="space-y-3">
+          {([
+            { value: "member-managed" as const,  label: "Member-managed",  desc: "All owners manage the business together. Best for most small LLCs and solo founders." },
+            { value: "manager-managed" as const, label: "Manager-managed", desc: "One or more appointed managers run operations. Common when some members are passive investors." },
+          ]).map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => setMgmt(opt.value)}
+              className={`w-full text-left border rounded-xl p-4 transition-all ${
+                mgmt === opt.value ? "border-[#D4AF37] bg-[#D4AF37]/5" : "border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                  mgmt === opt.value ? "border-[#D4AF37] bg-[#D4AF37]" : "border-gray-300"
+                }`}>
+                  {mgmt === opt.value && <Check className="w-3 h-3 text-white" />}
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">{opt.label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{opt.desc}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+        <ContinueBtn onClick={() => go("review")} />
+      </div>
+    );
+  }
+
+  // Review & place order
+  if (sub === "review") {
+    const serviceFee = price ? Math.round((price.totalCents - price.stateCents) / 100) : 0;
+    return (
+      <div className="space-y-5">
+        <ProgressBar current={sub} />
+        <StepLabel sub={sub} />
+
+        <div className="border border-gray-100 rounded-xl divide-y divide-gray-100 overflow-hidden">
+          <div className="px-5 py-4 space-y-3">
+            <ReviewRow label="Business" value={businessName} />
+            <ReviewRow label="State" value={state} />
+          </div>
+          <div className="px-5 py-4 space-y-3">
+            <ReviewRow label="Organizer" value={name} onEdit={() => go("contact")} />
+            <ReviewRow label="Phone" value={phone} onEdit={() => go("contact")} />
+            <ReviewRow label="Address" value={`${street}, ${city}, ${orgState} ${zip}`} onEdit={() => go("address")} />
+          </div>
+          <div className="px-5 py-4 space-y-3">
+            <ReviewRow
+              label="Reg. agent"
+              value={isSelfAgent ? "Self (you)" : `${agentName}, ${agentCity} ${agentState}`}
+              onEdit={() => go("agent")}
+            />
+          </div>
+          <div className="px-5 py-4 space-y-3">
+            <ReviewRow
+              label="Members"
+              value={members.map(m => `${m.name} (${m.ownership}%)`).join(", ")}
+              onEdit={() => go("ownership")}
+            />
+            <ReviewRow
+              label="Management"
+              value={mgmt === "member-managed" ? "Member-managed" : "Manager-managed"}
+              onEdit={() => go("management")}
+            />
+          </div>
+        </div>
+
+        {price && (
+          <div className="border border-gray-100 rounded-xl overflow-hidden text-sm">
+            <div className="flex justify-between px-5 py-3">
+              <span className="text-gray-500">Service fee</span>
+              <span className="font-semibold text-gray-900">${serviceFee}</span>
+            </div>
+            <div className="flex justify-between px-5 py-3 border-t border-gray-100">
+              <span className="text-gray-500">{state} state filing fee</span>
+              <span className="font-semibold text-gray-900">{price.stateFee}</span>
+            </div>
+            <div className="flex justify-between px-5 py-3 bg-gray-50 border-t border-gray-100 font-bold">
+              <span className="text-gray-900">Total due today</span>
+              <span className="text-gray-900 text-base">{price.display}</span>
+            </div>
+          </div>
+        )}
+
+        <button
+          disabled={loading}
+          onClick={handlePlaceOrder}
+          className="w-full bg-[#D4AF37] hover:bg-[#B8962E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-5 rounded-xl transition-all flex items-center justify-center gap-2 text-lg shadow-lg shadow-[#D4AF37]/20"
+        >
+          {loading ? "Placing order…" : "Place order"}{!loading && <ArrowRight className="w-5 h-5" />}
+        </button>
+        <p className="text-xs text-center text-gray-400">Secure payment via Stripe · One-time charge · No subscription</p>
+      </div>
+    );
+  }
+
+  return null;
 }
