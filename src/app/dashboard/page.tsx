@@ -3,6 +3,14 @@ import { getSession } from "@/lib/session";
 import { sql, Company } from "@/lib/db";
 import DashboardClient from "./DashboardClient";
 
+export interface FilingOrderSummary {
+  status: string;
+  state: string;
+  paid_at: string | null;
+  filed_at: string | null;
+  approved_at: string | null;
+}
+
 export default async function DashboardPage() {
   const session = await getSession();
   if (!session) redirect("/login");
@@ -15,23 +23,26 @@ export default async function DashboardPage() {
 
   if (!company) redirect("/guide");
 
-  let filingStatus: string | null = null;
+  let filingOrder: FilingOrderSummary | null = null;
   try {
     const orderRows = await sql`
-      SELECT status FROM filing_orders
+      SELECT status, state, created_at as paid_at, filed_at, approved_at
+      FROM filing_orders
       WHERE company_id = ${company.id}
       ORDER BY created_at DESC LIMIT 1
     `;
-    filingStatus = (orderRows[0]?.status as string) ?? null;
+    if (orderRows[0]) {
+      filingOrder = orderRows[0] as FilingOrderSummary;
+    }
   } catch {
-    // filing_orders table may not exist yet if user chose DIY
+    // filing_orders table may not exist yet
   }
 
   return (
     <DashboardClient
       company={company}
       userEmail={session.email}
-      filingStatus={filingStatus}
+      filingOrder={filingOrder}
     />
   );
 }

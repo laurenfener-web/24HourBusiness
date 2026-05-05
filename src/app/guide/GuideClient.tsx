@@ -9,6 +9,7 @@ import StepSelectState from "./steps/StepSelectState";
 import Step2Structure from "./steps/Step2Structure";
 import StepFilingDetails from "./steps/StepFilingDetails";
 import Step4EIN from "./steps/Step4EIN";
+import StepCongratulations from "./steps/StepCongratulations";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Logo from "@/components/Logo";
 import { Company } from "@/lib/db";
@@ -27,6 +28,7 @@ const STEPS = [
   { title: "Business structure", sub: "Choose the right entity" },
   { title: "File your LLC", sub: "We handle the paperwork" },
   { title: "Get your EIN", sub: "Free federal tax ID — 10 minutes" },
+  { title: "You're in business", sub: "The foundation is set" },
 ];
 
 function companyToData(company: Company): WizardData {
@@ -228,6 +230,14 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                 <Step4EIN
                   businessName={data.businessName}
                   state={data.state}
+                  onComplete={() => next()}
+                />
+              )}
+              {step === 6 && (
+                <StepCongratulations
+                  businessName={data.businessName}
+                  state={data.state}
+                  structure={data.structure}
                   onComplete={() => next()}
                 />
               )}

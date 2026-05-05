@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, LogOut, FileText } from "lucide-react";
+import { ExternalLink, LogOut, Check } from "lucide-react";
 import { logout } from "@/actions/auth";
 import Logo from "@/components/Logo";
+import type { FilingOrderSummary } from "./page";
 
 interface Company {
   id: string;
@@ -72,15 +73,127 @@ const TASKS = [
   },
 ];
 
+function fmt(date: string | null) {
+  if (!date) return null;
+  return new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function FilingTracker({ order, businessName, state }: { order: FilingOrderSummary; businessName: string; state: string }) {
+  const stages: { label: string; sub: string; date: string | null; done: boolean; active: boolean }[] = [
+    {
+      label: "Payment received",
+      sub: "We have your filing request",
+      date: fmt(order.paid_at),
+      done: true,
+      active: order.status === "paid",
+    },
+    {
+      label: `Filed with ${state}`,
+      sub: order.filed_at ? "Articles of Organization submitted" : "Filing in progress — we're on it",
+      date: fmt(order.filed_at),
+      done: !!order.filed_at,
+      active: order.status === "filed",
+    },
+    {
+      label: "State approved",
+      sub: order.approved_at ? `${businessName} is officially an LLC` : "Awaiting state confirmation",
+      date: fmt(order.approved_at),
+      done: !!order.approved_at,
+      active: order.status === "approved",
+    },
+  ];
+
+  const currentIdx = stages.findIndex(s => s.active);
+  const doneCount = stages.filter(s => s.done).length;
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden mb-8 shadow-sm">
+      {/* Header */}
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <p className="font-bold text-gray-900 text-sm">LLC Filing Status</p>
+          <p className="text-xs text-gray-400 mt-0.5">We&apos;ll email you at each stage</p>
+        </div>
+        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+          order.status === "approved"
+            ? "bg-emerald-100 text-emerald-700"
+            : order.status === "filed"
+              ? "bg-blue-100 text-blue-700"
+              : "bg-amber-100 text-amber-700"
+        }`}>
+          {order.status === "approved" ? "Approved" : order.status === "filed" ? "Filed" : "In progress"}
+        </span>
+      </div>
+
+      {/* Pipeline */}
+      <div className="px-6 py-6">
+        <div className="relative">
+          {/* Progress bar behind circles */}
+          <div className="absolute top-5 left-5 right-5 h-0.5 bg-gray-100" style={{ zIndex: 0 }}>
+            <div
+              className="h-full bg-[#D4AF37] transition-all duration-700"
+              style={{ width: doneCount === 1 ? "0%" : doneCount === 2 ? "50%" : doneCount === 3 ? "100%" : "0%" }}
+            />
+          </div>
+
+          <div className="relative grid grid-cols-3 gap-2" style={{ zIndex: 1 }}>
+            {stages.map((stage, i) => (
+              <div key={i} className="flex flex-col items-center text-center gap-2">
+                {/* Circle */}
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
+                  stage.done
+                    ? "bg-[#D4AF37] border-[#D4AF37]"
+                    : stage.active
+                      ? "bg-white border-[#D4AF37]"
+                      : "bg-white border-gray-200"
+                }`}>
+                  {stage.done ? (
+                    <Check className="w-4 h-4 text-white" />
+                  ) : stage.active ? (
+                    <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+                  ) : (
+                    <span className="w-2 h-2 rounded-full bg-gray-200" />
+                  )}
+                </div>
+
+                {/* Labels */}
+                <div>
+                  <p className={`text-xs font-bold leading-tight ${stage.done || stage.active ? "text-gray-900" : "text-gray-400"}`}>
+                    {stage.label}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5 leading-snug">{stage.sub}</p>
+                  {stage.date && (
+                    <p className="text-xs font-semibold text-[#D4AF37] mt-1">{stage.date}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer note */}
+      {!order.approved_at && (
+        <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
+          <p className="text-xs text-gray-400 text-center">
+            {order.status === "paid"
+              ? "We typically file within 1 business day of receiving your order."
+              : "State processing times vary. California: 3–5 days · Florida: same day · New York: 2–3 weeks · Texas: same day."}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface Props {
   company: Company;
   userEmail: string;
-  filingStatus: string | null;
+  filingOrder: FilingOrderSummary | null;
 }
 
-export default function DashboardClient({ company, userEmail, filingStatus }: Props) {
+export default function DashboardClient({ company, userEmail, filingOrder }: Props) {
   const structure = STRUCTURE_LABELS[company.structure] ?? company.structure.toUpperCase();
-  const hasFiling = filingStatus !== null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -105,7 +218,7 @@ export default function DashboardClient({ company, userEmail, filingStatus }: Pr
 
       <div className="max-w-3xl mx-auto px-6 py-12">
         {/* Business header */}
-        <div className="mb-10">
+        <div className="mb-8">
           <p className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-1">Your business</p>
           <h1 className="text-4xl font-bold text-gray-900 leading-tight">
             {company.name || "Your Business"}
@@ -115,27 +228,20 @@ export default function DashboardClient({ company, userEmail, filingStatus }: Pr
           </p>
         </div>
 
-        {/* Filing status */}
-        {hasFiling ? (
-          <div className="bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-2xl p-5 mb-8 flex items-start gap-4">
-            <FileText className="w-5 h-5 text-[#D4AF37] shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold text-gray-900">Filing in progress</p>
-              <p className="text-sm text-gray-500 mt-0.5">
-                We&apos;re handling the paperwork for {company.name || "your LLC"}. You&apos;ll get an email when it&apos;s submitted and again when it&apos;s approved.
-              </p>
-            </div>
-          </div>
+        {/* Filing status tracker */}
+        {filingOrder ? (
+          <FilingTracker
+            order={filingOrder}
+            businessName={company.name}
+            state={company.state}
+          />
         ) : (
           <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-8 flex items-start justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <FileText className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-gray-900">File your LLC</p>
-                <p className="text-sm text-gray-500 mt-0.5">
-                  You chose to file yourself — or haven&apos;t filed yet. Go back to the guide to file or have us do it for you.
-                </p>
-              </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-sm">File your LLC</p>
+              <p className="text-sm text-gray-500 mt-0.5">
+                You chose to file yourself. Go back anytime to have us handle it.
+              </p>
             </div>
             <Link
               href="/guide"
@@ -147,7 +253,7 @@ export default function DashboardClient({ company, userEmail, filingStatus }: Pr
         )}
 
         {/* Next steps */}
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Next steps</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Build your business</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {TASKS.map((task) => (
             <a
