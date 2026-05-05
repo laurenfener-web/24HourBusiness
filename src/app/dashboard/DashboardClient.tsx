@@ -15,13 +15,6 @@ const STRUCTURE_LABELS: Record<string, string> = {
 
 const TASKS = [
   {
-    emoji: "🪪",
-    title: "Get your EIN",
-    desc: "Your federal tax ID — free from the IRS, takes 5 minutes online. You need this to open a bank account.",
-    cta: "Apply at IRS.gov",
-    href: "https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online",
-  },
-  {
     emoji: "🏦",
     title: "Open a bank account",
     desc: "Keep business and personal money separate from day one. Mercury is the go-to for startups — no fees, no minimums.",

@@ -10,6 +10,7 @@ const STEP_LABELS = [
   "Select state",
   "Business structure",
   "File your LLC",
+  "Get your EIN",
 ];
 
 interface Props {

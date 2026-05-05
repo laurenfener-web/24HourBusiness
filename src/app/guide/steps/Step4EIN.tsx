@@ -4,17 +4,17 @@ import { ExternalLink, ArrowRight, AlertCircle } from "lucide-react";
 
 interface Props {
   businessName: string;
+  state: string;
   onComplete: () => void;
 }
 
-const ITEMS = [
-  { label: "Your LLC name", value: (name: string) => name || "your business name" },
-  { label: "State of formation", value: () => "California" },
-  { label: "Your personal SSN", value: () => "as the responsible party" },
-  { label: "About 10 minutes", value: () => "the form is straightforward" },
-];
-
-export default function Step4EIN({ businessName, onComplete }: Props) {
+export default function Step4EIN({ businessName, state, onComplete }: Props) {
+  const ITEMS = [
+    { label: "Your LLC name", value: businessName || "your business name" },
+    { label: "State of formation", value: state || "your state" },
+    { label: "Your personal SSN", value: "as the responsible party" },
+    { label: "About 10 minutes", value: "the form is straightforward" },
+  ];
   return (
     <div className="space-y-6">
       <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-start gap-3">
@@ -44,7 +44,7 @@ export default function Step4EIN({ businessName, onComplete }: Props) {
               </span>
               <div>
                 <span className="text-sm font-medium text-gray-800">{item.label}</span>
-                <span className="text-sm text-gray-400"> — {item.value(businessName)}</span>
+                <span className="text-sm text-gray-400"> — {item.value}</span>
               </div>
             </li>
           ))}
