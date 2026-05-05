@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Check, ChevronLeft } from "lucide-react";
 import Step1Name from "./steps/Step1Name";
+import StepLogo from "./steps/StepLogo";
 import StepSelectState from "./steps/StepSelectState";
 import Step2Structure from "./steps/Step2Structure";
 import StepFilingDetails from "./steps/StepFilingDetails";
@@ -21,6 +22,7 @@ interface WizardData {
 
 const STEPS = [
   { title: "Name your business", sub: "Find the perfect name" },
+  { title: "Design your logo", sub: "AI-generated icon concepts", skippable: true },
   { title: "Select your state", sub: "Where you'll file" },
   { title: "Business structure", sub: "Choose the right entity" },
   { title: "File your LLC", sub: "We handle the paperwork" },
@@ -209,9 +211,10 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
 
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
               {step === 0 && <Step1Name onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 1 && <StepSelectState onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 2 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
-              {step === 3 && (
+              {step === 1 && <StepLogo businessName={data.businessName} onComplete={() => next()} />}
+              {step === 2 && <StepSelectState onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 3 && <Step2Structure onComplete={(d) => next({ ...data, ...d })} />}
+              {step === 4 && (
                 <StepFilingDetails
                   businessName={data.businessName}
                   state={data.state}
@@ -221,7 +224,7 @@ export default function GuideClient({ userEmail, initialCompanies, initialCompan
                   onComplete={() => next()}
                 />
               )}
-              {step === 4 && (
+              {step === 5 && (
                 <Step4EIN
                   businessName={data.businessName}
                   state={data.state}

@@ -7,6 +7,7 @@ import { Company } from "@/lib/db";
 
 const STEP_LABELS = [
   "Choose a name",
+  "Design your logo",
   "Select state",
   "Business structure",
   "File your LLC",
