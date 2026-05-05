@@ -1,13 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Check, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Check, Plus, Trash2, ExternalLink } from "lucide-react";
 
 const PRICES: Record<string, { display: string; stateFee: string; stateCents: number; totalCents: number }> = {
   California: { display: "$149", stateFee: "$70",  stateCents: 7000,  totalCents: 14900 },
   Florida:    { display: "$199", stateFee: "$125", stateCents: 12500, totalCents: 19900 },
   "New York": { display: "$279", stateFee: "$200", stateCents: 20000, totalCents: 27900 },
   Texas:      { display: "$379", stateFee: "$300", stateCents: 30000, totalCents: 37900 },
+};
+
+const STATE_FILING_URLS: Record<string, { url: string; label: string; fee: string; time: string }> = {
+  California: { url: "https://bizfileonline.sos.ca.gov", label: "California Secretary of State", fee: "$70", time: "3–5 business days" },
+  Florida:    { url: "https://dos.myflorida.com/sunbiz",  label: "Florida Division of Corporations", fee: "$125", time: "Same day" },
+  "New York": { url: "https://ecorp.dos.ny.gov/",          label: "New York Department of State",    fee: "$200", time: "2–3 weeks" },
+  Texas:      { url: "https://www.sos.state.tx.us/corp/forms_boc.shtml", label: "Texas Secretary of State", fee: "$300", time: "Same day" },
 };
 
 const US_STATES = [
@@ -20,7 +27,7 @@ const US_STATES = [
   "Virginia","Washington","West Virginia","Wisconsin","Wyoming",
 ];
 
-type SubStep = "package" | "contact" | "address" | "agent" | "ownership" | "management" | "review";
+type SubStep = "package" | "diy" | "contact" | "address" | "agent" | "ownership" | "management" | "review";
 
 const SUBSTEP_LABELS: Record<SubStep, string> = {
   package:    "How would you like to file?",
@@ -187,7 +194,7 @@ export default function StepFilingDetails({ businessName, state, structure, comp
         </p>
         <div className="space-y-3">
           <button
-            onClick={onComplete}
+            onClick={() => go("diy")}
             className="w-full text-left border border-gray-200 hover:border-gray-300 hover:bg-gray-50 rounded-xl p-5 transition-all"
           >
             <div className="flex items-start justify-between gap-4">
@@ -240,6 +247,69 @@ export default function StepFilingDetails({ businessName, state, structure, comp
             </div>
           )}
         </div>
+      </div>
+    );
+  }
+
+  // DIY filing link
+  if (sub === "diy") {
+    const portal = STATE_FILING_URLS[state];
+    return (
+      <div className="space-y-5">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-1">File it yourself</p>
+          <h3 className="text-xl font-bold text-gray-900">Go file on the state website</h3>
+        </div>
+
+        {portal ? (
+          <>
+            <div className="rounded-xl border border-gray-100 bg-gray-50 px-5 py-4 flex gap-6 text-sm">
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Filing fee</p>
+                <p className="text-xl font-bold text-gray-900">{portal.fee}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Processing time</p>
+                <p className="text-xl font-bold text-gray-900">{portal.time}</p>
+              </div>
+            </div>
+
+            <a
+              href={portal.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between w-full bg-[#D4AF37] hover:bg-[#B8962E] text-white font-semibold px-5 py-4 rounded-xl transition-colors"
+            >
+              <span>File with {portal.label}</span>
+              <ExternalLink className="w-4 h-4 shrink-0" />
+            </a>
+
+            <div className="space-y-2 text-sm text-gray-500">
+              <p className="font-semibold text-gray-700">What you'll need on the site:</p>
+              <ul className="space-y-1.5">
+                {[
+                  `Your LLC name: ${businessName || "your business name"}`,
+                  "Registered agent name and address",
+                  "Your name as organizer",
+                  `Credit card for the ${portal.fee} state fee`,
+                ].map(item => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-[#D4AF37] shrink-0 font-bold">—</span>{item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : (
+          <p className="text-sm text-gray-500">Search for &ldquo;{state} LLC filing&rdquo; on your Secretary of State website to file directly.</p>
+        )}
+
+        <button
+          onClick={onComplete}
+          className="w-full border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+        >
+          I&apos;ve filed (or I&apos;ll do it later) — Continue <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
     );
   }
