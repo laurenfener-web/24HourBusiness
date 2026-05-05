@@ -17,7 +17,7 @@ export default function StepSelectState({ onComplete }: Props) {
   return (
     <div className="space-y-5">
       <p className="text-sm text-gray-500 leading-relaxed">
-        Where do you live?
+        Where do you want to file your LLC?
       </p>
 
       <div className="space-y-2">
@@ -66,6 +66,22 @@ export default function StepSelectState({ onComplete }: Props) {
           </button>
         </div>
       )}
+
+      <div className="rounded-xl border border-gray-100 bg-white px-5 py-4 space-y-3">
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Why this matters</p>
+        <ul className="space-y-2.5">
+          {[
+            { heading: "Each state has different rules.", body: "Filing fees, processing times, annual reports, and publication requirements vary widely. New York requires costly newspaper publication; Texas does not." },
+            { heading: "File where you operate.", body: "For most small businesses, the right answer is the state where you live and work. Filing in Delaware or Wyoming only makes sense if you have a specific legal or investor reason to." },
+            { heading: "You can change later, but it's a pain.", body: "Switching states means dissolving your LLC in one state and re-filing in another. Get it right the first time." },
+          ].map(({ heading, body }) => (
+            <li key={heading} className="flex items-start gap-2.5 text-sm text-gray-500">
+              <span className="text-[#D4AF37] font-bold shrink-0 mt-0.5">—</span>
+              <p><span className="font-semibold text-gray-800">{heading}</span> {body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
