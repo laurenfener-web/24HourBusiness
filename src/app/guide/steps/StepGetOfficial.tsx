@@ -2,7 +2,41 @@
 
 import { useState } from "react";
 import { ArrowRight, Check, ChevronRight, DollarSign, Clock, AlertCircle, ExternalLink } from "lucide-react";
-import { OFFICIAL_SUBSTEPS, type SubStepKind } from "../GuideClient";
+type SubStepKind = "structure" | "name-check" | "file" | "ein" | "statement-of-info" | "publish" | "cert-of-pub";
+
+interface OfficialSubStepDef {
+  kind: SubStepKind;
+  title: string;
+  hint?: string;
+  optional?: boolean;
+}
+
+const OFFICIAL_SUBSTEPS: Record<string, OfficialSubStepDef[]> = {
+  California: [
+    { kind: "structure", title: "Business structure" },
+    { kind: "name-check", title: "Reserve your name", optional: true },
+    { kind: "file", title: "File Articles" },
+    { kind: "ein", title: "Get your EIN", hint: "Do this during your 3–5 day wait" },
+    { kind: "statement-of-info", title: "Statement of Information" },
+  ],
+  "New York": [
+    { kind: "structure", title: "Business structure" },
+    { kind: "file", title: "File Articles" },
+    { kind: "ein", title: "Get your EIN", hint: "Do this during your 2–3 week wait" },
+    { kind: "publish", title: "Publish notice" },
+    { kind: "cert-of-pub", title: "Certificate of Publication" },
+  ],
+  Florida: [
+    { kind: "structure", title: "Business structure" },
+    { kind: "file", title: "File with Florida" },
+    { kind: "ein", title: "Get your EIN" },
+  ],
+  Texas: [
+    { kind: "structure", title: "Business structure" },
+    { kind: "file", title: "File Certificate" },
+    { kind: "ein", title: "Get your EIN" },
+  ],
+};
 
 interface Props {
   businessName: string;

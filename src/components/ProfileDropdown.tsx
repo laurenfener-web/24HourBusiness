@@ -7,16 +7,9 @@ import { Company } from "@/lib/db";
 
 const STEP_LABELS = [
   "Choose a name",
-  "Design logo",
   "Select state",
-  "Get official",
-  "Bank account",
-  "Credit card",
-  "Accounting",
-  "Buy a domain",
-  "Build a website",
+  "Business structure",
   "File your LLC",
-  "Launch",
 ];
 
 interface Props {

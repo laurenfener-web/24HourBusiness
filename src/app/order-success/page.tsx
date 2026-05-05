@@ -20,10 +20,10 @@ export default function OrderSuccessPage() {
       </p>
 
       <Link
-        href="/guide"
-        className="text-[#D4AF37] hover:text-[#D4AF37]/70 text-sm font-medium transition-colors"
+        href="/dashboard"
+        className="bg-[#D4AF37] hover:bg-[#B8962E] text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
       >
-        Back to your guide
+        Go to your dashboard
       </Link>
     </div>
   );
