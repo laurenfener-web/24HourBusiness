@@ -15,12 +15,17 @@ export default async function DashboardPage() {
 
   if (!company) redirect("/guide");
 
-  const orderRows = await sql`
-    SELECT status FROM filing_orders
-    WHERE company_id = ${company.id}
-    ORDER BY created_at DESC LIMIT 1
-  `;
-  const filingStatus = (orderRows[0]?.status as string) ?? null;
+  let filingStatus: string | null = null;
+  try {
+    const orderRows = await sql`
+      SELECT status FROM filing_orders
+      WHERE company_id = ${company.id}
+      ORDER BY created_at DESC LIMIT 1
+    `;
+    filingStatus = (orderRows[0]?.status as string) ?? null;
+  } catch {
+    // filing_orders table may not exist yet if user chose DIY
+  }
 
   return (
     <DashboardClient
