@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
 
     if (!order) return NextResponse.json({ ok: true });
 
+    // Notify ops
     await resend.emails.send({
       from: "The Midnight Founder <noreply@themidnightfounder.com>",
       to: "laurenfener@gmail.com",
@@ -48,9 +49,27 @@ export async function POST(req: NextRequest) {
           <tr><td style="padding:8px;border:1px solid #e5e7eb;font-weight:bold">Amount paid</td><td style="padding:8px;border:1px solid #e5e7eb">$${(order.amount_cents / 100).toFixed(2)}</td></tr>
         </table>
         <p style="margin-top:16px;font-family:sans-serif;font-size:14px;color:#6b7280">
-          Log in to your admin panel to mark this as filed once complete:<br/>
-          <a href="https://themidnightfounder.com/admin">themidnightfounder.com/admin</a>
+          <a href="https://themidnightfounder.com/admin">View in admin panel →</a>
         </p>
+      `,
+    });
+
+    // Confirm to customer
+    await resend.emails.send({
+      from: "The Midnight Founder <noreply@themidnightfounder.com>",
+      to: order.user_email,
+      subject: `We received your filing request for ${order.business_name}`,
+      html: `
+        <div style="font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;">
+          <h2 style="font-size:22px;font-weight:700;color:#111;margin:0 0 12px">We're on it.</h2>
+          <p style="color:#555;font-size:15px;line-height:1.6;margin:0 0 16px">
+            We received your filing request for <strong>${order.business_name}</strong> (${order.state} ${order.structure.toUpperCase()}) and payment of <strong>$${(order.amount_cents / 100).toFixed(0)}</strong>.
+          </p>
+          <p style="color:#555;font-size:15px;line-height:1.6;margin:0 0 16px">
+            We'll file your Articles of Organization shortly and send you another email once it's submitted to the state. You'll get a final confirmation once the state approves it.
+          </p>
+          <p style="color:#888;font-size:13px;margin:0">— The Midnight Founder team</p>
+        </div>
       `,
     });
   }

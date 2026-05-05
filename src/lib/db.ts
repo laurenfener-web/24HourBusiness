@@ -62,12 +62,19 @@ export async function initOrdersTable() {
       stripe_session_id TEXT,
       amount_cents INT NOT NULL,
       details TEXT,
+      notes TEXT DEFAULT '',
+      confirmation_number TEXT DEFAULT '',
       status TEXT NOT NULL DEFAULT 'pending_payment',
       filed_at TIMESTAMPTZ,
+      approved_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
+  // Add columns to existing tables that were created before this schema version
+  await sql`ALTER TABLE filing_orders ADD COLUMN IF NOT EXISTS notes TEXT DEFAULT ''`;
+  await sql`ALTER TABLE filing_orders ADD COLUMN IF NOT EXISTS confirmation_number TEXT DEFAULT ''`;
+  await sql`ALTER TABLE filing_orders ADD COLUMN IF NOT EXISTS approved_at TIMESTAMPTZ`;
 }
 
 export interface FilingOrder {
@@ -85,8 +92,11 @@ export interface FilingOrder {
   stripe_session_id: string | null;
   amount_cents: number;
   details: string | null;
+  notes: string;
+  confirmation_number: string;
   status: string;
   filed_at: string | null;
+  approved_at: string | null;
   created_at: string;
   updated_at: string;
 }
