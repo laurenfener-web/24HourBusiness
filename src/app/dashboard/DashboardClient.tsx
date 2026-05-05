@@ -4,7 +4,14 @@ import Link from "next/link";
 import { ExternalLink, LogOut, FileText } from "lucide-react";
 import { logout } from "@/actions/auth";
 import Logo from "@/components/Logo";
-import { Company } from "@/lib/db";
+
+interface Company {
+  id: string;
+  name: string;
+  structure: string;
+  state: string;
+  done: boolean;
+}
 
 const STRUCTURE_LABELS: Record<string, string> = {
   llc: "LLC",
