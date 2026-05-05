@@ -406,7 +406,7 @@ function FilingContent({
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
           <strong>While you wait (2–3 weeks):</strong> Get your EIN — next step. Once your Articles are approved, you&apos;ll complete a quick publication step.
         </div>
-        <ActionLink href="https://www.dos.ny.gov/corps/bus_entity_search.html" label="File with New York Department of State" />
+        <ActionLink href="https://ecorp.dos.ny.gov/" label="File with New York Department of State" />
         {structure === "scorp" && (
           <div className="bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-xl p-4 text-sm text-[#D4AF37]">
             <p className="font-semibold mb-1">S-Corp election</p>
@@ -629,7 +629,7 @@ function CertOfPubContent({ onNext }: { onNext: () => void }) {
       <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-sm text-emerald-800">
         Once this is filed, your New York LLC is fully formed. The hardest part — publication — is behind you.
       </div>
-      <ActionLink href="https://www.dos.ny.gov/corps/bus_entity_search.html" label="File Certificate of Publication — NY DOS" />
+      <ActionLink href="https://www.dos.ny.gov/corps/llcpub.html" label="File Certificate of Publication — NY DOS" />
       <ContinueBtn label="Certificate filed → Continue" onClick={onNext} />
     </div>
   );
