@@ -31,6 +31,7 @@ type SubStep = "package" | "diy" | "contact" | "address" | "agent" | "ownership"
 
 const SUBSTEP_LABELS: Record<SubStep, string> = {
   package:    "How would you like to file?",
+  diy:        "File it yourself",
   contact:    "Your contact info",
   address:    "Your address",
   agent:      "Registered agent",
